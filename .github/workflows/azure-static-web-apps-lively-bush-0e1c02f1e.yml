@@ -32,6 +32,8 @@ jobs:
           api_location: "https://cyugx99810.execute-api.us-west-2.amazonaws.com/develop" # Api source code path - optional
           output_location: "dist/restaurant-frontend-app/browser" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          BACKEND_URL: "https://cyugx99810.execute-api.us-west-2.amazonaws.com/develop"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
