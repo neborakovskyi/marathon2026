@@ -21,28 +21,35 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
 
 import { LoginModalComponent } from '@app/auth/components/login/login-modal/login-modal.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { DishesDataSource } from './dishes.data-source';
+import { DishModalComponent } from '@app/components/dish-modal/dish-modal.component';
+import { DishCardComponent } from '@app/shared/custom-components/dish-card/dish-card.component';
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink, LocationCardComponent, FeedbackWindowComponent, LoginModalComponent, ],
+  imports: [CommonModule, RouterLink, LocationCardComponent, FeedbackWindowComponent, LoginModalComponent, ScrollingModule, DishModalComponent, DishCardComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [LocationsService, DishesService, ReservationService, UsersService, FeedbacksService],
 })
 export class MainPageComponent implements OnInit {
-  dishes: DishListResponse[] = [];
-  locations: LocationResponse[] = [];
+  public dishes: DishListResponse[] = []; //remove
+  public locations: LocationResponse[] = [];
 
-  showFeedbackModal = false;
-  selectedReservationCustomer!: ReservationCustomer;
-  feedbackForUpdate: FeedbackReservationResponseItem | undefined;
-  selectedTable = 0;
-  anonymousFeedbackToken = '';
+  public selectedDish: DishListResponse | null = null;
+
+  public showFeedbackModal = false;
+  public selectedReservationCustomer!: ReservationCustomer;
+  public feedbackForUpdate: FeedbackReservationResponseItem | undefined;
+  public selectedTable = 0;
+  public anonymousFeedbackToken = '';
 
   private readonly locationsService = inject(LocationsService);
   private readonly dishesService = inject (DishesService);
+  readonly dishesDataSource = new DishesDataSource(this.dishesService);
   private readonly route = inject(ActivatedRoute);
   private readonly reservationsService = inject(ReservationService)
   private readonly userService = inject(UsersService);
@@ -61,10 +68,10 @@ export class MainPageComponent implements OnInit {
   );
 
   // display the modal when URL = /login
-  readonly showLoginModal = computed(() => this.currentUrl().startsWith('/login'));
+  public readonly showLoginModal = computed(() => this.currentUrl().startsWith('/login'));
 
   // closing the modal returns to the main screen
-  closeLogin() {
+  public closeLogin(): void {
     this.router.navigate(['/main']);
   }
 
@@ -81,9 +88,19 @@ export class MainPageComponent implements OnInit {
     });
   }
 
-  loadPopularDishes(): void {
-    this.dishesService.getPopularDishes().subscribe((data) => {
-      this.dishes = data.slice(0, 4).map((dish) => ({
+  public openModal(dish: DishListResponse):void {
+    this.selectedDish = dish;
+  }
+
+  public closeModal():void {
+    this.selectedDish = null;
+  }
+
+  public loadPopularDishes(): void {
+
+    this.dishesService.getPopularDishes(1,null)
+      .subscribe((data) => {
+      this.dishes = data.items.slice(0, 4).map((dish) => ({
         ...dish,
         imageUrl: dish.imageUrl || 'assets/img/dish.png',
         name: dish.name || 'Unknown Dish',
@@ -92,6 +109,20 @@ export class MainPageComponent implements OnInit {
       }));
     });
   }
+// virtual scroll
+  // loadPopularDishes(): void {
+  //   this.dishesDataSource.loadNextPage();
+  // }
+
+  // onDishScroll(index: number): void {
+  //   if (index >= this.dishesDataSource.data.length - 5) {
+  //     this.dishesDataSource.loadNextPage();
+  //   }
+  // }
+
+  // trackDish(_index: number, dish: DishListResponse): string {
+  //   return dish.id;
+  // }
 
   loadLocations(): void {
     this.locationsService.getLocations().subscribe((data) => {

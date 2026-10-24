@@ -393,26 +393,35 @@ Response: 200 OK
 
 
 ### `GET` /dishes/popular
+Query parameters:
+
+- `Limit` (optional, 1–100; defaults to 12)
+- `ExclusiveStartKeyJson` (optional; Base64-encoded JSON cursor from the previous response)
+
 Response: `200 OK`
 ```json
-[
-  {
-    "id": "string",
-    "name": "string",
-    "imageUrl": "string",
-    "price": 12.34,
-    "state": "string",
-    "weight": "string",
-    "dishType": "string",
-    "description": "string",
-    "calories": "string",
-    "proteins": "string",
-    "fats": "string",
-    "carbohydrates": "string",
-    "vitamins": "string"
-  }
-]
+{
+  "items": [
+    {
+      "id": "string",
+      "name": "string",
+      "imageUrl": "string",
+      "price": 12.34,
+      "state": "string",
+      "weight": "string",
+      "dishType": "string",
+      "description": "string",
+      "calories": "string",
+      "proteins": "string",
+      "fats": "string",
+      "carbohydrates": "string",
+      "vitamins": "string"
+    }
+  ],
+  "nextPageCursor": "eyJpZCI6ImRpc2gtMTIifQ=="
+}
 ```
+`nextPageCursor` is `null` when DynamoDB has no further page.
 
 ### `GET` /dishes/{id}
 Response: `200 OK`

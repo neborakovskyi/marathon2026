@@ -53,17 +53,24 @@
         </div>
       </div>
 
-      <div class="dish-cards">
-        @for (dish of filteredDishes; track dish) {
-          <app-dish-card
-            [dish]="dish"
-            [preOrderEnabled]="isPreOrderEnabled"
-            (dishClicked)="openModal(dish)"
-            (preOrderClicked)="addDishToCart(dish)"
-            maxWidth="288px"
-          ></app-dish-card>
-        }
-      </div>
+      @if (filteredDishes.length === 0) {
+        <div class="common-loading" role="status" aria-live="polite">
+          <span class="common-spinner" aria-hidden="true"></span>
+          <p>Please wait while we load your reservations.</p>
+        </div>
+      } @else {
+        <div class="dish-cards">
+          @for (dish of filteredDishes; track dish) {
+            <app-dish-card
+              [dish]="dish"
+              [preOrderEnabled]="isPreOrderEnabled"
+              (dishClicked)="openModal(dish)"
+              (preOrderClicked)="addDishToCart(dish)"
+              maxWidth="288px"
+            ></app-dish-card>
+          }
+        </div>
+      }
     </div>
   </section>
 

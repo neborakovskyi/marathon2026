@@ -1,0 +1,17 @@
+---
+description: Where to read project docs and skills before changing code
+alwaysApply: true
+---
+
+# Marathon restaurant repo
+
+Start from `AGENTS.md`. Then open only the source of truth for the area you are changing:
+
+- Frontend: `frontend/restaurant-frontend-app/CLAUDE.md`
+- Backend: `backend/restaurant-backend-app/CLAUDE.md`
+- Deploy: root `README.md`
+- API contract: `backend/restaurant-backend-app/docs/ApiRoutes.md` and `RouteRegistry.cs`
+
+Use project skills in `.cursor/skills/` (`frontend-angular`, `backend-dotnet-lambda`, `deploy-aws`).
+
+Do not commit, branch, or push unless asked. Do not duplicate CLAUDE.md content into new files.

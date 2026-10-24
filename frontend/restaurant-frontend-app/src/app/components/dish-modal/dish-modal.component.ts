@@ -1,16 +1,17 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, input } from '@angular/core';
 import { DishListResponse } from '@app/models/dishes/dish-list-response.model';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-dish-modal',
   standalone: true,
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './dish-modal.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dish-modal.component.scss',
 })
 export class DishModalComponent {
-  @Input() dish!: DishListResponse;
+  readonly dish = input.required<DishListResponse>();
   @Output() closed = new EventEmitter<void>();
 
   onClose(): void {

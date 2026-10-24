@@ -1,9 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { LoginResult } from '../models/login.model';
 import { API_BASE_URL } from '@app/shared/config/api-base-url.token';
 import { HttpClient } from '@angular/common/http';
 import { UserModel } from '../models/user.model';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Tokens } from '../models/tokens.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 @Injectable({
@@ -11,10 +12,10 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthenticationService {
   private readonly baseUrl = inject(API_BASE_URL);
-  private user$$ = new BehaviorSubject<UserModel | null>(this.getUser());
-  public user$: Observable<UserModel | null> = this.user$$.asObservable();
-  private isAuthorised$$ = new BehaviorSubject<boolean>(localStorage.getItem('auth') !== null);
-  public isAuthorised$: Observable<boolean> = this.isAuthorised$$.asObservable();
+  readonly user = signal<UserModel | null>(this.getUser());
+  readonly user$: Observable<UserModel | null> = toObservable(this.user);
+  readonly isAuthorised = signal<boolean>(localStorage.getItem('auth') !== null);
+  readonly isAuthorised$: Observable<boolean> = toObservable(this.isAuthorised);
   public jwtHelperService = new JwtHelperService();
   private readonly http = inject(HttpClient);
   
@@ -72,8 +73,8 @@ export class AuthenticationService {
   signOut() {
     localStorage.removeItem('auth');
     localStorage.removeItem('user');
-    this.user$$.next(null);
-    this.isAuthorised$$.next(false);
+    this.user.set(null);
+    this.isAuthorised.set(false);
   }
   getUserNameById$(userId: string): Observable<string> {
     const url = `${this.baseUrl}/users/${userId}/name`;
@@ -89,7 +90,7 @@ export class AuthenticationService {
           accessToken: body.accessToken,
         };
         localStorage.setItem('auth', JSON.stringify(tokens));
-        this.isAuthorised$$.next(true);
+        this.isAuthorised.set(true);
         this.loadUser();
       } else if (!response.ok) {
         result.success = false;
@@ -137,12 +138,12 @@ export class AuthenticationService {
     const url = this.baseUrl + '/me';
     this.http.get<UserModel>(url).subscribe(
       (user) => {
-        this.user$$.next(user);
+        this.user.set(user);
         localStorage.setItem('user', JSON.stringify(user));
       },
       (error) => {
         console.error('Failed to load user data:', error);
-        this.user$$.next(null);
+        this.user.set(null);
       }
     );
   }

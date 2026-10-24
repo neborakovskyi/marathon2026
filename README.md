@@ -1,5 +1,7 @@
 # Deployment Guide
 
+Contributor and agent docs: [AGENTS.md](AGENTS.md). Frontend: `frontend/restaurant-frontend-app/CLAUDE.md`. Backend: `backend/restaurant-backend-app/CLAUDE.md`.
+
 This repo uses three deployment tracks:
 
 - Terraform for shared AWS infrastructure under `infra/terraform`

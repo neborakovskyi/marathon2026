@@ -128,17 +128,17 @@ export class MenuPageComponent implements OnInit {
     });
   }
 
-  selectedDish: DishListResponse | null = null;
+  public selectedDish: DishListResponse | null = null;
 
-  openModal(dish: DishListResponse) {
+  public openModal(dish: DishListResponse):void {
     this.selectedDish = dish;
   }
 
-  closeModal() {
+  public closeModal():void {
     this.selectedDish = null;
   }
 
-  addDishToCart(dish: DishListResponse): void {
+  public addDishToCart(dish: DishListResponse): void {
     this.orderService
       .addDishToPreOrderByReservationId(this.preOrderReservationId!, dish, 1)
       .subscribe({

@@ -62,13 +62,13 @@
             type="text"
             class="search-input"
             placeholder="Search user by name or phone..."
-            [(ngModel)]="searchQuery"
-            (input)="searchQuery$.next(searchQuery)"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
           />
           <p class="hint">e.g John Doe</p>
-          @if (searchedUsers.length > 0) {
+          @if (searchedUsers().length > 0) {
             <div class="user-results">
-              @for (user of searchedUsers; track user) {
+              @for (user of searchedUsers(); track user) {
                 <div
                   class="user-item"
                   role="button"
@@ -93,11 +93,11 @@
         <div class="reservation-guests">
           <app-custom-number
             class="guests-filter"
-            [currentValue]="guests"
+            [currentValue]="guests()"
             [iconPath]="'assets/svg/people-green.svg'"
             [placeholder]="'Guests'"
             [minValue]="1"
-            [maxValue]="selectedTable?.capacity || guests"
+            [maxValue]="selectedTable?.capacity || guests()"
             (currentValueChange)="onGuestsChange($event)"
           />
         </div>

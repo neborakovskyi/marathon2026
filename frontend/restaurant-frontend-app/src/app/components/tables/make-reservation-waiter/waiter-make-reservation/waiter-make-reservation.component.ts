@@ -3,7 +3,10 @@ import {
   EventEmitter,
   OnInit,
   Output,
-  ChangeDetectionStrategy, inject,
+  ChangeDetectionStrategy,
+  effect,
+  inject,
+  signal,
 } from '@angular/core';
 import { CustomButtonComponent } from '@app/shared/custom-components/custom-button/custom-button.component';
 import { CustomSelectComponent } from '@app/shared/custom-components/custom-select/custom-select.component';
@@ -20,14 +23,8 @@ import { TableService } from '@app/services/table/table.service';
 import { TableFilter } from '@app/models/tables/table-filter.model';
 import { UsersService } from '@app/services/users/users.service';
 import { FormsModule } from '@angular/forms';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  of,
-  Subject,
-  switchMap,
-} from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import {ToastService} from '@app/services/toast/toast.service';
 
 @Component({
@@ -48,7 +45,7 @@ export class WaiterMakeReservationComponent implements OnInit {
   private toast = inject(ToastService);
 
   title = 'New Reservation';
-  guests = 1;
+  readonly guests = signal(1);
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() makeReservation = new EventEmitter<{
@@ -73,13 +70,27 @@ export class WaiterMakeReservationComponent implements OnInit {
   selectedEndTime = '';
 
   reservationType: 'visitor' | 'existingUser' = 'visitor';
-  searchedUsers: UserModel[] = [];
-  searchQuery = '';
+  readonly searchedUsers = signal<UserModel[]>([]);
+  readonly searchQuery = signal('');
+  readonly searchQuery$ = toObservable(this.searchQuery).pipe(
+    debounceTime(700),
+    distinctUntilChanged(),
+    switchMap((query) =>
+      query.trim() ? this.usersService.getUsers(query).pipe(catchError(() => of([]))) : of([])
+    )
+  );
   selectedCustomerId: string | null = null;
   selectedCustomerEmail: string | null = null;
 
-  searchQuery$ = new Subject<string>();
-  guestsChange$ = new Subject<number>();
+  constructor() {
+    effect(() => {
+      const guests = this.guests();
+      if (this.selectedLocationId) {
+        this.loadTables();
+      }
+      void guests;
+    });
+  }
 
   private readonly locationService = inject(LocationsService);
   private readonly waitersService = inject(WaitersService);
@@ -90,23 +101,8 @@ export class WaiterMakeReservationComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authenticationService.getUser();
-
     this.loadLocations();
-
-    this.searchQuery$
-      .pipe(
-        debounceTime(700),
-        distinctUntilChanged(),
-        switchMap((query) =>
-          query.trim() ? this.usersService.getUsers(query).pipe(catchError(() => of([]))) : of([])
-        )
-      )
-      .subscribe((users) => (this.searchedUsers = users));
-
-    this.guestsChange$.pipe(debounceTime(700), distinctUntilChanged()).subscribe((guests) => {
-      this.guests = guests;
-      this.loadTables();
-    });
+    this.searchQuery$.subscribe((users) => this.searchedUsers.set(users));
   }
 
   private loadLocations() {
@@ -143,7 +139,7 @@ export class WaiterMakeReservationComponent implements OnInit {
       location: this.selectedLocationId,
       date: null,
       time: null,
-      guests: this.guests,
+      guests: this.guests(),
     };
 
     this.tableService
@@ -253,7 +249,7 @@ export class WaiterMakeReservationComponent implements OnInit {
     this.makeReservation.emit({
       tableId: this.selectedTable.id,
       timeRange,
-      guests: this.guests,
+      guests: this.guests(),
       customerEmail: this.reservationType === 'visitor' ? null : this.selectedCustomerEmail,
     });
 
@@ -266,7 +262,7 @@ export class WaiterMakeReservationComponent implements OnInit {
       return;
     }
 
-    this.guestsChange$.next(guests);
+    this.guests.set(guests);
   }
 
   selectUser(user: UserModel) {

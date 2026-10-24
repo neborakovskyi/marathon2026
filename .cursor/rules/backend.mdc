@@ -1,0 +1,14 @@
+---
+description: .NET Lambda conventions for restaurant-backend-app
+globs: backend/restaurant-backend-app/**/*.{cs,json,yml,md}
+alwaysApply: false
+---
+
+# Backend
+
+Read and follow `backend/restaurant-backend-app/CLAUDE.md`.
+
+- New HTTP APIs: handler + service + repository + `RouteRegistry` + `docs/ApiRoutes.md` + xUnit tests
+- Thin handlers; DynamoDB only in repositories
+- No local API host — `dotnet test` locally, Syndicate for runtime
+- Group pre-order homework payloads: repo-root `homework-backend.md`
