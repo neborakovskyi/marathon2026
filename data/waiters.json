@@ -1,0 +1,261 @@
+{
+  "Waiters": [
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "createdAt": {
+            "S": "2026-09-01T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": [
+              {
+                "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+              },
+              {
+                "S": "6190941b-6700-4ce6-957e-fb57536e5c7c"
+              },
+              {
+                "S": "7e13b5a7-1980-4678-9714-d317cd1874fa"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "createdAt": {
+            "S": "2026-09-02T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": [
+              {
+                "S": "89f7e15e-431f-45a4-9d49-ed71ecaa94fc"
+              },
+              {
+                "S": "45baf726-e5a9-4044-9dc1-78f1ed46b764"
+              },
+              {
+                "S": "7aa9ad39-c5b1-4f24-88a3-5c72aad6ef7d"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "createdAt": {
+            "S": "2026-09-03T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": [
+              {
+                "S": "eaefdea9-1c3a-4c1b-963b-adc9b7e521a4"
+              },
+              {
+                "S": "16986e39-8176-4d89-9dc3-b04dc6e7b73b"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "locationId": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          },
+          "createdAt": {
+            "S": "2026-09-04T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": [
+              {
+                "S": "e33ce69e-a50e-4375-a991-4c1de9541bca"
+              },
+              {
+                "S": "720f669a-0b08-4349-8f62-68caf053371a"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "ba4060db-5714-4524-b79b-25c6d7b5bc36"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "createdAt": {
+            "S": "2026-09-05T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": [
+              {
+                "S": "68b497c7-49be-485d-8762-35cf67a60f8b"
+              },
+              {
+                "S": "d0da7100-db48-45a7-8bdc-b0cb018cd1d9"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "6e1b901f-d2d7-4522-8b66-7f81ec12bdda"
+          },
+          "locationId": {
+            "S": "ff74d3af-3a42-4581-94ff-06b7b6d33251"
+          },
+          "createdAt": {
+            "S": "2026-09-06T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "f4eca63e-e264-4e46-970f-2821af2c0268"
+          },
+          "locationId": {
+            "S": "ec2142bb-2d14-489d-abe5-87c7a51488a3"
+          },
+          "createdAt": {
+            "S": "2026-09-07T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "ac2f6083-d3ec-4d24-a009-a96f8910ae6e"
+          },
+          "locationId": {
+            "S": "591cc4cb-4843-418a-8024-3384195df46b"
+          },
+          "createdAt": {
+            "S": "2026-09-08T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "4d8e2f1a-6b7c-4d9e-8f0a-1b2c3d4e5f60"
+          },
+          "locationId": {
+            "S": "fd0705d3-cd4f-4dfe-8002-0c45da05a6e2"
+          },
+          "createdAt": {
+            "S": "2026-09-09T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "5e9f3a2b-7c8d-4e0f-9a1b-2c3d4e5f6071"
+          },
+          "locationId": {
+            "S": "5efd6ff5-d614-4f55-a1cc-e723a8e2d5b4"
+          },
+          "createdAt": {
+            "S": "2026-09-10T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "6f0a4b3c-8d9e-4f10-ab2c-3d4e5f607182"
+          },
+          "locationId": {
+            "S": "f897c1a0-e81a-4d85-9c9d-e08901a196a3"
+          },
+          "createdAt": {
+            "S": "2026-09-11T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "userId": {
+            "S": "701b5c4d-9e0f-4011-bc3d-4e5f60718293"
+          },
+          "locationId": {
+            "S": "fb8923ef-564a-4855-84db-1ebdd5d856d1"
+          },
+          "createdAt": {
+            "S": "2026-09-12T08:00:00.000Z"
+          },
+          "reservations": {
+            "L": []
+          }
+        }
+      }
+    }
+  ]
+}

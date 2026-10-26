@@ -1,0 +1,400 @@
+{
+  "Reservations": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+          },
+          "tableId": {
+            "S": "3c7dee65-9891-4753-a34c-03c8bfb6bc37"
+          },
+          "customerId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-20T18:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-20T20:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "2"
+          },
+          "status": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "6190941b-6700-4ce6-957e-fb57536e5c7c"
+          },
+          "tableId": {
+            "S": "b68d0495-de73-4002-acb8-1a974f35b270"
+          },
+          "customerId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "createdByWaiter": {
+            "BOOL": true
+          },
+          "startTime": {
+            "S": "2026-10-21T12:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-21T13:30:00.000Z"
+          },
+          "guestCount": {
+            "N": "4"
+          },
+          "status": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "89f7e15e-431f-45a4-9d49-ed71ecaa94fc"
+          },
+          "tableId": {
+            "S": "ed728c3e-2ea4-4855-a7a6-ea2562f01543"
+          },
+          "customerId": {
+            "S": "ccc2b208-e324-43b7-8a5c-7fa544e3c2e9"
+          },
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-21T19:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-21T21:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "5"
+          },
+          "status": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "45baf726-e5a9-4044-9dc1-78f1ed46b764"
+          },
+          "tableId": {
+            "S": "bb76039c-3f46-42ee-a436-7161e0c7abd5"
+          },
+          "customerId": {
+            "S": "4f17b8b2-ec03-41c7-b4f8-5d6315dc06dd"
+          },
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-22T18:30:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-22T20:30:00.000Z"
+          },
+          "guestCount": {
+            "N": "3"
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "eaefdea9-1c3a-4c1b-963b-adc9b7e521a4"
+          },
+          "tableId": {
+            "S": "f2dbfbf3-a4dd-49bb-9b76-5bdef925b7d9"
+          },
+          "customerId": {
+            "S": "616d948f-8659-460e-8a93-599abe5ab85b"
+          },
+          "waiterId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "createdByWaiter": {
+            "BOOL": true
+          },
+          "startTime": {
+            "S": "2026-10-22T13:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-22T14:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "2"
+          },
+          "status": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "e33ce69e-a50e-4375-a991-4c1de9541bca"
+          },
+          "tableId": {
+            "S": "9dbd74e4-d85c-43b3-9f39-5115202d5311"
+          },
+          "customerId": {
+            "S": "26e00714-d271-4989-97a5-8ae492a1bac9"
+          },
+          "waiterId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-23T19:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-23T21:30:00.000Z"
+          },
+          "guestCount": {
+            "N": "4"
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "720f669a-0b08-4349-8f62-68caf053371a"
+          },
+          "tableId": {
+            "S": "392eebc7-1438-4e13-8e60-6d60d446e515"
+          },
+          "customerId": {
+            "S": "668689fe-ce8d-4ddb-9bde-cc8db0f1ac97"
+          },
+          "waiterId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-23T20:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-23T22:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "6"
+          },
+          "status": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "68b497c7-49be-485d-8762-35cf67a60f8b"
+          },
+          "tableId": {
+            "S": "49421929-447a-4fc8-9a58-d68f9b5cf9af"
+          },
+          "customerId": {
+            "S": "a4f8a8ac-5a5c-4d65-ad40-3291d0770112"
+          },
+          "waiterId": {
+            "S": "ba4060db-5714-4524-b79b-25c6d7b5bc36"
+          },
+          "createdByWaiter": {
+            "BOOL": true
+          },
+          "startTime": {
+            "S": "2026-10-24T18:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-24T20:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "3"
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "d0da7100-db48-45a7-8bdc-b0cb018cd1d9"
+          },
+          "tableId": {
+            "S": "3c7dee65-9891-4753-a34c-03c8bfb6bc37"
+          },
+          "customerId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "waiterId": {
+            "S": "ba4060db-5714-4524-b79b-25c6d7b5bc36"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-24T12:30:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-24T14:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "2"
+          },
+          "status": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "7aa9ad39-c5b1-4f24-88a3-5c72aad6ef7d"
+          },
+          "tableId": {
+            "S": "ed728c3e-2ea4-4855-a7a6-ea2562f01543"
+          },
+          "customerId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-25T19:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-25T21:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "4"
+          },
+          "status": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "16986e39-8176-4d89-9dc3-b04dc6e7b73b"
+          },
+          "tableId": {
+            "S": "f2dbfbf3-a4dd-49bb-9b76-5bdef925b7d9"
+          },
+          "customerId": {
+            "S": "ccc2b208-e324-43b7-8a5c-7fa544e3c2e9"
+          },
+          "waiterId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "createdByWaiter": {
+            "BOOL": true
+          },
+          "startTime": {
+            "S": "2026-10-25T13:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-25T14:30:00.000Z"
+          },
+          "guestCount": {
+            "N": "2"
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "7e13b5a7-1980-4678-9714-d317cd1874fa"
+          },
+          "tableId": {
+            "S": "b68d0495-de73-4002-acb8-1a974f35b270"
+          },
+          "customerId": {
+            "S": "4f17b8b2-ec03-41c7-b4f8-5d6315dc06dd"
+          },
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "createdByWaiter": {
+            "BOOL": false
+          },
+          "startTime": {
+            "S": "2026-10-26T18:00:00.000Z"
+          },
+          "endTime": {
+            "S": "2026-10-26T20:00:00.000Z"
+          },
+          "guestCount": {
+            "N": "3"
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -15,7 +15,7 @@ export class DishesService {
   // }
 
   getPopularDishes(limit: number, cursor: string | null): Observable<DishPageResponse> {
-    let params = new HttpParams().set('Limit', limit);
+    let params = new HttpParams();//.set('Limit', limit);
     if (cursor) {
       params = params.set('ExclusiveStartKeyJson', cursor);
     }

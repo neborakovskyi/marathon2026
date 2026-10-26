@@ -1,0 +1,328 @@
+{
+  "Feedback": [
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "comment": {
+            "S": "Excellent service, our waiter was attentive."
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-20T20:05:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "comment": {
+            "S": "Salmon was cooked perfectly."
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-20T20:06:00.000Z"
+          },
+          "type": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "6190941b-6700-4ce6-957e-fb57536e5c7c"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "userId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "comment": {
+            "S": "A bit slow at lunch, but friendly."
+          },
+          "rating": {
+            "N": "4"
+          },
+          "createdAt": {
+            "S": "2026-10-21T13:35:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "89f7e15e-431f-45a4-9d49-ed71ecaa94fc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "userId": {
+            "S": "ccc2b208-e324-43b7-8a5c-7fa544e3c2e9"
+          },
+          "comment": {
+            "S": "Great table near the window."
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-21T21:05:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "89f7e15e-431f-45a4-9d49-ed71ecaa94fc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "userId": {
+            "S": "ccc2b208-e324-43b7-8a5c-7fa544e3c2e9"
+          },
+          "comment": {
+            "S": "Pizza crust was outstanding."
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-21T21:06:00.000Z"
+          },
+          "type": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "eaefdea9-1c3a-4c1b-963b-adc9b7e521a4"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "userId": {
+            "S": "616d948f-8659-460e-8a93-599abe5ab85b"
+          },
+          "comment": {
+            "S": "Quick lunch service."
+          },
+          "rating": {
+            "N": "4"
+          },
+          "createdAt": {
+            "S": "2026-10-22T14:05:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "eaefdea9-1c3a-4c1b-963b-adc9b7e521a4"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "userId": {
+            "S": "616d948f-8659-460e-8a93-599abe5ab85b"
+          },
+          "comment": {
+            "S": "Salmon was a little dry."
+          },
+          "rating": {
+            "N": "3"
+          },
+          "createdAt": {
+            "S": "2026-10-22T14:06:00.000Z"
+          },
+          "type": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "e33ce69e-a50e-4375-a991-4c1de9541bca"
+          },
+          "locationId": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          },
+          "userId": {
+            "NULL": true
+          },
+          "comment": {
+            "NULL": true
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-23T21:35:00.000Z"
+          },
+          "type": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "d0da7100-db48-45a7-8bdc-b0cb018cd1d9"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "comment": {
+            "S": "Smooth brunch seating."
+          },
+          "rating": {
+            "N": "4"
+          },
+          "createdAt": {
+            "S": "2026-10-24T14:05:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "d0da7100-db48-45a7-8bdc-b0cb018cd1d9"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "comment": {
+            "S": "Loved the risotto."
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-24T14:06:00.000Z"
+          },
+          "type": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "7aa9ad39-c5b1-4f24-88a3-5c72aad6ef7d"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "userId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "comment": {
+            "S": "Waiter checked in often."
+          },
+          "rating": {
+            "N": "4"
+          },
+          "createdAt": {
+            "S": "2026-10-25T21:05:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "reservationId": {
+            "S": "45baf726-e5a9-4044-9dc1-78f1ed46b764"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "userId": {
+            "S": "4f17b8b2-ec03-41c7-b4f8-5d6315dc06dd"
+          },
+          "comment": {
+            "S": "Looking forward to the meal."
+          },
+          "rating": {
+            "N": "5"
+          },
+          "createdAt": {
+            "S": "2026-10-22T18:35:00.000Z"
+          },
+          "type": {
+            "N": "0"
+          }
+        }
+      }
+    }
+  ]
+}

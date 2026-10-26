@@ -1,0 +1,724 @@
+{
+  "Dishes": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "15673599-3a6f-44fc-8b76-e64f2f4f2ce3"
+          },
+          "name": {
+            "S": "Grilled Salmon 2"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "18.99"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "320 g"
+          },
+          "description": {
+            "S": "Fresh salmon fillet with lemon butter sauce and seasonal vegetables."
+          },
+          "calories": {
+            "S": "540 kcal"
+          },
+          "proteins": {
+            "S": "34 g"
+          },
+          "fats": {
+            "S": "28 g"
+          },
+          "carbohydrates": {
+            "S": "22 g"
+          },
+          "vitamins": {
+            "S": "Vitamin D, Vitamin B12, Omega-3"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "95f0b087-4128-428f-bd3c-cc3353471e75"
+          },
+          "name": {
+            "S": "Truffle Mushroom Risotto"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "22.5"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "350g"
+          },
+          "description": {
+            "S": "Creamy arborio rice cooked with wild mushrooms and truffle oil."
+          },
+          "calories": {
+            "S": "620 kcal"
+          },
+          "proteins": {
+            "S": "14g"
+          },
+          "fats": {
+            "S": "28g"
+          },
+          "carbohydrates": {
+            "S": "65g"
+          },
+          "vitamins": {
+            "S": "Vitamin D, Iron"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "3a6058ab-493f-4dc7-b2df-3a492be1268d"
+          },
+          "name": {
+            "S": "Green Salad"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "9.99"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "0"
+          },
+          "weight": {
+            "S": "220g"
+          },
+          "description": {
+            "S": "Fresh vegetable salad"
+          },
+          "calories": {
+            "S": "180"
+          },
+          "proteins": {
+            "S": "4g"
+          },
+          "fats": {
+            "S": "8g"
+          },
+          "carbohydrates": {
+            "S": "20g"
+          },
+          "vitamins": {
+            "S": "A, C, K"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "1862cae4-8538-4905-92ca-7c849c701b3c"
+          },
+          "name": {
+            "S": "Margherita Pizza"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "14.99"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "450 g"
+          },
+          "description": {
+            "S": "Classic pizza with tomato sauce, mozzarella, and basil."
+          },
+          "calories": {
+            "S": "980 kcal"
+          },
+          "proteins": {
+            "S": "36 g"
+          },
+          "fats": {
+            "S": "28 g"
+          },
+          "carbohydrates": {
+            "S": "120 g"
+          },
+          "vitamins": {
+            "S": "A, B12, C"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "b370f005-6ae3-4eab-b38d-0ba54558e198"
+          },
+          "name": {
+            "S": "Fresh Avocado Toast"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "12"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "0"
+          },
+          "weight": {
+            "S": "200g"
+          },
+          "description": {
+            "S": "Smashed avocado on sourdough with cherry tomatoes and chili flakes."
+          },
+          "calories": {
+            "S": "320 kcal"
+          },
+          "proteins": {
+            "S": "8g"
+          },
+          "fats": {
+            "S": "18g"
+          },
+          "carbohydrates": {
+            "S": "30g"
+          },
+          "vitamins": {
+            "S": "Vitamin C, Potassium"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "07efc9a8-e9fc-4612-9e80-59fda0dc7fc3"
+          },
+          "name": {
+            "S": "Grilled Salmon"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "18.99"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "320 g"
+          },
+          "description": {
+            "S": "Fresh salmon fillet with lemon butter sauce and seasonal vegetables."
+          },
+          "calories": {
+            "S": "540 kcal"
+          },
+          "proteins": {
+            "S": "34 g"
+          },
+          "fats": {
+            "S": "28 g"
+          },
+          "carbohydrates": {
+            "S": "22 g"
+          },
+          "vitamins": {
+            "S": "Vitamin D, Vitamin B12, Omega-3"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "d2d165f7-4259-4a13-93cd-d20715e7d130"
+          },
+          "name": {
+            "S": "Margherita Pizza"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "14.99"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "450 g"
+          },
+          "description": {
+            "S": "Classic pizza with tomato sauce, mozzarella, and basil."
+          },
+          "calories": {
+            "S": "980 kcal"
+          },
+          "proteins": {
+            "S": "36 g"
+          },
+          "fats": {
+            "S": "28 g"
+          },
+          "carbohydrates": {
+            "S": "120 g"
+          },
+          "vitamins": {
+            "S": "A, B12, C"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "3c8207b9-945a-4a42-a4bc-5dad3eb3d992"
+          },
+          "name": {
+            "S": "Grilled Salmon"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "18.99"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "320 g"
+          },
+          "description": {
+            "S": "Fresh salmon fillet with lemon butter sauce and seasonal vegetables."
+          },
+          "calories": {
+            "S": "540 kcal"
+          },
+          "proteins": {
+            "S": "34 g"
+          },
+          "fats": {
+            "S": "28 g"
+          },
+          "carbohydrates": {
+            "S": "22 g"
+          },
+          "vitamins": {
+            "S": "Vitamin D, Vitamin B12, Omega-3"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "79068272-ff05-4c11-8870-d49fcb43767c"
+          },
+          "name": {
+            "S": "Khachapuri Adjarian"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "16.5"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "380 g"
+          },
+          "description": {
+            "S": "Boat-shaped bread filled with molten cheese, butter, and egg."
+          },
+          "calories": {
+            "S": "890 kcal"
+          },
+          "proteins": {
+            "S": "32 g"
+          },
+          "fats": {
+            "S": "48 g"
+          },
+          "carbohydrates": {
+            "S": "78 g"
+          },
+          "vitamins": {
+            "S": "Calcium, Vitamin A"
+          },
+          "locationId": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "4b83bf47-3c42-44f0-950f-f8af3a11db98"
+          },
+          "name": {
+            "S": "Chocolate Lava Cake"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "8.5"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "2"
+          },
+          "weight": {
+            "S": "160 g"
+          },
+          "description": {
+            "S": "Warm chocolate cake with a molten center and vanilla ice cream."
+          },
+          "calories": {
+            "S": "510 kcal"
+          },
+          "proteins": {
+            "S": "7 g"
+          },
+          "fats": {
+            "S": "28 g"
+          },
+          "carbohydrates": {
+            "S": "58 g"
+          },
+          "vitamins": {
+            "S": "Iron"
+          },
+          "locationId": {
+            "S": "ff74d3af-3a42-4581-94ff-06b7b6d33251"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "28df55d8-835b-4fd4-a21d-339d01207f3f"
+          },
+          "name": {
+            "S": "Lamb Shashlik"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "21"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "300 g"
+          },
+          "description": {
+            "S": "Charcoal-grilled lamb skewers with onion and pomegranate molasses."
+          },
+          "calories": {
+            "S": "640 kcal"
+          },
+          "proteins": {
+            "S": "42 g"
+          },
+          "fats": {
+            "S": "36 g"
+          },
+          "carbohydrates": {
+            "S": "12 g"
+          },
+          "vitamins": {
+            "S": "Iron, Zinc, B12"
+          },
+          "locationId": {
+            "S": "ec2142bb-2d14-489d-abe5-87c7a51488a3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "50e3096a-24e8-45a0-8089-5cd5802497cc"
+          },
+          "name": {
+            "S": "Tomato Soup"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "7.5"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "0"
+          },
+          "weight": {
+            "S": "250 g"
+          },
+          "description": {
+            "S": "Roasted tomato soup with basil oil and croutons."
+          },
+          "calories": {
+            "S": "210 kcal"
+          },
+          "proteins": {
+            "S": "5 g"
+          },
+          "fats": {
+            "S": "8 g"
+          },
+          "carbohydrates": {
+            "S": "28 g"
+          },
+          "vitamins": {
+            "S": "Vitamin C, Lycopene"
+          },
+          "locationId": {
+            "S": "591cc4cb-4843-418a-8024-3384195df46b"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "f2c1f663-de3a-4b20-973c-3896a63f1af7"
+          },
+          "name": {
+            "S": "Tiramisu"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "9"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "2"
+          },
+          "weight": {
+            "S": "180 g"
+          },
+          "description": {
+            "S": "Classic mascarpone dessert with espresso-soaked ladyfingers."
+          },
+          "calories": {
+            "S": "450 kcal"
+          },
+          "proteins": {
+            "S": "8 g"
+          },
+          "fats": {
+            "S": "24 g"
+          },
+          "carbohydrates": {
+            "S": "48 g"
+          },
+          "vitamins": {
+            "S": "Calcium"
+          },
+          "locationId": {
+            "S": "fd0705d3-cd4f-4dfe-8002-0c45da05a6e2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "3143f7ea-5a9a-4c5d-b4c2-9249f67af946"
+          },
+          "name": {
+            "S": "Beef Steak"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "27.5"
+          },
+          "state": {
+            "N": "1"
+          },
+          "dishType": {
+            "N": "1"
+          },
+          "weight": {
+            "S": "280 g"
+          },
+          "description": {
+            "S": "Grilled ribeye with herb butter and roasted potatoes."
+          },
+          "calories": {
+            "S": "780 kcal"
+          },
+          "proteins": {
+            "S": "48 g"
+          },
+          "fats": {
+            "S": "52 g"
+          },
+          "carbohydrates": {
+            "S": "18 g"
+          },
+          "vitamins": {
+            "S": "Iron, B12, Zinc"
+          },
+          "locationId": {
+            "S": "5efd6ff5-d614-4f55-a1cc-e723a8e2d5b4"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "50f39742-80e6-457b-9ce0-8f34cd8278f4"
+          },
+          "name": {
+            "S": "Panna Cotta"
+          },
+          "imageUrl": {
+            "NULL": true
+          },
+          "price": {
+            "N": "8"
+          },
+          "state": {
+            "N": "0"
+          },
+          "dishType": {
+            "N": "2"
+          },
+          "weight": {
+            "S": "150 g"
+          },
+          "description": {
+            "S": "Vanilla panna cotta with berry coulis. Currently on stop."
+          },
+          "calories": {
+            "S": "320 kcal"
+          },
+          "proteins": {
+            "S": "4 g"
+          },
+          "fats": {
+            "S": "18 g"
+          },
+          "carbohydrates": {
+            "S": "32 g"
+          },
+          "vitamins": {
+            "S": "Calcium"
+          },
+          "locationId": {
+            "S": "f897c1a0-e81a-4d85-9c9d-e08901a196a3"
+          }
+        }
+      }
+    }
+  ]
+}

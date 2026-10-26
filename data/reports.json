@@ -1,0 +1,436 @@
+{
+  "Reports": [
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "averageServiceRating": {
+            "N": "4.7"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.8"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "1240.50"
+          },
+          "hoursWorked": {
+            "N": "8.0"
+          },
+          "date": {
+            "S": "2026-10-20T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "12"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "averageServiceRating": {
+            "N": "4.5"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.6"
+          },
+          "minimumCuisineRating": {
+            "N": "3"
+          },
+          "totalRevenue": {
+            "N": "980.00"
+          },
+          "hoursWorked": {
+            "N": "7.5"
+          },
+          "date": {
+            "S": "2026-10-21T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "9"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "averageServiceRating": {
+            "N": "4.6"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.7"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "1105.25"
+          },
+          "hoursWorked": {
+            "N": "8.0"
+          },
+          "date": {
+            "S": "2026-10-26T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "10"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "averageServiceRating": {
+            "N": "4.8"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.9"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "1560.00"
+          },
+          "hoursWorked": {
+            "N": "8.5"
+          },
+          "date": {
+            "S": "2026-10-21T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "14"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "averageServiceRating": {
+            "N": "4.4"
+          },
+          "minimumServiceRating": {
+            "N": "3"
+          },
+          "averageCuisineRating": {
+            "N": "4.5"
+          },
+          "minimumCuisineRating": {
+            "N": "3"
+          },
+          "totalRevenue": {
+            "N": "1320.75"
+          },
+          "hoursWorked": {
+            "N": "8.0"
+          },
+          "date": {
+            "S": "2026-10-22T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "11"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "averageServiceRating": {
+            "N": "4.6"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.7"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "1488.00"
+          },
+          "hoursWorked": {
+            "N": "8.0"
+          },
+          "date": {
+            "S": "2026-10-25T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "13"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "averageServiceRating": {
+            "N": "4.3"
+          },
+          "minimumServiceRating": {
+            "N": "3"
+          },
+          "averageCuisineRating": {
+            "N": "4.1"
+          },
+          "minimumCuisineRating": {
+            "N": "3"
+          },
+          "totalRevenue": {
+            "N": "640.00"
+          },
+          "hoursWorked": {
+            "N": "6.0"
+          },
+          "date": {
+            "S": "2026-10-22T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "6"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "averageServiceRating": {
+            "N": "4.5"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.4"
+          },
+          "minimumCuisineRating": {
+            "N": "3"
+          },
+          "totalRevenue": {
+            "N": "720.50"
+          },
+          "hoursWorked": {
+            "N": "6.5"
+          },
+          "date": {
+            "S": "2026-10-25T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "7"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "locationId": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          },
+          "averageServiceRating": {
+            "N": "4.9"
+          },
+          "minimumServiceRating": {
+            "N": "5"
+          },
+          "averageCuisineRating": {
+            "N": "4.8"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "1880.00"
+          },
+          "hoursWorked": {
+            "N": "9.0"
+          },
+          "date": {
+            "S": "2026-10-23T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "16"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "6e1b901f-d2d7-4522-8b66-7f81ec12bdda"
+          },
+          "locationId": {
+            "S": "ff74d3af-3a42-4581-94ff-06b7b6d33251"
+          },
+          "averageServiceRating": {
+            "N": "4.2"
+          },
+          "minimumServiceRating": {
+            "N": "3"
+          },
+          "averageCuisineRating": {
+            "N": "4.0"
+          },
+          "minimumCuisineRating": {
+            "N": "3"
+          },
+          "totalRevenue": {
+            "N": "910.00"
+          },
+          "hoursWorked": {
+            "N": "7.0"
+          },
+          "date": {
+            "S": "2026-10-23T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "8"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "ba4060db-5714-4524-b79b-25c6d7b5bc36"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "averageServiceRating": {
+            "N": "4.6"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.7"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "870.00"
+          },
+          "hoursWorked": {
+            "N": "7.5"
+          },
+          "date": {
+            "S": "2026-10-24T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "8"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "waiterId": {
+            "S": "f4eca63e-e264-4e46-970f-2821af2c0268"
+          },
+          "locationId": {
+            "S": "ec2142bb-2d14-489d-abe5-87c7a51488a3"
+          },
+          "averageServiceRating": {
+            "N": "4.4"
+          },
+          "minimumServiceRating": {
+            "N": "4"
+          },
+          "averageCuisineRating": {
+            "N": "4.5"
+          },
+          "minimumCuisineRating": {
+            "N": "4"
+          },
+          "totalRevenue": {
+            "N": "760.25"
+          },
+          "hoursWorked": {
+            "N": "6.0"
+          },
+          "date": {
+            "S": "2026-10-24T00:00:00.000Z"
+          },
+          "ordersProcessed": {
+            "N": "7"
+          }
+        }
+      }
+    }
+  ]
+}

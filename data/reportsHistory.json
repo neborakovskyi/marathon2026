@@ -1,0 +1,598 @@
+{
+  "ReportsHistory": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "e5d76fa8-89f7-44c4-863e-0bda3cd4abc6"
+          },
+          "reportType": {
+            "N": "0"
+          },
+          "startDate": {
+            "S": "2026-10-13"
+          },
+          "endDate": {
+            "S": "2026-10-19"
+          },
+          "userId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "locationName": {
+            "S": "9 Abashidze Street"
+          },
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "waiterName": {
+            "S": "Nino K."
+          },
+          "waiterEmail": {
+            "S": "nino.k@example.com"
+          },
+          "workingHours": {
+            "N": "40.5"
+          },
+          "totalOrders": {
+            "N": "52"
+          },
+          "avgServiceFeedback": {
+            "N": "4.6"
+          },
+          "minServiceFeedback": {
+            "N": "4"
+          },
+          "deltaAvgServiceFeedback": {
+            "N": "0.2"
+          },
+          "deltaTotalOrders": {
+            "N": "4"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "68b5f9f5-a2c9-417e-a12c-f97078d16321"
+          },
+          "reportType": {
+            "N": "0"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "locationName": {
+            "S": "9 Abashidze Street"
+          },
+          "waiterId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "waiterName": {
+            "S": "Nino K."
+          },
+          "waiterEmail": {
+            "S": "nino.k@example.com"
+          },
+          "workingHours": {
+            "N": "23.5"
+          },
+          "totalOrders": {
+            "N": "31"
+          },
+          "avgServiceFeedback": {
+            "N": "4.6"
+          },
+          "minServiceFeedback": {
+            "N": "4"
+          },
+          "deltaAvgServiceFeedback": {
+            "N": "0.0"
+          },
+          "deltaTotalOrders": {
+            "N": "-21"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "aa38d9e0-601e-47c7-8524-c2b0e1876934"
+          },
+          "reportType": {
+            "N": "0"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "locationName": {
+            "S": "14 Baratashvili Street"
+          },
+          "waiterId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "waiterName": {
+            "S": "Giorgi M."
+          },
+          "waiterEmail": {
+            "S": "giorgi.m@example.com"
+          },
+          "workingHours": {
+            "N": "24.5"
+          },
+          "totalOrders": {
+            "N": "38"
+          },
+          "avgServiceFeedback": {
+            "N": "4.6"
+          },
+          "minServiceFeedback": {
+            "N": "3"
+          },
+          "deltaAvgServiceFeedback": {
+            "N": "0.1"
+          },
+          "deltaTotalOrders": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "8bbd528e-cd50-4997-a199-eba30ec0884d"
+          },
+          "reportType": {
+            "N": "0"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "locationName": {
+            "S": "48 Rustaveli Avenue"
+          },
+          "waiterId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "waiterName": {
+            "S": "Tamar B."
+          },
+          "waiterEmail": {
+            "S": "tamar.b@example.com"
+          },
+          "workingHours": {
+            "N": "12.5"
+          },
+          "totalOrders": {
+            "N": "13"
+          },
+          "avgServiceFeedback": {
+            "N": "4.4"
+          },
+          "minServiceFeedback": {
+            "N": "3"
+          },
+          "deltaAvgServiceFeedback": {
+            "N": "0.2"
+          },
+          "deltaTotalOrders": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "d20562e5-63bb-4514-bed8-8da06d1df754"
+          },
+          "reportType": {
+            "N": "0"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "locationId": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          },
+          "locationName": {
+            "S": "22 Chavchavadze Avenue"
+          },
+          "waiterId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "waiterName": {
+            "S": "Levan D."
+          },
+          "waiterEmail": {
+            "S": "levan.d@example.com"
+          },
+          "workingHours": {
+            "N": "16.0"
+          },
+          "totalOrders": {
+            "N": "24"
+          },
+          "avgServiceFeedback": {
+            "N": "4.9"
+          },
+          "minServiceFeedback": {
+            "N": "5"
+          },
+          "deltaAvgServiceFeedback": {
+            "N": "0.3"
+          },
+          "deltaTotalOrders": {
+            "N": "5"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "7df87aa5-591a-4a5f-bb57-6e1285c93cd0"
+          },
+          "reportType": {
+            "N": "0"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "ba4060db-5714-4524-b79b-25c6d7b5bc36"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "locationName": {
+            "S": "9 Abashidze Street"
+          },
+          "waiterId": {
+            "S": "ba4060db-5714-4524-b79b-25c6d7b5bc36"
+          },
+          "waiterName": {
+            "S": "Ana S."
+          },
+          "waiterEmail": {
+            "S": "ana.s@example.com"
+          },
+          "workingHours": {
+            "N": "13.5"
+          },
+          "totalOrders": {
+            "N": "15"
+          },
+          "avgServiceFeedback": {
+            "N": "4.6"
+          },
+          "minServiceFeedback": {
+            "N": "4"
+          },
+          "deltaAvgServiceFeedback": {
+            "N": "0.1"
+          },
+          "deltaTotalOrders": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "67bc0c38-7308-496b-9be6-0b0f70d2a7b0"
+          },
+          "reportType": {
+            "N": "1"
+          },
+          "startDate": {
+            "S": "2026-10-13"
+          },
+          "endDate": {
+            "S": "2026-10-19"
+          },
+          "userId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "locationName": {
+            "S": "9 Abashidze Street"
+          },
+          "totalOrders": {
+            "N": "48"
+          },
+          "avgCuisineFeedback": {
+            "N": "4.5"
+          },
+          "minCuisineFeedback": {
+            "N": "3"
+          },
+          "revenue": {
+            "N": "4120.00"
+          },
+          "deltaAvgCuisineFeedback": {
+            "N": "0.1"
+          },
+          "deltaRevenue": {
+            "N": "210.00"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "ca53c9bb-1873-45ad-b938-6dc6d8a2bc3f"
+          },
+          "reportType": {
+            "N": "1"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "locationId": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "locationName": {
+            "S": "9 Abashidze Street"
+          },
+          "totalOrders": {
+            "N": "31"
+          },
+          "avgCuisineFeedback": {
+            "N": "4.7"
+          },
+          "minCuisineFeedback": {
+            "N": "4"
+          },
+          "revenue": {
+            "N": "3325.75"
+          },
+          "deltaAvgCuisineFeedback": {
+            "N": "0.2"
+          },
+          "deltaRevenue": {
+            "N": "-794.25"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "8bfc8eaf-2b9e-4851-addf-7afc0f172f81"
+          },
+          "reportType": {
+            "N": "1"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "ab50bb00-6e53-480d-8157-d9c503a845dc"
+          },
+          "locationId": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "locationName": {
+            "S": "14 Baratashvili Street"
+          },
+          "totalOrders": {
+            "N": "38"
+          },
+          "avgCuisineFeedback": {
+            "N": "4.7"
+          },
+          "minCuisineFeedback": {
+            "N": "3"
+          },
+          "revenue": {
+            "N": "4368.75"
+          },
+          "deltaAvgCuisineFeedback": {
+            "N": "0.0"
+          },
+          "deltaRevenue": {
+            "N": "125.50"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "68541632-d8f5-4dec-b3cd-f7926646f970"
+          },
+          "reportType": {
+            "N": "1"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "ac9cb6f6-3376-45a5-83a0-ae24ee013198"
+          },
+          "locationId": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "locationName": {
+            "S": "48 Rustaveli Avenue"
+          },
+          "totalOrders": {
+            "N": "13"
+          },
+          "avgCuisineFeedback": {
+            "N": "4.25"
+          },
+          "minCuisineFeedback": {
+            "N": "3"
+          },
+          "revenue": {
+            "N": "1360.50"
+          },
+          "deltaAvgCuisineFeedback": {
+            "N": "-0.1"
+          },
+          "deltaRevenue": {
+            "N": "80.00"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "68feb10e-1d4c-4cea-9a35-b8d40bb696db"
+          },
+          "reportType": {
+            "N": "1"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "locationId": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          },
+          "locationName": {
+            "S": "22 Chavchavadze Avenue"
+          },
+          "totalOrders": {
+            "N": "16"
+          },
+          "avgCuisineFeedback": {
+            "N": "4.8"
+          },
+          "minCuisineFeedback": {
+            "N": "4"
+          },
+          "revenue": {
+            "N": "1880.00"
+          },
+          "deltaAvgCuisineFeedback": {
+            "N": "0.4"
+          },
+          "deltaRevenue": {
+            "N": "310.00"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "724ce06d-569c-4f9f-a0fd-56f3e9d9372a"
+          },
+          "reportType": {
+            "N": "1"
+          },
+          "startDate": {
+            "S": "2026-10-20"
+          },
+          "endDate": {
+            "S": "2026-10-26"
+          },
+          "userId": {
+            "S": "f4eca63e-e264-4e46-970f-2821af2c0268"
+          },
+          "locationId": {
+            "S": "ec2142bb-2d14-489d-abe5-87c7a51488a3"
+          },
+          "locationName": {
+            "S": "17 Aghmashenebeli Avenue"
+          },
+          "totalOrders": {
+            "N": "7"
+          },
+          "avgCuisineFeedback": {
+            "N": "4.5"
+          },
+          "minCuisineFeedback": {
+            "N": "4"
+          },
+          "revenue": {
+            "N": "760.25"
+          },
+          "deltaAvgCuisineFeedback": {
+            "N": "0.2"
+          },
+          "deltaRevenue": {
+            "N": "40.00"
+          }
+        }
+      }
+    }
+  ]
+}

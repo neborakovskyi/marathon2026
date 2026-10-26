@@ -1,0 +1,410 @@
+{
+  "Locations": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "7d598da3-0887-4a04-a3a1-fe26d8a4a4f2"
+          },
+          "address": {
+            "S": "9 Abashidze Street"
+          },
+          "description": {
+            "S": "Set in an upscale, trendy district, this chic venue specializes in modern fusion cuisine, featuring a minimalist interior and a vibrant evening atmosphere."
+          },
+          "totalCapacity": {
+            "N": "2"
+          },
+          "averageOccupancy": {
+            "S": "90%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/rustaveli-avenue-48.jpg"
+          },
+          "rating": {
+            "N": "4.6"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "15673599-3a6f-44fc-8b76-e64f2f4f2ce3"
+              },
+              {
+                "S": "95f0b087-4128-428f-bd3c-cc3353471e75"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "2de08053-9bec-4662-bf56-2ccb70aeeb78"
+          },
+          "address": {
+            "S": "14 Baratashvili Street"
+          },
+          "description": {
+            "S": "Nestled near the historic city walls, this cozy spot blends traditional brickwork with modern design, offering a warm dining experience just steps from the old town."
+          },
+          "totalCapacity": {
+            "N": "6"
+          },
+          "averageOccupancy": {
+            "S": "70%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/baratashvili-street-14.jpg"
+          },
+          "rating": {
+            "N": "4.4"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "1862cae4-8538-4905-92ca-7c849c701b3c"
+              },
+              {
+                "S": "07efc9a8-e9fc-4612-9e80-59fda0dc7fc3"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "98c4acc4-ca8b-4416-be9d-ef40f1e73e0a"
+          },
+          "address": {
+            "S": "48 Rustaveli Avenue"
+          },
+          "description": {
+            "S": "Located on the city's bustling main cultural artery, this grand establishment features classic high ceilings and a wide outdoor terrace perfect for people-watching."
+          },
+          "totalCapacity": {
+            "N": "2"
+          },
+          "averageOccupancy": {
+            "S": "85%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/abashidze-street-9.jpg"
+          },
+          "rating": {
+            "N": "4.5"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "d2d165f7-4259-4a13-93cd-d20715e7d130"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "78b2074d-47ae-4b3c-82ae-75474298731e"
+          },
+          "address": {
+            "S": "22 Chavchavadze Avenue"
+          },
+          "description": {
+            "S": "A neighborhood bistro with an open kitchen and a focus on Georgian classics."
+          },
+          "totalCapacity": {
+            "N": "4"
+          },
+          "averageOccupancy": {
+            "S": "75%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/rustaveli-avenue-48.jpg"
+          },
+          "rating": {
+            "N": "4.3"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "79068272-ff05-4c11-8870-d49fcb43767c"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "ff74d3af-3a42-4581-94ff-06b7b6d33251"
+          },
+          "address": {
+            "S": "5 Marjanishvili Street"
+          },
+          "description": {
+            "S": "Industrial-chic dining room known for desserts and late-night service."
+          },
+          "totalCapacity": {
+            "N": "8"
+          },
+          "averageOccupancy": {
+            "S": "80%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/baratashvili-street-14.jpg"
+          },
+          "rating": {
+            "N": "4.2"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "4b83bf47-3c42-44f0-950f-f8af3a11db98"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "ec2142bb-2d14-489d-abe5-87c7a51488a3"
+          },
+          "address": {
+            "S": "17 Aghmashenebeli Avenue"
+          },
+          "description": {
+            "S": "Lively street-side terrace serving grilled meats and seasonal salads."
+          },
+          "totalCapacity": {
+            "N": "4"
+          },
+          "averageOccupancy": {
+            "S": "65%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/abashidze-street-9.jpg"
+          },
+          "rating": {
+            "N": "4.1"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "28df55d8-835b-4fd4-a21d-339d01207f3f"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "591cc4cb-4843-418a-8024-3384195df46b"
+          },
+          "address": {
+            "S": "3 Freedom Square"
+          },
+          "description": {
+            "S": "Compact lunch spot popular with office workers for soups and salads."
+          },
+          "totalCapacity": {
+            "N": "2"
+          },
+          "averageOccupancy": {
+            "S": "88%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/rustaveli-avenue-48.jpg"
+          },
+          "rating": {
+            "N": "4.0"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "50e3096a-24e8-45a0-8089-5cd5802497cc"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "fd0705d3-cd4f-4dfe-8002-0c45da05a6e2"
+          },
+          "address": {
+            "S": "11 Pekini Avenue"
+          },
+          "description": {
+            "S": "Quiet residential restaurant with a pastry counter and espresso bar."
+          },
+          "totalCapacity": {
+            "N": "6"
+          },
+          "averageOccupancy": {
+            "S": "60%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/baratashvili-street-14.jpg"
+          },
+          "rating": {
+            "N": "4.4"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "f2c1f663-de3a-4b20-973c-3896a63f1af7"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "5efd6ff5-d614-4f55-a1cc-e723a8e2d5b4"
+          },
+          "address": {
+            "S": "8 Dadiani Street"
+          },
+          "description": {
+            "S": "Steakhouse with a wine cellar and private dining rooms."
+          },
+          "totalCapacity": {
+            "N": "4"
+          },
+          "averageOccupancy": {
+            "S": "72%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/abashidze-street-9.jpg"
+          },
+          "rating": {
+            "N": "4.7"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "3143f7ea-5a9a-4c5d-b4c2-9249f67af946"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "f897c1a0-e81a-4d85-9c9d-e08901a196a3"
+          },
+          "address": {
+            "S": "26 Kazbegi Avenue"
+          },
+          "description": {
+            "S": "Modern cafe with a short tasting menu and weekend brunch."
+          },
+          "totalCapacity": {
+            "N": "4"
+          },
+          "averageOccupancy": {
+            "S": "55%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/rustaveli-avenue-48.jpg"
+          },
+          "rating": {
+            "N": "3.9"
+          },
+          "specialtyDishIds": {
+            "L": [
+              {
+                "S": "50f39742-80e6-457b-9ce0-8f34cd8278f4"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "fb8923ef-564a-4855-84db-1ebdd5d856d1"
+          },
+          "address": {
+            "S": "4 Leselidze Street"
+          },
+          "description": {
+            "S": "Old-town wine bar pairing small plates with natural wines."
+          },
+          "totalCapacity": {
+            "N": "3"
+          },
+          "averageOccupancy": {
+            "S": "68%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/baratashvili-street-14.jpg"
+          },
+          "rating": {
+            "N": "4.3"
+          },
+          "specialtyDishIds": {
+            "NULL": true
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "3e075f2a-5b65-4809-aca8-e1b331e80ea5"
+          },
+          "address": {
+            "S": "19 Tsereteli Avenue"
+          },
+          "description": {
+            "S": "Family-friendly location with a large patio and kids' menu."
+          },
+          "totalCapacity": {
+            "N": "10"
+          },
+          "averageOccupancy": {
+            "S": "50%"
+          },
+          "imageUrl": {
+            "S": "https://restaurant-backend-dev-images-537568690970.s3.us-west-2.amazonaws.com/assets/img/locations/abashidze-street-9.jpg"
+          },
+          "rating": {
+            "N": "4.1"
+          },
+          "specialtyDishIds": {
+            "NULL": true
+          }
+        }
+      }
+    }
+  ]
+}

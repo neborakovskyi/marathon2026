@@ -1,0 +1,328 @@
+{
+  "Notifications": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "8c395176-eab0-481d-991e-01fb8c681ee6"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "message": {
+            "S": "Your reservation is confirmed."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-19T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "341fa159-ceb5-4363-8429-c2e7e58b8c02"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "message": {
+            "S": "Thanks for dining with us. Please leave feedback."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+          },
+          "isRead": {
+            "BOOL": true
+          },
+          "createdAt": {
+            "S": "2026-10-20T20:10:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "bb866400-9cf5-49c0-b3eb-be69880917b9"
+          },
+          "userId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "message": {
+            "S": "Your reservation starts in one hour."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "6190941b-6700-4ce6-957e-fb57536e5c7c"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-21T11:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "14bf3e38-025b-40ea-bfe8-8fbd341f1993"
+          },
+          "userId": {
+            "S": "c470f7b9-b9d1-4f0f-b2bb-7ba34480567e"
+          },
+          "message": {
+            "S": "New walk-in reservation assigned to you."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "6190941b-6700-4ce6-957e-fb57536e5c7c"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-21T11:55:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "181187ed-fdb8-4b4c-bf15-ab1da36eda41"
+          },
+          "userId": {
+            "S": "ccc2b208-e324-43b7-8a5c-7fa544e3c2e9"
+          },
+          "message": {
+            "S": "Your reservation is confirmed."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "89f7e15e-431f-45a4-9d49-ed71ecaa94fc"
+          },
+          "isRead": {
+            "BOOL": true
+          },
+          "createdAt": {
+            "S": "2026-10-20T09:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "b05d023b-9290-4e95-81d2-dbad43422df8"
+          },
+          "userId": {
+            "S": "4f17b8b2-ec03-41c7-b4f8-5d6315dc06dd"
+          },
+          "message": {
+            "S": "Your reservation is booked."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "45baf726-e5a9-4044-9dc1-78f1ed46b764"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-21T16:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "94972b7c-a6e2-4758-a358-de72c38a45e2"
+          },
+          "userId": {
+            "S": "616d948f-8659-460e-8a93-599abe5ab85b"
+          },
+          "message": {
+            "S": "Please rate your visit."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "eaefdea9-1c3a-4c1b-963b-adc9b7e521a4"
+          },
+          "isRead": {
+            "BOOL": true
+          },
+          "createdAt": {
+            "S": "2026-10-22T14:10:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "8039000f-172c-47f1-b187-24b1e86a5eba"
+          },
+          "userId": {
+            "S": "26e00714-d271-4989-97a5-8ae492a1bac9"
+          },
+          "message": {
+            "S": "Your table is ready."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "e33ce69e-a50e-4375-a991-4c1de9541bca"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-23T18:50:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "10a617b0-f36b-41b4-a8c3-d427584b71ac"
+          },
+          "userId": {
+            "S": "668689fe-ce8d-4ddb-9bde-cc8db0f1ac97"
+          },
+          "message": {
+            "S": "Reservation cancelled."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "720f669a-0b08-4349-8f62-68caf053371a"
+          },
+          "isRead": {
+            "BOOL": true
+          },
+          "createdAt": {
+            "S": "2026-10-23T12:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "05d0dcd3-f6aa-48bf-84e0-badba097a132"
+          },
+          "userId": {
+            "S": "c0eb486b-f2cb-4211-8520-3e834032b6c6"
+          },
+          "message": {
+            "S": "A reservation at your location was cancelled."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "720f669a-0b08-4349-8f62-68caf053371a"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-23T12:01:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "5a88bd1e-7fa6-4695-a307-3ad88fba7f99"
+          },
+          "userId": {
+            "S": "a4f8a8ac-5a5c-4d65-ad40-3291d0770112"
+          },
+          "message": {
+            "S": "Waiter created a reservation for you."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "68b497c7-49be-485d-8762-35cf67a60f8b"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "createdAt": {
+            "S": "2026-10-24T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {
+            "S": "21fe772b-30df-4785-8e5c-fd1424af2e63"
+          },
+          "userId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "message": {
+            "S": "Your brunch reservation is complete."
+          },
+          "orderId": {
+            "NULL": true
+          },
+          "reservationId": {
+            "S": "d0da7100-db48-45a7-8bdc-b0cb018cd1d9"
+          },
+          "isRead": {
+            "BOOL": true
+          },
+          "createdAt": {
+            "S": "2026-10-24T14:10:00.000Z"
+          }
+        }
+      }
+    }
+  ]
+}
