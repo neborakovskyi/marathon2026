@@ -29,11 +29,11 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "./frontend/restaurant-frontend-app" # App source code path
-          api_location: "https://cyugx99810.execute-api.us-west-2.amazonaws.com/develop" # Api source code path - optional
+          api_location: "https://22kgs9smy0.execute-api.us-west-2.amazonaws.com/develop" # Api source code path - optional
           output_location: "dist/restaurant-frontend-app/browser" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
         env:
-          BACKEND_URL: "https://cyugx99810.execute-api.us-west-2.amazonaws.com/develop"
+          BACKEND_URL: "https://22kgs9smy0.execute-api.us-west-2.amazonaws.com/develop"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

@@ -38,6 +38,8 @@ import { DishCardComponent } from '@app/shared/custom-components/dish-card/dish-
 export class MainPageComponent implements OnInit {
   public dishes: DishListResponse[] = []; //remove
   public locations: LocationResponse[] = [];
+  public loadingDishes = true;
+  public loadingLocation = true;
 
   public selectedDish: DishListResponse | null = null;
 
@@ -48,7 +50,7 @@ export class MainPageComponent implements OnInit {
   public anonymousFeedbackToken = '';
 
   private readonly locationsService = inject(LocationsService);
-  private readonly dishesService = inject (DishesService);
+  private readonly dishesService = inject(DishesService);
   readonly dishesDataSource = new DishesDataSource(this.dishesService);
   private readonly route = inject(ActivatedRoute);
   private readonly reservationsService = inject(ReservationService)
@@ -88,28 +90,44 @@ export class MainPageComponent implements OnInit {
     });
   }
 
-  public openModal(dish: DishListResponse):void {
+  public openModal(dish: DishListResponse): void {
     this.selectedDish = dish;
   }
 
-  public closeModal():void {
+  public closeModal(): void {
     this.selectedDish = null;
   }
 
   public loadPopularDishes(): void {
-
-    this.dishesService.getPopularDishes(1,null)
-      .subscribe((data) => {
-      this.dishes = data.items.slice(0, 4).map((dish) => ({
-        ...dish,
-        imageUrl: dish.imageUrl || 'assets/img/dish.png',
-        name: dish.name || 'Unknown Dish',
-        price: dish.price || 0,
-        weight: dish.weight || 'N/A',
-      }));
+    this.loadingDishes = true;
+    this.dishesService.getPopularDishes(1, null).subscribe({
+      next: (data) => {
+        this.dishes = data.items.slice(0, 4).map((dish) => ({
+          ...dish,
+          imageUrl: dish.imageUrl || 'assets/img/dish.png',
+          name: dish.name || 'Unknown Dish',
+          price: dish.price || 0,
+          weight: dish.weight || 'N/A',
+        }));
+        this.loadingDishes = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loadingDishes = false;
+      }
     });
+
+    //   .subscribe((data) => {
+    //   this.dishes = data.items.slice(0, 4).map((dish) => ({
+    //     ...dish,
+    //     imageUrl: dish.imageUrl || 'assets/img/dish.png',
+    //     name: dish.name || 'Unknown Dish',
+    //     price: dish.price || 0,
+    //     weight: dish.weight || 'N/A',
+    //   }));
+    // });
   }
-// virtual scroll
+  // virtual scroll
   // loadPopularDishes(): void {
   //   this.dishesDataSource.loadNextPage();
   // }
@@ -125,14 +143,22 @@ export class MainPageComponent implements OnInit {
   // }
 
   loadLocations(): void {
-    this.locationsService.getLocations().subscribe((data) => {
-      this.locations = data.slice(0, 3).map((location) => ({
-        ...location,
-        imageUrl: location.imageUrl || 'assets/img/locations/baratashvili-street-14.jpg',
-        address: location.address || 'Unknown Address',
-        totalCapacity: location.totalCapacity || 0,
-        averageOccupancy: location.averageOccupancy || 'N/A',
-      }));
+    this.loadingLocation = true;
+    this.locationsService.getLocations().subscribe({
+      next: (data) => {
+        this.locations = data.slice(0, 3).map((location) => ({
+          ...location,
+          imageUrl: location.imageUrl || 'assets/img/locations/baratashvili-street-14.jpg',
+          address: location.address || 'Unknown Address',
+          totalCapacity: location.totalCapacity || 0,
+          averageOccupancy: location.averageOccupancy || 'N/A',
+        }));
+        this.loadingLocation = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loadingLocation = false;
+      }
     });
   }
 

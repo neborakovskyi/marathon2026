@@ -67,3 +67,9 @@
     transform: rotate(360deg);
   }
 }
+
+.empty-message{
+  color: color.$neutral-900;
+  font-size: 1.125rem;
+  text-align: center;
+}

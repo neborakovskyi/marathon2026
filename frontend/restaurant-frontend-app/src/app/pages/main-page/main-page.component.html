@@ -22,13 +22,15 @@
   <div class="popular-dishes-section">
     <h2 class="section-heading">Most Popular Dishes</h2>
 
-    @if (dishes.length === 0) {
-      <div class="common-loading" role="status" aria-live="polite">
-        <span class="common-spinner" aria-hidden="true"></span>
-        <p>Please wait while we load Most Popular Dishes.</p>
-      </div>
+    @if (loadingDishes) {
+    <div class="common-loading" role="status" aria-live="polite">
+      <span class="common-spinner" aria-hidden="true"></span>
+      <p>Please wait while we load Most Popular Dishes.</p>
+    </div>
+    } @else if (dishes.length === 0) {
+      <p class="empty-message">The Popular Dishes are empty</p>
     } @else {
-      <!-- <div class="dish-cards">
+    <!-- <div class="dish-cards">
         @for (dish of dishes; track dish) { -->
     <!-- <cdk-virtual-scroll-viewport class="dish-viewport"
                                                         itemSize="310"
@@ -38,8 +40,8 @@
                                                         aria-label="Popular dishes">
 
       <a *cdkVirtualFor="let dish of dishesDataSource; trackBy: trackDish" routerLink="/dish/{{ dish.id }}" routerLinkActive="router-link-active" class="dish-card"> -->
-        <!-- ***** -->
-      <!-- <a routerLink="/dish/{{ dish.id }}" routerLinkActive="router-link-active" class="dish-card">
+    <!-- ***** -->
+    <!-- <a routerLink="/dish/{{ dish.id }}" routerLinkActive="router-link-active" class="dish-card">
         <img [src]="dish.imageUrl" alt="{{ dish.name }}" class="dish-image" />
         <div class="dish-info">
           <div class="dish-name">{{ dish.name }}</div>
@@ -52,19 +54,15 @@
 
 
     <!-- </cdk-virtual-scroll-viewport> -->
-      <!-- }
+    <!-- }
       </div> -->
-      <div class="dish-cards">
-          @for (dish of dishes; track dish) {
-            <app-dish-card
-              [dish]="dish"
-              (dishClicked)="openModal(dish)"
-              maxWidth="288px"
-            ></app-dish-card>
-          }
-        </div>
+    <div class="dish-cards">
+      @for (dish of dishes; track dish) {
+      <app-dish-card [dish]="dish" (dishClicked)="openModal(dish)" maxWidth="288px"></app-dish-card>
       }
-   <!-- @if (dishesDataSource.isLoading | async) {
+    </div>
+    }
+    <!-- @if (dishesDataSource.isLoading | async) {
       <div class="dish-loading" role="status" aria-live="polite">
         <span class="dish-spinner" aria-hidden="true"></span>
         <span>Loading dishes…</span>
@@ -81,35 +79,34 @@
   <div class="locations-section">
     <h2 class="section-heading">Locations</h2>
 
-    @if (locations.length === 0) {
-      <div class="common-loading" role="status" aria-live="polite">
-        <span class="common-spinner" aria-hidden="true"></span>
-        <p>Please wait while we load Locations.</p>
-      </div>
+    @if (loadingLocation) {
+    <div class="common-loading" role="status" aria-live="polite">
+      <span class="common-spinner" aria-hidden="true"></span>
+      <p>Please wait while we load Locations.</p>
+    </div>
+    } @else if (locations.length === 0) {
+      <p class="empty-message">The Locations are empty</p>
     } @else {
-      <div class="location-cards">
-        @for (location of locations; track location) {
-          <app-location-card [location]="location" maxWidth="488px"></app-location-card>
-        }
-      </div>
+    <div class="location-cards">
+      @for (location of locations; track location) {
+      <app-location-card [location]="location" maxWidth="488px"></app-location-card>
+      }
+    </div>
     }
   </div>
 </section>
 <!-- </div> -->
 
 @if (showFeedbackModal) {
-  <app-feedback-window
-    [selectedReservation]="selectedReservationAsReservation || null"
-    [anonymousToken]="anonymousFeedbackToken"
-    [feedbackForUpdate]="feedbackForUpdate"
-    (closedFeedback)="showFeedbackModal = false"
-  ></app-feedback-window>
+<app-feedback-window [selectedReservation]="selectedReservationAsReservation || null"
+  [anonymousToken]="anonymousFeedbackToken" [feedbackForUpdate]="feedbackForUpdate"
+  (closedFeedback)="showFeedbackModal = false"></app-feedback-window>
 }
 
 @if (showLoginModal()) {
-  <app-login-modal (closed)="closeLogin()" />
+<app-login-modal (closed)="closeLogin()" />
 }
 
 @if (selectedDish) {
-    <app-dish-modal [dish]="selectedDish" (closed)="closeModal()"></app-dish-modal>
-  }
+<app-dish-modal [dish]="selectedDish" (closed)="closeModal()"></app-dish-modal>
+}
