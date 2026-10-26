@@ -133,6 +133,7 @@ public static class RouteRegistry
             // Locations
             new RouteHandler(new Route(HttpMethods.POST, "/locations"), ActivatorUtilities.CreateInstance<CreateLocationHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.GET, "/locations"), ActivatorUtilities.CreateInstance<GetLocationsHandler>(provider)),
+            new RouteHandler(new Route(HttpMethods.GET, "/locations/{locationId}/waiters"), ActivatorUtilities.CreateInstance<GetWaitersByLocationIdHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.GET, "/locations/{id}/dishes"), ActivatorUtilities.CreateInstance<GetDishesByLocationIdHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.GET, "/locations/{id}"), ActivatorUtilities.CreateInstance<GetLocationByIdHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.PUT, "/locations/{id}"), ActivatorUtilities.CreateInstance<EditLocationHandler>(provider)),

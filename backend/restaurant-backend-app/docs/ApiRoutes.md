@@ -236,6 +236,23 @@ Response: 200 OK
 
 ## Waiters
 
+### `GET` /locations/{locationId}/waiters
+Response: `200 OK`
+```json
+[
+  {
+    "userId": "user1",
+    "locationId": "location1"
+  },
+  {
+    "userId": "user2",
+    "locationId": "location1"
+  }
+]
+```
+
+Returns an empty array when no waiters are assigned to the location.
+
 ### `POST` /waiters
 Request body:
 ```json
