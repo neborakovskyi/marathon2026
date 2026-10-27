@@ -3,9 +3,9 @@
 Booking tables, reservations and pre-orders for three roles: **client**, **waiter**, **admin**.
 Standalone components, SCSS, Karma + Jasmine. Deploy target: S3 static hosting.
 
-This file is the single source of truth for frontend work. Backend: `backend/restaurant-backend-app/CLAUDE.md`. Repo map: `AGENTS.md`.
+This file is the single source of truth for frontend work. The backend has no `CLAUDE.md` yet — documenting it is a separate task.
 
-**The backend cannot be run locally.** No Docker, no LocalStack, no `dotnet run` host. Frontend work runs against an already-deployed API Gateway URL; any backend change requires a real `syndicate deploy` by whoever owns that task. When a frontend model disagrees with an API response, `backend/restaurant-backend-app/docs/ApiRoutes.md` and `dnapp/lambdas/api-handler/Routing/RouteRegistry.cs` win over the frontend interface. Current shared-account region is `us-west-2` (see `environment.development.ts` and Syndicate aliases).
+**The backend cannot be run locally.** No Docker, no LocalStack, no `dotnet run` host. Frontend work runs against an already-deployed API Gateway URL; any backend change requires a real `syndicate deploy` by whoever owns that task. When a frontend model disagrees with an API response, `backend/restaurant-backend-app/docs/ApiRoutes.md` and `dnapp/lambdas/api-handler/Routing/RouteRegistry.cs` win over the frontend interface. Region note: the backend config deploys to `us-west-1` while the frontend dev environment points at an API in `eu-west-1`.
 
 ---
 

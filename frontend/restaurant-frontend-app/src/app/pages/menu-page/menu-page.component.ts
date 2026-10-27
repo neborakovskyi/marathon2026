@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, inject} from '@angular/core';
 import { DishCardComponent } from '@app/shared/custom-components/dish-card/dish-card.component';
 import { DishesService } from '@app/services/dishes/dishes.service';
 import { DishListResponse } from '@app/models/dishes/dish-list-response.model';
@@ -9,7 +9,7 @@ import { DishType } from '@app/models/enums/dish-type.model';
 import { DishSortingLabels, DishTypeLabels } from '@app/shared/mappers/dish-enum.mapper';
 import { DishModalComponent } from '@app/components/dish-modal/dish-modal.component';
 import { PreOrdersService } from '@app/services/pre-orders/pre-orders.service';
-import { ToastService } from '@app/services/toast/toast.service';
+import {ToastService} from '@app/services/toast/toast.service';
 
 @Component({
   selector: 'app-menu-page',
@@ -27,28 +27,26 @@ import { ToastService } from '@app/services/toast/toast.service';
 })
 export class MenuPageComponent implements OnInit {
   private toast = inject(ToastService);
-  public dishes: DishListResponse[] = [];
-  public filteredDishes: DishListResponse[] = [];
-  public loadingDishes = true;
+  dishes: DishListResponse[] = [];
+  filteredDishes: DishListResponse[] = [];
 
-  public isPreOrderEnabled = false;
-  public preOrderReservationId?: string;
-  public preOrderReservationLabel?: string;
+  isPreOrderEnabled = false;
+  preOrderReservationId?: string;
+  preOrderReservationLabel?: string;
 
-  public sortOptions = Object.values(DishSort);
-  public sortLabels = DishSortingLabels;
+  sortOptions = Object.values(DishSort);
+  sortLabels = DishSortingLabels;
 
-  public menuCategories = Object.values(DishType);
-  public menuCategoryLabels = DishTypeLabels;
+  menuCategories = Object.values(DishType);
+  menuCategoryLabels = DishTypeLabels;
 
-  public selectedCategory: DishType | null = null; // initially show all
-  public selectedSort: DishSort = DishSort.PopularityDescending;
+  selectedCategory: DishType | null = null; // initially show all
+  selectedSort: DishSort = DishSort.PopularityDescending;
 
   private readonly dishesService = inject(DishesService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly orderService = inject(PreOrdersService);
-
+  private  readonly orderService = inject(PreOrdersService);
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -80,32 +78,24 @@ export class MenuPageComponent implements OnInit {
     const category = this.selectedCategory ?? undefined;
     const sort = this.selectedSort;
 
-    this.loadingDishes = true;
-    this.dishesService.getDishes(category, sort).subscribe({
-      next: (data) => {
-        this.dishes = data.map((dish) => ({
-          ...dish,
-          imageUrl: dish.imageUrl || 'assets/img/dish.png',
-          name: dish.name || 'Unknown Dish',
-          price: dish.price || 0,
-          weight: dish.weight || 'N/A',
-          description: dish.description || 'N/A',
-          state: dish.state || 'N/A',
-          dishType: dish.dishType || 'N/A',
-          calories: dish.calories || '0',
-          proteins: dish.proteins || '0',
-          fats: dish.fats || '0',
-          carbohydrates: dish.carbohydrates || '0',
-          vitamins: dish.vitamins || '0',
-        }));
+    this.dishesService.getDishes(category, sort).subscribe((data) => {
+      this.dishes = data.map((dish) => ({
+        ...dish,
+        imageUrl: dish.imageUrl || 'assets/img/dish.png',
+        name: dish.name || 'Unknown Dish',
+        price: dish.price || 0,
+        weight: dish.weight || 'N/A',
+        description: dish.description || 'N/A',
+        state: dish.state || 'N/A',
+        dishType: dish.dishType || 'N/A',
+        calories: dish.calories || '0',
+        proteins: dish.proteins || '0',
+        fats: dish.fats || '0',
+        carbohydrates: dish.carbohydrates || '0',
+        vitamins: dish.vitamins || '0',
+      }));
 
-        this.filteredDishes = this.dishes;
-        this.loadingDishes = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loadingDishes = false;
-      }
+      this.filteredDishes = this.dishes;
     });
   }
 
@@ -138,17 +128,17 @@ export class MenuPageComponent implements OnInit {
     });
   }
 
-  public selectedDish: DishListResponse | null = null;
+  selectedDish: DishListResponse | null = null;
 
-  public openModal(dish: DishListResponse): void {
+  openModal(dish: DishListResponse) {
     this.selectedDish = dish;
   }
 
-  public closeModal(): void {
+  closeModal() {
     this.selectedDish = null;
   }
 
-  public addDishToCart(dish: DishListResponse): void {
+  addDishToCart(dish: DishListResponse): void {
     this.orderService
       .addDishToPreOrderByReservationId(this.preOrderReservationId!, dish, 1)
       .subscribe({

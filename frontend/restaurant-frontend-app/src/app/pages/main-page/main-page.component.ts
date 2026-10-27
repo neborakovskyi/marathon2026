@@ -21,37 +21,28 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
 
 import { LoginModalComponent } from '@app/auth/components/login/login-modal/login-modal.component';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { DishesDataSource } from './dishes.data-source';
-import { DishModalComponent } from '@app/components/dish-modal/dish-modal.component';
-import { DishCardComponent } from '@app/shared/custom-components/dish-card/dish-card.component';
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink, LocationCardComponent, FeedbackWindowComponent, LoginModalComponent, ScrollingModule, DishModalComponent, DishCardComponent],
+  imports: [CommonModule, RouterLink, LocationCardComponent, FeedbackWindowComponent, LoginModalComponent, ],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [LocationsService, DishesService, ReservationService, UsersService, FeedbacksService],
 })
 export class MainPageComponent implements OnInit {
-  public dishes: DishListResponse[] = []; //remove
-  public locations: LocationResponse[] = [];
-  public loadingDishes = true;
-  public loadingLocation = true;
+  dishes: DishListResponse[] = [];
+  locations: LocationResponse[] = [];
 
-  public selectedDish: DishListResponse | null = null;
-
-  public showFeedbackModal = false;
-  public selectedReservationCustomer!: ReservationCustomer;
-  public feedbackForUpdate: FeedbackReservationResponseItem | undefined;
-  public selectedTable = 0;
-  public anonymousFeedbackToken = '';
+  showFeedbackModal = false;
+  selectedReservationCustomer!: ReservationCustomer;
+  feedbackForUpdate: FeedbackReservationResponseItem | undefined;
+  selectedTable = 0;
+  anonymousFeedbackToken = '';
 
   private readonly locationsService = inject(LocationsService);
-  private readonly dishesService = inject(DishesService);
-  readonly dishesDataSource = new DishesDataSource(this.dishesService);
+  private readonly dishesService = inject (DishesService);
   private readonly route = inject(ActivatedRoute);
   private readonly reservationsService = inject(ReservationService)
   private readonly userService = inject(UsersService);
@@ -70,10 +61,10 @@ export class MainPageComponent implements OnInit {
   );
 
   // display the modal when URL = /login
-  public readonly showLoginModal = computed(() => this.currentUrl().startsWith('/login'));
+  readonly showLoginModal = computed(() => this.currentUrl().startsWith('/login'));
 
   // closing the modal returns to the main screen
-  public closeLogin(): void {
+  closeLogin() {
     this.router.navigate(['/main']);
   }
 
@@ -90,66 +81,27 @@ export class MainPageComponent implements OnInit {
     });
   }
 
-  public openModal(dish: DishListResponse): void {
-    this.selectedDish = dish;
-  }
-
-  public closeModal(): void {
-    this.selectedDish = null;
-  }
-
-  public loadPopularDishes(): void {
-    this.loadingDishes = true;
-    this.dishesService.getPopularDishes(12, null).subscribe({
-      next: (data) => {
-        this.dishes = data.items.slice(0, 4).map((dish) => ({
-          ...dish,
-          imageUrl: dish.imageUrl || 'assets/img/dish.png',
-          name: dish.name || 'Unknown Dish',
-          price: dish.price || 0,
-          weight: dish.weight || 'N/A',
-        }));
-        this.loadingDishes = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loadingDishes = false;
-      }
+  loadPopularDishes(): void {
+    this.dishesService.getPopularDishes().subscribe((data) => {
+      this.dishes = data.slice(0, 4).map((dish) => ({
+        ...dish,
+        imageUrl: dish.imageUrl || 'assets/img/dish.png',
+        name: dish.name || 'Unknown Dish',
+        price: dish.price || 0,
+        weight: dish.weight || 'N/A',
+      }));
     });
   }
-  // virtual scroll
-  // loadPopularDishes(): void {
-  //   this.dishesDataSource.loadNextPage();
-  // }
-
-  // onDishScroll(index: number): void {
-  //   if (index >= this.dishesDataSource.data.length - 5) {
-  //     this.dishesDataSource.loadNextPage();
-  //   }
-  // }
-
-  // trackDish(_index: number, dish: DishListResponse): string {
-  //   return dish.id;
-  // }
 
   loadLocations(): void {
-    this.loadingLocation = true;
-    this.locationsService.getLocations().subscribe({
-      next: (data) => {
-        this.locations = data//.slice(0, 3)
-        .map((location) => ({
-          ...location,
-          imageUrl: location.imageUrl || 'assets/img/locations/baratashvili-street-14.jpg',
-          address: location.address || 'Unknown Address',
-          totalCapacity: location.totalCapacity || 0,
-          averageOccupancy: location.averageOccupancy || 'N/A',
-        }));
-        this.loadingLocation = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loadingLocation = false;
-      }
+    this.locationsService.getLocations().subscribe((data) => {
+      this.locations = data.slice(0, 3).map((location) => ({
+        ...location,
+        imageUrl: location.imageUrl || 'assets/img/locations/baratashvili-street-14.jpg',
+        address: location.address || 'Unknown Address',
+        totalCapacity: location.totalCapacity || 0,
+        averageOccupancy: location.averageOccupancy || 'N/A',
+      }));
     });
   }
 

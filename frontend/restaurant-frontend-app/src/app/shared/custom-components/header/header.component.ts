@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy, signal, computed, effect, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, signal, computed, effect, inject } from '@angular/core';
 import { Roles } from '@app/shared/constants/roles';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserModel } from '@app/auth/models/user.model';
@@ -18,7 +18,7 @@ import { GuestPreorderStore } from '@app/pages/guest-pre-order-page/state/guest-
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   private readonly POLLING_INTERVAL = 60000; // 60 sec
   private isDestroyed = false;
 
@@ -43,6 +43,7 @@ export class HeaderComponent implements OnDestroy {
   showCart = signal(false);
 
   private pollingSubscription?: Subscription;
+  private userSubscription?: Subscription;
 
   protected readonly authService = inject(AuthenticationService);
   private readonly notificationsService = inject(NotificationsService);
@@ -58,22 +59,27 @@ export class HeaderComponent implements OnDestroy {
   }
 
   constructor() {
+    //MIGRATION: keep same behavior as previous user$.subscribe in ngOnInit
     effect(() => {
-      const u = this.authService.user();
-      this.user.set(u);
-
+      const u = this.user();
       if (u?.role === Roles.WAITER) {
         this.startNotificationsPolling();
       } else {
         this.stopNotificationsPolling();
         this.notifications.set([]);
+        //this.unreadCount = 0;
       }
     });
+  }
+
+  ngOnInit() {
+    this.userSubscription = this.authService.user$.subscribe((u) => this.user.set(u));
   }
 
   ngOnDestroy() {
     this.isDestroyed = true;
     this.stopNotificationsPolling();
+    this.userSubscription?.unsubscribe();
   }
 
   startNotificationsPolling() {
