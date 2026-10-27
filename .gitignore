@@ -24,3 +24,5 @@ node_modules/
 *.tfvars.json
 crash.log
 crash.*.log
+/backend/restaurant-backend-app/dnapp/lambdas/api-handler/.aws-sam
+/backend/restaurant-backend-app/dnapp/lambdas/api-handler/Dockerfile
