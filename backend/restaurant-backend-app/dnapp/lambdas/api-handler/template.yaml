@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for api-handler (C#)
+
+Resources:
+  APIHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Путь к папке проекта. Для Bash/Docker лучше использовать прямые слэши
+      CodeUri: ./publish
+      
+      # Маппинг из поля func_name
+      Handler: APIHandler::APIHandler.Function::FunctionHandler
+      
+      # Параметры из JSON
+      Runtime: dotnet10
+      MemorySize: 128
+      Timeout: 100
+      Architectures:
+        - x86_64
+
+      # Переменные окружения из вашего поля env_variables
+      Environment:
+        Variables:
+          REGION: "us-west-2"
+          COGNITO_USER_POOL_ID: "mock-user-pool-id"
+          COGNITO_USER_POOL_CLIENT_ID: "mock-client-id"
+          reports_queue_name: "mock-reports-queue"
+          OrderIndexReservationId: "mock-reservation-id"
+          notificationsTable: "mock-notifications-table"
+          FEEDBACK_TABLE_NAME: "mock-feedback-table"
+          locationsTable: "mock-locations-table"
+          WaiterListTableName: "mock-waiter-list-table"
+          tablesTable: "mock-tables-table"
+          dishesTable: "mock-dishes-table"
+          reservationsTable: "mock-reservations-table"
+          reportsTable: "mock-reports-table"
+          reportsHistoryTable: "mock-reports-history-table"
+          profileImagesTable: "mock-profile-images-table"
+          notificationsUserIdIndex: "mock-notifications-idx"
+          reservationsCustomerIdGlobalIndex: "mock-reservations-cust-idx"
+          reservationsWaiterIdGlobalIndex: "mock-reservations-waiter-idx"
+          reservationsTableGlobalIndex: "mock-reservations-table-idx"
+          waitersGlobalIndex: "mock-waiters-idx"
+          imagesBucketName: "mock-images-bucket"
+          profileImagesBucketName: "mock-profile-images-bucket"
+          ordersTable: "mock-orders-table"
+          feedbackGlobalIndex: "mock-feedback-idx"
+          groupReservationsTable: "GroupReservations"
+          guestSessionTable: "GuestSessions"
+          tableLocationIdIndex: "mock-tables-loc-idx"

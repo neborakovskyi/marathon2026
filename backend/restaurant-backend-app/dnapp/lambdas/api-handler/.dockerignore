@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.aws-sam/
+.git/
+.gitignore
+.vs/
+.vscode/
+*.user
+*.suo
+Dockerfile*
+docker-compose.yml
