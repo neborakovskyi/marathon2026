@@ -141,6 +141,8 @@ Response: `201 Created`
 ```
 
 ### `GET` /locations
+The response is cached in Lambda process memory for up to 60 seconds.
+
 Response: `200 OK`
 ```json
 [
@@ -340,6 +342,8 @@ Optional query parameters:
 - `sortBy` (PriceAscending, PriceDescending, PopularityAscending, PopularityDescending)
 - `name`
 
+Responses are cached in Lambda process memory for up to 60 seconds. Query parameters are part of the cache key.
+
 Response: `200 OK`
 ```json
 [
@@ -414,6 +418,8 @@ Query parameters:
 
 - `Limit` (optional, 1–100; defaults to 12)
 - `ExclusiveStartKeyJson` (optional; Base64-encoded JSON cursor from the previous response)
+
+Responses are cached in Lambda process memory for up to 60 seconds. Query parameters, including the cursor, are part of the cache key.
 
 Response: `200 OK`
 ```json

@@ -6,6 +6,8 @@ using APIHandler.Constants.Dishes;
 using APIHandler.Entities;
 using APIHandler.Helpers;
 using APIHandler.Mappers;
+using APIHandler.Models.Dishes;
+using APIHandler.Services.Caching;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +20,12 @@ public class GetAllDishesHandler : IApiRequestHandler
     private static readonly string DishesTableName = ResourceNames.DishesTableName;
 
     private readonly IDynamoDBContext _dbContext;
+    private readonly IApiResponseCache _responseCache;
 
-    public GetAllDishesHandler(IDynamoDBContext dbContext)
+    public GetAllDishesHandler(IDynamoDBContext dbContext, IApiResponseCache responseCache)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _responseCache = responseCache ?? throw new ArgumentNullException(nameof(responseCache));
     }
 
     public static readonly DynamoDBOperationConfig _dishesConfig = new()
@@ -42,44 +46,50 @@ public class GetAllDishesHandler : IApiRequestHandler
             request.QueryStringParameters.TryGetValue("name", out name);
         }
 
-        // dishes
-        var dishes = await _dbContext
-            .ScanAsync<Dish>(new List<ScanCondition>(), _dishesConfig)
-            .GetRemainingAsync();
-
-        var orders = new List<global::APIHandler.Entities.Order>();
-        var popularityMap = new Dictionary<string, int>();
-
-        if (sortBy == DishSortingLabels.PopularityAscending ||
-            sortBy == DishSortingLabels.PopularityDescending)
+        var response = await _responseCache.GetOrCreateAsync(
+            "GET /dishes",
+            request.QueryStringParameters,
+            async () =>
         {
-            orders = await _dbContext
-                .ScanAsync<global::APIHandler.Entities.Order>(new List<ScanCondition>(), new DynamoDBOperationConfig
-                {
-                    OverrideTableName = ResourceNames.OrdersTableName
-                })
+            var dishes = await _dbContext
+                .ScanAsync<Dish>(new List<ScanCondition>(), _dishesConfig)
                 .GetRemainingAsync();
 
-            popularityMap = orders
-                .SelectMany(o => o.Dishes)
-                .GroupBy(item => item.DishId)
-                .ToDictionary(g => g.Key, g => g.Count());
-        }
+            var orders = new List<global::APIHandler.Entities.Order>();
+            var popularityMap = new Dictionary<string, int>();
 
-        if (!string.IsNullOrEmpty(dishType) &&
-            Enum.TryParse<DishType>(dishType, ignoreCase: true, out var parsedType))
-        {
-            dishes = dishes.Where(d => d.DishType == parsedType).ToList();
-        }
+            if (sortBy == DishSortingLabels.PopularityAscending ||
+                sortBy == DishSortingLabels.PopularityDescending)
+            {
+                orders = await _dbContext
+                    .ScanAsync<global::APIHandler.Entities.Order>(new List<ScanCondition>(), new DynamoDBOperationConfig
+                    {
+                        OverrideTableName = ResourceNames.OrdersTableName
+                    })
+                    .GetRemainingAsync();
 
-        if (!string.IsNullOrEmpty(name))
-        {
-            dishes = dishes.Where(d => d.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
+                popularityMap = orders
+                    .SelectMany(o => o.Dishes)
+                    .GroupBy(item => item.DishId)
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
 
-        dishes = SortDishes(dishes, sortBy, popularityMap);
+            if (!string.IsNullOrEmpty(dishType) &&
+                Enum.TryParse<DishType>(dishType, ignoreCase: true, out var parsedType))
+            {
+                dishes = dishes.Where(d => d.DishType == parsedType).ToList();
+            }
 
-        var response = dishes.ConvertAll(DishMapper.ToDishListResponse);
+            if (!string.IsNullOrEmpty(name))
+            {
+                dishes = dishes.Where(d => d.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            dishes = SortDishes(dishes, sortBy, popularityMap);
+
+            return dishes.ConvertAll(DishMapper.ToDishListResponse);
+        });
+
         return ResponseBuilder.CreateSuccessResponse(response);
     }
 

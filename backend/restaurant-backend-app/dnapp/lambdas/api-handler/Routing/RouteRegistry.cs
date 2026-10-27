@@ -36,6 +36,7 @@ using APIHandler.Repositories.Tables;
 using APIHandler.Repositories.Waiters;
 using APIHandler.Services;
 using APIHandler.Services.Auth;
+using APIHandler.Services.Caching;
 using APIHandler.Services.Dishes;
 using APIHandler.Services.Feedbacks;
 using APIHandler.Services.GroupReservations;
@@ -99,6 +100,8 @@ public static class RouteRegistry
         services.AddSingleton<ITableRepository, TableRepository>();
 
         // 3. Services
+        services.AddMemoryCache();
+        services.AddSingleton<IApiResponseCache, InMemoryApiResponseCache>();
         services.AddSingleton<S3ImageService>();
         services.AddSingleton<IReportFileService, ReportFileService>();
         services.AddSingleton<IUserService, UserService>();
@@ -222,6 +225,5 @@ public static class RouteRegistry
         return allRoutes;
     }
 }
-
 
 

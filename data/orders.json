@@ -1,0 +1,492 @@
+{
+  "Orders": [
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "customerId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "reservationId": {
+            "S": "af1dd64c-1127-4f77-949d-62b37d0d7f05"
+          },
+          "reservationAddress": {
+            "S": "9 Abashidze Street, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 20, 2026, 6:00 PM - 8:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "15673599-3a6f-44fc-8b76-e64f2f4f2ce3"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "dishId": {
+                    "S": "95f0b087-4128-428f-bd3c-cc3353471e75"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+          },
+          "customerId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "reservationId": {
+            "S": "6190941b-6700-4ce6-957e-fb57536e5c7c"
+          },
+          "reservationAddress": {
+            "S": "9 Abashidze Street, Table 2"
+          },
+          "reservationTime": {
+            "S": "Oct 21, 2026, 12:00 PM - 1:30 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "1862cae4-8538-4905-92ca-7c849c701b3c"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "dishId": {
+                    "S": "07efc9a8-e9fc-4612-9e80-59fda0dc7fc3"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "c3d4e5f6-a7b8-9012-cdef-234567890123"
+          },
+          "customerId": {
+            "S": "ccc2b208-e324-43b7-8a5c-7fa544e3c2e9"
+          },
+          "reservationId": {
+            "S": "89f7e15e-431f-45a4-9d49-ed71ecaa94fc"
+          },
+          "reservationAddress": {
+            "S": "14 Baratashvili Street, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 21, 2026, 7:00 PM - 9:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "d2d165f7-4259-4a13-93cd-d20715e7d130"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "d4e5f6a7-b8c9-0123-defa-345678901234"
+          },
+          "customerId": {
+            "S": "4f17b8b2-ec03-41c7-b4f8-5d6315dc06dd"
+          },
+          "reservationId": {
+            "S": "45baf726-e5a9-4044-9dc1-78f1ed46b764"
+          },
+          "reservationAddress": {
+            "S": "14 Baratashvili Street, Table 2"
+          },
+          "reservationTime": {
+            "S": "Oct 22, 2026, 6:30 PM - 8:30 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "79068272-ff05-4c11-8870-d49fcb43767c"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "dishId": {
+                    "S": "4b83bf47-3c42-44f0-950f-f8af3a11db98"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "e5f6a7b8-c9d0-1234-efab-456789012345"
+          },
+          "customerId": {
+            "S": "616d948f-8659-460e-8a93-599abe5ab85b"
+          },
+          "reservationId": {
+            "S": "eaefdea9-1c3a-4c1b-963b-adc9b7e521a4"
+          },
+          "reservationAddress": {
+            "S": "48 Rustaveli Avenue, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 22, 2026, 1:00 PM - 2:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "28df55d8-835b-4fd4-a21d-339d01207f3f"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "1"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "1"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "f6a7b8c9-d0e1-2345-fabc-567890123456"
+          },
+          "customerId": {
+            "S": "26e00714-d271-4989-97a5-8ae492a1bac9"
+          },
+          "reservationId": {
+            "S": "e33ce69e-a50e-4375-a991-4c1de9541bca"
+          },
+          "reservationAddress": {
+            "S": "22 Chavchavadze Avenue, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 23, 2026, 7:00 PM - 9:30 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "f2c1f663-de3a-4b20-973c-3896a63f1af7"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "dishId": {
+                    "S": "50e3096a-24e8-45a0-8089-5cd5802497cc"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "a7b8c9d0-e1f2-3456-abcd-678901234567"
+          },
+          "customerId": {
+            "S": "668689fe-ce8d-4ddb-9bde-cc8db0f1ac97"
+          },
+          "reservationId": {
+            "S": "720f669a-0b08-4349-8f62-68caf053371a"
+          },
+          "reservationAddress": {
+            "S": "22 Chavchavadze Avenue, Table 2"
+          },
+          "reservationTime": {
+            "S": "Oct 23, 2026, 8:00 PM - 10:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "3143f7ea-5a9a-4c5d-b4c2-9249f67af946"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "2"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "b8c9d0e1-f2a3-4567-bcde-789012345678"
+          },
+          "customerId": {
+            "S": "a4f8a8ac-5a5c-4d65-ad40-3291d0770112"
+          },
+          "reservationId": {
+            "S": "68b497c7-49be-485d-8762-35cf67a60f8b"
+          },
+          "reservationAddress": {
+            "S": "9 Abashidze Street, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 24, 2026, 6:00 PM - 8:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "15673599-3a6f-44fc-8b76-e64f2f4f2ce3"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "dishId": {
+                    "S": "3a6058ab-493f-4dc7-b2df-3a492be1268d"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "0"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "c9d0e1f2-a3b4-5678-cdef-890123456789"
+          },
+          "customerId": {
+            "S": "9a07da12-8191-4ba9-a626-ec8a0d0a8720"
+          },
+          "reservationId": {
+            "S": "d0da7100-db48-45a7-8bdc-b0cb018cd1d9"
+          },
+          "reservationAddress": {
+            "S": "9 Abashidze Street, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 24, 2026, 12:30 PM - 2:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "95f0b087-4128-428f-bd3c-cc3353471e75"
+                  },
+                  "quantity": {
+                    "N": "2"
+                  },
+                  "state": {
+                    "N": "1"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "3"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "orderId": {
+            "S": "d0e1f2a3-b4c5-6789-defa-901234567890"
+          },
+          "customerId": {
+            "S": "2b36210d-1741-4e57-8fdd-5d1e7c7b870c"
+          },
+          "reservationId": {
+            "S": "7aa9ad39-c5b1-4f24-88a3-5c72aad6ef7d"
+          },
+          "reservationAddress": {
+            "S": "14 Baratashvili Street, Table 1"
+          },
+          "reservationTime": {
+            "S": "Oct 25, 2026, 7:00 PM - 9:00 PM"
+          },
+          "dishes": {
+            "L": [
+              {
+                "M": {
+                  "dishId": {
+                    "S": "1862cae4-8538-4905-92ca-7c849c701b3c"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "dishId": {
+                    "S": "3a6058ab-493f-4dc7-b2df-3a492be1268d"
+                  },
+                  "quantity": {
+                    "N": "1"
+                  },
+                  "state": {
+                    "N": "0"
+                  }
+                }
+              }
+            ]
+          },
+          "status": {
+            "N": "1"
+          }
+        }
+      }
+    }
+  ]
+}
