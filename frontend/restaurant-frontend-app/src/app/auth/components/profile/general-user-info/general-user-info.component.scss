@@ -51,7 +51,8 @@
   min-width: 0;
   gap: 4px;
 
-  input {
+  input,
+  select {
     box-sizing: border-box;
     width: 100%;
     min-height: 48px;

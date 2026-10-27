@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using APIHandler.Models.Users;
 
 namespace APIHandler.Models;
 
@@ -43,4 +44,10 @@ public class RegistrationRequest
     /// </summary>
     [JsonPropertyName("confirmPassword")]
     public required string ConfirmPassword { get; set; }
+
+    /// <summary>
+    /// Gets or sets the requested registration role. Older clients that omit this field register as customers.
+    /// </summary>
+    [JsonPropertyName("role")]
+    public string Role { get; set; } = Roles.Customer.ToString();
 }

@@ -9,4 +9,7 @@ public class EditUserRequest
 
     [JsonPropertyName("lastName")]
     public required string LastName { get; set; }
+
+    [JsonPropertyName("role")]
+    public string? Role { get; set; }
 }

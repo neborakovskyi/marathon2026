@@ -101,6 +101,15 @@
       </div>
     </label>
 
+    <label for="role">
+      Role:
+      <select id="role" class="default-input" formControlName="role">
+        @for (role of registrationRoles; track role) {
+          <option [value]="role">{{ role }}</option>
+        }
+      </select>
+    </label>
+
     <app-password-with-rules
       class="password"
       [control]="password"

@@ -89,6 +89,18 @@
         }
       </div>
 
+      <div class="form-row">
+        <label class="block-title" for="role">
+          Role
+        </label>
+
+        <select id="role" class="body" formControlName="role">
+          @for (role of roleOptions; track role) {
+            <option [value]="role">{{ role }}</option>
+          }
+        </select>
+      </div>
+
       <button
         type="submit"
         class="button button--primary button--large save-button"

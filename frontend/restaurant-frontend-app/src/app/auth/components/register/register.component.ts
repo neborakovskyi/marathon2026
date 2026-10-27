@@ -14,6 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { PasswordWithRulesComponent } from '@app/shared/custom-components/password-with-rules/password-with-rules.component';
 import { ConfirmPasswordComponent } from '@app/shared/custom-components/confirm-password/confirm-password.component';
+import { Roles } from '@app/shared/constants/roles';
 
 @Component({
   selector: 'app-register',
@@ -40,6 +41,7 @@ export class RegisterComponent implements OnInit {
 
   unsuccessfulRegistration = false;
   errorMessage: string | null = null;
+  readonly registrationRoles = [Roles.CUSTOMER, Roles.WAITER];
 
   ngOnInit(): void {
     this.initRegisterForm();
@@ -63,6 +65,7 @@ export class RegisterComponent implements OnInit {
             Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
           ],
         ],
+        role: [Roles.CUSTOMER, Validators.required],
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]],
         confirmPassword: ['', Validators.required],
       },
@@ -98,7 +101,8 @@ export class RegisterComponent implements OnInit {
         registerData.lastName,
         registerData.email,
         registerData.password,
-        registerData.confirmPassword
+        registerData.confirmPassword,
+        registerData.role
       );
       this.unsuccessfulRegistration = !result.success;
       this.errorMessage = result.message || null;

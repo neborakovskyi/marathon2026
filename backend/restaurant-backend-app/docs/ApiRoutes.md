@@ -9,11 +9,14 @@
     "lastName": "Doe",
     "email": "john_doe@mail.com",
     "password": "1234SecurePassword!",
-    "confirmPassword": "1234SecurePassword!"
+    "confirmPassword": "1234SecurePassword!",
+    "role": "Customer"
 }
 ```
 
-Response: 
+`role` is optional for backwards compatibility and defaults to `Customer`. Allowed values are exactly `Customer` and `Waiter`; any other value (including `Admin` and `Guest`) returns `400 Bad Request` without creating the user.
+
+Response:
 `200 OK`
 ```json
 {
@@ -777,11 +780,16 @@ Request body:
 ```json
 {
   "firstName": "string",
-  "lastName": "string"
+  "lastName": "string",
+  "role": "Admin | Customer | Waiter"
 }
 ```
 
-Response: `200 OK`
+`role` is optional. When provided, only an Admin caller may change it. Allowed values are exactly `Admin`, `Customer`, and `Waiter`.
+
+Responses: `200 OK` on success, `400 Bad Request` for invalid input, `401 Unauthorized` when authentication claims are missing, or `403 Forbidden` when a non-Admin caller requests a role change.
+
+Role updates remove the caller's existing role groups before assigning the requested role. If assigning the new role fails, the API attempts to restore the previous role groups and surfaces the failure; if restoration also fails, both the assignment and restoration failures are surfaced. This compensating action is not transactional. Concurrent role-update requests are not serialized, so interleaving requests can still leave group membership different from either request's intended final state.
 ```json
 "User information updated successfully."
 ```

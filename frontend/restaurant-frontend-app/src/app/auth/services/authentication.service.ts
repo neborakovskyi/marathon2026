@@ -6,6 +6,7 @@ import { UserModel } from '../models/user.model';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Tokens } from '../models/tokens.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Roles } from '@app/shared/constants/roles';
 @Injectable({
   providedIn: 'root',
 })
@@ -49,7 +50,8 @@ export class AuthenticationService {
     lastName: string,
     email: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
+    role: string = Roles.CUSTOMER
   ) {
     const body = {
       firstName: firstName,
@@ -57,6 +59,7 @@ export class AuthenticationService {
       email: email,
       password: password,
       confirmPassword: confirmPassword,
+      role: role,
     };
     const url = this.baseUrl + '/register';
 
@@ -150,9 +153,17 @@ export class AuthenticationService {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
-  editProfile(firstName: string, lastName: string): Observable<string> {
+  editProfile(
+    firstName: string,
+    lastName: string,
+    role?: string,
+  ): Observable<string> {
     const url = this.baseUrl + '/me';
-    const body = { firstName, lastName };
+    const body = {
+      firstName,
+      lastName,
+      ...(role !== undefined ? { role } : {}),
+    };
     return new Observable((observer) => {
       this.http.put(url, body).subscribe({
         next: () => {

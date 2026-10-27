@@ -12,6 +12,7 @@ import { AuthenticationService } from '@app/auth/services/authentication.service
 import { UserModel } from '@app/auth/models/user.model';
 import { UsersService } from '@app/services/users/users.service';
 import { ToastService } from '@app/services/toast/toast.service';
+import { Roles } from '@app/shared/constants/roles';
 import { GeneralInformationComponent } from './general-user-info.component';
 
 describe('GeneralInformationComponent', () => {
@@ -19,6 +20,8 @@ describe('GeneralInformationComponent', () => {
     id: 'user-1',
     firstName: 'Alice',
     lastName: 'Smith',
+    email: 'alice@example.com',
+    role: Roles.CUSTOMER,
   } as UserModel;
 
   const serverImage = 'https://test.api/avatar.png';
@@ -50,8 +53,45 @@ describe('GeneralInformationComponent', () => {
 
   let readerResults: WeakMap<FileReader, string>;
   let readerStates: WeakMap<FileReader, FileReader['readyState']>;
+  const nativeFileReader = window.FileReader;
+
+  class ControlledFileReader {
+    static readonly EMPTY = 0;
+    static readonly LOADING = 1;
+    static readonly DONE = 2;
+
+    onload:
+      | ((this: FileReader, event: ProgressEvent<FileReader>) => unknown)
+      | null = null;
+    onerror:
+      | ((this: FileReader, event: ProgressEvent<FileReader>) => unknown)
+      | null = null;
+    private fileToRead: Blob | null = null;
+
+    get result(): string | ArrayBuffer | null {
+      return readerResults.get(this as unknown as FileReader) ?? null;
+    }
+
+    get readyState(): number {
+      return readerStates.get(this as unknown as FileReader) ?? ControlledFileReader.EMPTY;
+    }
+
+    readAsDataURL(file: Blob): void {
+      this.fileToRead = file;
+    }
+
+    abort(): void {
+      this.fileToRead = null;
+    }
+  }
 
   beforeEach(async () => {
+    Object.defineProperty(window, 'FileReader', {
+      configurable: true,
+      writable: true,
+      value: ControlledFileReader,
+    });
+
     auth = {
       user$: new BehaviorSubject<UserModel | null>(user),
 
@@ -81,16 +121,6 @@ describe('GeneralInformationComponent', () => {
     readerStates = new WeakMap();
 
     // Control callbacks without reading or decoding real files.
-    spyOnProperty(FileReader.prototype, 'result', 'get')
-      .and.callFake(function (this: FileReader) {
-      return readerResults.get(this) ?? null;
-    });
-
-    spyOnProperty(FileReader.prototype, 'readyState', 'get')
-      .and.callFake(function (this: FileReader) {
-      return readerStates.get(this) ?? FileReader.EMPTY;
-    });
-
     readSpy = spyOn(
       FileReader.prototype,
       'readAsDataURL',
@@ -130,19 +160,17 @@ describe('GeneralInformationComponent', () => {
         { provide: ToastService, useValue: toast },
       ],
     })
-      .overrideComponent(GeneralInformationComponent, {
-        set: {
-          template: '',
-          templateUrl: undefined,
-          imports: [],
-          styles: [],
-          styleUrl: undefined,
-          styleUrls: [],
-        },
-      })
       .compileComponents();
 
     createComponent();
+  });
+
+  afterEach(() => {
+    Object.defineProperty(window, 'FileReader', {
+      configurable: true,
+      writable: true,
+      value: nativeFileReader,
+    });
   });
 
   function createComponent(): void {
@@ -210,7 +238,41 @@ describe('GeneralInformationComponent', () => {
     expect(component.userForm.getRawValue()).toEqual({
       firstName: 'Alice',
       lastName: 'Smith',
+      role: Roles.CUSTOMER,
     });
+  });
+
+  it('shows the current role disabled for non-admin users', () => {
+    const roleSelect = (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLSelectElement>('#role')!;
+
+    expect(roleSelect.disabled).toBeTrue();
+    expect(roleSelect.value).toBe(Roles.CUSTOMER);
+    expect(Array.from(roleSelect.options, (option) => option.textContent?.trim())).toEqual([
+      Roles.ADMIN,
+      Roles.CUSTOMER,
+      Roles.WAITER,
+    ]);
+  });
+
+  it('allows admins to edit the role using the available roles', () => {
+    auth.user$.next({
+      ...user,
+      role: Roles.ADMIN,
+    });
+    fixture.detectChanges();
+
+    const roleSelect = (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLSelectElement>('#role')!;
+
+    expect(roleSelect.disabled).toBeFalse();
+    expect(roleSelect.value).toBe(Roles.ADMIN);
+
+    roleSelect.value = Roles.WAITER;
+    roleSelect.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    expect(component.userForm.controls.role.value).toBe(Roles.WAITER);
   });
 
   for (const name of ['Alice1', 'Alice!', 'Alice Smith']) {
@@ -231,6 +293,7 @@ describe('GeneralInformationComponent', () => {
     component.userForm.setValue({
       firstName: 'Mary-Jane',
       lastName: "O'Neil",
+      role: Roles.CUSTOMER,
     });
 
     expect(component.userForm.valid).toBeTrue();
@@ -282,6 +345,7 @@ describe('GeneralInformationComponent', () => {
     component.userForm.setValue({
       firstName: 'Alicia',
       lastName: 'Jones',
+      role: Roles.CUSTOMER,
     });
 
     component.onSave();
@@ -297,6 +361,28 @@ describe('GeneralInformationComponent', () => {
     );
 
     expect(component.isSaving()).toBeFalse();
+  });
+
+  it('passes an admin-selected role to the profile save request', () => {
+    auth.user$.next({
+      ...user,
+      role: Roles.ADMIN,
+    });
+    component.userForm.controls.role.setValue(Roles.WAITER);
+    component.userForm.controls.firstName.setValue('Alicia');
+
+    component.onSave();
+
+    expect(auth.editProfile)
+      .toHaveBeenCalledOnceWith('Alicia', 'Smith', Roles.WAITER);
+  });
+
+  it('does not send a role when a non-admin saves their profile', () => {
+    component.userForm.controls.firstName.setValue('Alicia');
+    component.onSave();
+
+    expect(auth.editProfile)
+      .toHaveBeenCalledOnceWith('Alicia', 'Smith');
   });
 
   it('shows an error when saving names fails', () => {

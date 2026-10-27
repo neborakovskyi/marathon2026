@@ -17,6 +17,7 @@ import { AuthenticationService } from '@app/auth/services/authentication.service
 import { UserModel } from '@app/auth/models/user.model';
 import { UsersService } from '@app/services/users/users.service';
 import { ToastService } from '@app/services/toast/toast.service';
+import { Roles } from '@app/shared/constants/roles';
 
 type ProfileControlName = 'firstName' | 'lastName';
 
@@ -39,6 +40,7 @@ export class GeneralInformationComponent {
   readonly profileImage = signal<string | null>(null);
   readonly isSaving = signal(false);
   readonly isReadingPhoto = signal(false);
+  readonly roleOptions = [Roles.ADMIN, Roles.CUSTOMER, Roles.WAITER];
 
   private photoChanged = false;
   private imageRevision = 0;
@@ -62,6 +64,7 @@ export class GeneralInformationComponent {
         Validators.pattern(/^[A-Za-z'-]+$/),
       ],
     ],
+    role: ['', Validators.required],
   });
 
   constructor() {
@@ -86,13 +89,21 @@ export class GeneralInformationComponent {
 
         if (!user) {
           this.userForm.reset();
+          this.userForm.controls.role.disable();
           return;
         }
 
         this.userForm.patchValue({
           firstName: user.firstName,
           lastName: user.lastName,
+          role: user.role,
         });
+
+        if (user.role === Roles.ADMIN) {
+          this.userForm.controls.role.enable();
+        } else {
+          this.userForm.controls.role.disable();
+        }
 
         if (userChanged) {
           this.loadUserProfileImage(user.id);
@@ -166,15 +177,18 @@ export class GeneralInformationComponent {
       return;
     }
 
-    const { firstName, lastName } = this.userForm.getRawValue();
+    const { firstName, lastName, role } = this.userForm.getRawValue();
     const imageToUpload = this.photoChanged ? this.profileImage() : null;
     const imageRevision = this.imageRevision;
     const userRevision = this.userRevision;
     let uploadingPhoto = false;
+    const profileUpdate = user.role === Roles.ADMIN
+      ? this.authenticationService.editProfile(firstName, lastName, role)
+      : this.authenticationService.editProfile(firstName, lastName);
 
     this.isSaving.set(true);
 
-    this.authenticationService.editProfile(firstName, lastName)
+    profileUpdate
       .pipe(
         concatMap((response) => {
           if (userRevision !== this.userRevision) {

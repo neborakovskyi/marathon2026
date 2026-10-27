@@ -6,7 +6,6 @@ using APIHandler.Constants;
 using APIHandler.Exceptions;
 using APIHandler.Helpers;
 using APIHandler.Models;
-using APIHandler.Models.Users;
 using APIHandler.Services.Waiters;
 using System;
 using System.Net;
@@ -45,6 +44,11 @@ public class RegistrationHandler : IApiRequestHandler
             return ResponseBuilder.CreateErrorResponse(400, "Invalid request body", context.Logger);
         }
 
+        if (registrationRequest.Role is not ("Customer" or "Waiter"))
+        {
+            return ResponseBuilder.CreateErrorResponse(400, "Role must be Customer or Waiter", context.Logger);
+        }
+
         try
         {
             PersonalDataValidator.ValidateName(registrationRequest.FirstName, "First name");
@@ -69,7 +73,7 @@ public class RegistrationHandler : IApiRequestHandler
             return ResponseBuilder.CreateErrorResponse(500, confirmationError ?? "User confirmation failed", context.Logger);
         }
 
-        var groupError = await AddUserToGroupAsync(registrationRequest.Email);
+        var groupError = await AddUserToGroupAsync(registrationRequest.Email, registrationRequest.Role);
         if (groupError is not null)
         {
             return ResponseBuilder.CreateErrorResponse(500, groupError ?? "Failed to add user to group", context.Logger);
@@ -136,9 +140,8 @@ public class RegistrationHandler : IApiRequestHandler
         }
     }
 
-    private async Task<string?> AddUserToGroupAsync(string email)
+    private async Task<string?> AddUserToGroupAsync(string email, string groupNameStr)
     {
-        var groupNameStr = Roles.Customer.ToString(); // On registration, users are alwaus added to the Customer group since adding to a waiters groups requires user to be registered first.
         var groups = await _cognitoClient.ListGroupsAsync(new ListGroupsRequest { UserPoolId = _userPoolId });
 
         try

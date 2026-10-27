@@ -59,13 +59,24 @@ public class GetAuthorizedUserHandler : IApiRequestHandler
 
     private async Task<string> GetUserRoleAsync(string username)
     {
-        var groupsResponse = await _cognitoClient.AdminListGroupsForUserAsync(new AdminListGroupsForUserRequest
-        {
-            Username = username,
-            UserPoolId = UserPoolId
-        });
+        var groups = new List<GroupType>();
+        string? nextToken = null;
 
-        var groupNames = groupsResponse.Groups
+        do
+        {
+            var groupsResponse = await _cognitoClient.AdminListGroupsForUserAsync(new AdminListGroupsForUserRequest
+            {
+                Username = username,
+                UserPoolId = UserPoolId,
+                NextToken = nextToken
+            });
+
+            groups.AddRange(groupsResponse.Groups);
+            nextToken = groupsResponse.NextToken;
+        }
+        while (!string.IsNullOrEmpty(nextToken));
+
+        var groupNames = groups
             .Select(g => g.GroupName)
             .Where(name => Enum.TryParse<Roles>(name, out _))
             .OrderBy(name => (int)Enum.Parse<Roles>(name))
