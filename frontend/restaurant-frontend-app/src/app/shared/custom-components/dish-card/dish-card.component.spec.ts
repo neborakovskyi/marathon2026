@@ -15,7 +15,7 @@ describe('DishCardComponent', () => {
     state: DishState.Available,
     weight: '350',
     dishType: 'MainCourse',
-    description: 'Georgian cheese bread',
+    description: 'Ukraine cheese bread',
     calories: '500',
     proteins: '20',
     carbohydrates: '45',

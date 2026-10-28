@@ -152,7 +152,7 @@ locations = [
     (L1, "9 Abashidze Street", "Set in an upscale, trendy district, this chic venue specializes in modern fusion cuisine, featuring a minimalist interior and a vibrant evening atmosphere.", 2, "90%", 4.6, [D1, D2]),
     (L2, "14 Baratashvili Street", "Nestled near the historic city walls, this cozy spot blends traditional brickwork with modern design, offering a warm dining experience just steps from the old town.", 6, "70%", 4.4, [D4, D6]),
     (L3, "48 Rustaveli Avenue", "Located on the city's bustling main cultural artery, this grand establishment features classic high ceilings and a wide outdoor terrace perfect for people-watching.", 2, "85%", 4.5, [D7]),
-    (L4, "22 Chavchavadze Avenue", "A neighborhood bistro with an open kitchen and a focus on Georgian classics.", 4, "75%", 4.3, [D9]),
+    (L4, "22 Chavchavadze Avenue", "A neighborhood bistro with an open kitchen and a focus on Ukraine classics.", 4, "75%", 4.3, [D9]),
     (L5, "5 Marjanishvili Street", "Industrial-chic dining room known for desserts and late-night service.", 8, "80%", 4.2, [D10]),
     (L6, "17 Aghmashenebeli Avenue", "Lively street-side terrace serving grilled meats and seasonal salads.", 4, "65%", 4.1, [D11]),
     (L7, "3 Freedom Square", "Compact lunch spot popular with office workers for soups and salads.", 2, "88%", 4.0, [D12]),

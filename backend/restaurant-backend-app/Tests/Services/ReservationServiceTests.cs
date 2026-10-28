@@ -83,14 +83,19 @@ public class ReservationServiceTests
             .ReturnsAsync(table);
 
         // Act
+        var creationStartedAt = DateTime.UtcNow;
         var result = await _reservationService.CreateReservationAsync(request, callerId, isWaiter: false, _mockLogger.Object);
+        var creationCompletedAt = DateTime.UtcNow;
 
+        Assert.InRange(result.CreatedDate, creationStartedAt, creationCompletedAt);
         _mockReservationRepository
             .Verify(r => r.SaveReservationAsync(It.Is<Reservation>(
                 r => r.TableId == request.TableId
                 && r.Status == ReservationStatus.Reserved
                 && r.CreatedByWaiter == false
-                && r.CustomerId == callerId)), Times.Once());
+                && r.CustomerId == callerId
+                && r.CreatedDate >= creationStartedAt
+                && r.CreatedDate <= creationCompletedAt)), Times.Once());
     }
 
     [Theory, AutoData]
@@ -147,7 +152,8 @@ public class ReservationServiceTests
                 r => r.TableId == request.TableId
                 && r.Status == ReservationStatus.Reserved
                 && r.CreatedByWaiter == true
-                && r.CustomerId == customerId)), Times.Once());
+                && r.CustomerId == customerId
+                && r.CreatedDate != default)), Times.Once());
     }
 
     [Theory, AutoData]

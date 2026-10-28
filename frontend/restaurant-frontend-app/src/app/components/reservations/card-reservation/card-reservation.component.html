@@ -9,7 +9,7 @@
           aria-hidden="true"
         />
 
-        {{ r().locationAddress }}
+        {{ reservation().locationAddress }}
       </div>
 
       @if (role() === Roles.WAITER) {
@@ -43,15 +43,21 @@
           aria-hidden="true"
         />
 
-        {{ r().startTime | date: 'mediumDate' }}
+        {{ reservation().startTime | date: 'mediumDate' }}
       </span>
 
-      @if (
-        role() === Roles.WAITER &&
-        preOrderItemCount() > 0
-        ) {
-        <span class="preorder-badge">Pre-order</span>
-      }
+      <div class="reservation-badges">
+        @if (isNew()) {
+          <span class="new-badge">New</span>
+        }
+
+        @if (
+          role() === Roles.WAITER &&
+          preOrderItemCount() > 0
+          ) {
+          <span class="preorder-badge">Pre-order</span>
+        }
+      </div>
     </div>
 
     <div class="details-line">
@@ -63,9 +69,9 @@
           aria-hidden="true"
         />
 
-        {{ r().startTime | date: 'shortTime' }}
+        {{ reservation().startTime | date: 'shortTime' }}
         –
-        {{ r().endTime | date: 'shortTime' }}
+        {{ reservation().endTime | date: 'shortTime' }}
       </span>
     </div>
 
@@ -112,9 +118,9 @@
           aria-hidden="true"
         />
 
-        {{ r().guestCount }}
+        {{ reservation().guestCount }}
         {{
-          r().guestCount === 1
+          reservation().guestCount === 1
             ? 'Guest'
             : 'Guests'
         }}
@@ -123,12 +129,12 @@
   </div>
 
   <div class="actions">
-    @switch (r().status) {
+    @switch (reservation().status) {
       @case (ReservationStatusCustomer.Reserved) {
         <button
           type="button"
           class="button button--tertiary button--large"
-          (click)="cancelReservation.emit(r().id)"
+          (click)="cancelReservation.emit(reservation().id)"
         >
           Cancel
         </button>
@@ -137,7 +143,7 @@
           <button
             type="button"
             class="button button--secondary button--large"
-            (click)="editReservation.emit(r())"
+            (click)="editReservation.emit(reservation())"
           >
             Edit
           </button>
@@ -147,7 +153,7 @@
           <button
             type="button"
             class="button button--secondary button--large"
-            (click)="postponeReservation.emit(r())"
+            (click)="postponeReservation.emit(reservation())"
           >
             Postpone
           </button>
@@ -176,7 +182,7 @@
         <button
           type="button"
           class="button button--tertiary button--large"
-          (click)="cancelReservation.emit(r().id)"
+          (click)="cancelReservation.emit(reservation().id)"
         >
           Cancel
         </button>
@@ -198,32 +204,32 @@
 
     @if (role() === Roles.CUSTOMER) {
       @if (
-        r().status !==
+        reservation().status !==
         ReservationStatusCustomer.Reserved &&
-        r().status !==
+        reservation().status !==
         ReservationStatusCustomer.Cancelled &&
         !hasFullFeedback()
         ) {
         <button
           type="button"
           class="button button--secondary button--large"
-          (click)="leaveFeedbackReservation.emit(r())"
+          (click)="leaveFeedbackReservation.emit(reservation())"
         >
           Leave Feedback
         </button>
       }
 
       @if (
-        r().status !==
+        reservation().status !==
         ReservationStatusCustomer.Reserved &&
-        r().status !==
+        reservation().status !==
         ReservationStatusCustomer.Cancelled &&
         hasFullFeedback()
         ) {
         <button
           type="button"
           class="button button--secondary button--large"
-          (click)="updateFeedbackReservation.emit(r())"
+          (click)="updateFeedbackReservation.emit(reservation())"
         >
           Update Feedback
         </button>
@@ -232,7 +238,7 @@
 
     @if (
       role() === Roles.WAITER &&
-      r().status === ReservationStatusCustomer.Reserved
+      reservation().status === ReservationStatusCustomer.Reserved
       ) {
       <button
         type="button"
@@ -249,7 +255,7 @@
 
     @if (
       role() === Roles.WAITER &&
-      r().status ===
+      reservation().status ===
       ReservationStatusCustomer.InProgress
       ) {
       <button
@@ -267,9 +273,9 @@
 
     @if (
       role() === Roles.WAITER &&
-      (r().status ===
+      (reservation().status ===
         ReservationStatusCustomer.Finished ||
-        r().status ===
+        reservation().status ===
         ReservationStatusCustomer.InProgress) &&
       isAnonymous() &&
       !hasFullFeedback()
@@ -277,7 +283,7 @@
       <button
         type="button"
         class="button button--primary button--large"
-        (click)="sendAnonymousFeedback.emit(r())"
+        (click)="sendAnonymousFeedback.emit(reservation())"
       >
         Send feedback
       </button>
@@ -287,8 +293,8 @@
 
 @if (showWaiterOrderModal()) {
   <app-place-order-waiter
-    [reservationId]="r().id"
-    [customerId]="r().customerId"
+    [reservationId]="reservation().id"
+    [customerId]="reservation().customerId"
     (closeModal)="closeWaiterOrderModal()"
     (placeOrder)="onWaiterOrderCreated($event)"
   />

@@ -141,7 +141,7 @@ export class ReservationDashboardComponent implements OnInit {
           this.selectedTable()?.capacity ??
           reservation.guestCount,
         hasSubmittedPreOrder:
-        reservation.hasSubmittedPreOrder,
+          reservation.hasSubmittedPreOrder,
         preOrder: reservation.preOrder,
         preOrders: reservation.preOrders,
       };
@@ -195,7 +195,7 @@ export class ReservationDashboardComponent implements OnInit {
                 ? {
                   ...reservation,
                   status:
-                  ReservationStatusCustomer.Cancelled,
+                    ReservationStatusCustomer.Cancelled
                 }
                 : reservation,
             ),
@@ -206,7 +206,7 @@ export class ReservationDashboardComponent implements OnInit {
           if (selected?.id === id) {
             this.selectedReservation.set({
               ...selected,
-              status: ReservationStatusCustomer.Cancelled,
+              status: ReservationStatusCustomer.Cancelled
             });
           }
         },
@@ -341,28 +341,28 @@ export class ReservationDashboardComponent implements OnInit {
       .subscribe({
         next: (updatedReservation) => {
           const updatedCustomerReservation: ReservationCustomer =
-            {
-              ...currentReservation,
-              ...updatedReservation,
-              status:
-                updatedReservation.status as unknown as ReservationStatusCustomer,
-              restaurantName:
-                updatedReservation.restaurantName ??
-                currentReservation.restaurantName ??
-                '',
-              feedback: currentReservation.feedback,
-              preOrder: currentReservation.preOrder,
-              preOrders: currentReservation.preOrders,
-              createdByName:
+          {
+            ...currentReservation,
+            ...updatedReservation,
+            status:
+              updatedReservation.status as unknown as ReservationStatusCustomer,
+            restaurantName:
+              updatedReservation.restaurantName ??
+              currentReservation.restaurantName ??
+              '',
+            feedback: currentReservation.feedback,
+            preOrder: currentReservation.preOrder,
+            preOrders: currentReservation.preOrders,
+            createdByName:
               currentReservation.createdByName,
-              createdByRole:
+            createdByRole:
               currentReservation.createdByRole,
-            };
+          };
 
           this.reservations.update((reservations) =>
             reservations.map((reservation) =>
               reservation.id ===
-              updatedCustomerReservation.id
+                updatedCustomerReservation.id
                 ? updatedCustomerReservation
                 : reservation,
             ),
@@ -469,13 +469,13 @@ export class ReservationDashboardComponent implements OnInit {
     forkJoin({
       reservations:
         this.reservationService.getReservationsForUser$(),
-      orders: this.ordersService.getPreOrders().pipe(
-        catchError((error) => {
-          console.error('Failed to load pre-orders:', error);
-          return of([]);
-        }),
-      ),
-    })
+        orders: this.ordersService.getPreOrders().pipe(
+          catchError((error) => {
+            console.error('Failed to load pre-orders:', error);
+            return of([]);
+          }),
+        ),
+      })
       .pipe(
         switchMap(({ reservations, orders }) => {
           if (reservations.length === 0) {

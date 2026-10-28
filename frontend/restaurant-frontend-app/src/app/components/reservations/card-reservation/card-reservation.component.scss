@@ -159,3 +159,26 @@
   font-size: 0.875rem;
   line-height: 1rem;
 }
+
+.reservation-badges {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.new-badge {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 1.5rem;
+  padding: 0 0.5rem;
+
+  color: color.$green-800;
+  background-color: color.$green-100;
+  border-radius: 1rem;
+
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1rem;
+}

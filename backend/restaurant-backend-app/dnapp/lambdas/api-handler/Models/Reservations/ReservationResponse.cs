@@ -24,6 +24,9 @@ public class ReservationResponse
     [JsonPropertyName("status")]
     public ReservationStatus Status { get; set; }
 
+    [JsonPropertyName("createdDate")]
+    public DateTime CreatedDate { get; set; }
+
     [JsonPropertyName("customerId")]
     public string? CustomerId { get; set; }
 

@@ -41,22 +41,22 @@ public class GetLocationsHandler : IApiRequestHandler
                 "GET /locations",
                 request.QueryStringParameters,
                 async () =>
-            {
-                var locations = await GetLocationsAsync();
-                var mappedLocations = locations
-                    .Select(LocationMapper.ToLocationResponse).ToList();
-                foreach (var location in mappedLocations)
                 {
-                    var capacity = await _locationService.GetLocationCapacityAsync(location.Id);
-                    var rating = await _locationService.GetLocationRatingAsync(location.Id);
-                    location.TotalCapacity = capacity;
-                    location.Rating = rating;
+                    var locations = await GetLocationsAsync();
+                    var mappedLocations = locations
+                        .Select(LocationMapper.ToLocationResponse).ToList();
+                    foreach (var location in mappedLocations)
+                    {
+                        var capacity = await _locationService.GetLocationCapacityAsync(location.Id);
+                        var rating = await _locationService.GetLocationRatingAsync(location.Id);
+                        location.TotalCapacity = capacity;
+                        location.Rating = rating;
 
-                    location.AverageOccupancy = OccupancyHelper.SanitizeLegacy(location.AverageOccupancy);
-                }
+                        location.AverageOccupancy = OccupancyHelper.SanitizeLegacy(location.AverageOccupancy);
+                    }
 
-                return mappedLocations;
-            });
+                    return mappedLocations;
+                });
 
             return ResponseBuilder.CreateSuccessResponse(responseModel);
         }

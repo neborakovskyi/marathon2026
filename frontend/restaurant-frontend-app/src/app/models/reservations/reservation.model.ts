@@ -17,6 +17,8 @@ export interface Reservation {
   preOrder?: Order;
   preOrders?: Order[];
   guestInviteLinkAvailable?: boolean;
+  createdDate?: Date;
+  isNew?: boolean; // Флаг для UI анимации
 }
 
 export enum ReservationStatus {
@@ -44,6 +46,7 @@ export interface ReservationCustomer {
   preOrders?: Order[];
   createdByName?: string;
   createdByRole?: 'Customer' | 'Waiter';
+  createdDate?: Date;
 }
 
 export enum ReservationStatusCustomer {

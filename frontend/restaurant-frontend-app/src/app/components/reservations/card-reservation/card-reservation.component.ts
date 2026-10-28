@@ -2,6 +2,8 @@ import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
+  OnInit,
   computed,
   inject,
   input,
@@ -31,6 +33,8 @@ interface WaiterPreOrderNavigationData {
   tableName: string;
 }
 
+const NEW_RESERVATION_DURATION_MS = 5 * 60 * 1000;
+
 @Component({
   selector: 'app-card-reservation',
   standalone: true,
@@ -43,12 +47,14 @@ interface WaiterPreOrderNavigationData {
   styleUrl: './card-reservation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardReservationComponent {
+export class CardReservationComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   readonly Roles = Roles;
   readonly ReservationStatusCustomer = ReservationStatusCustomer;
+  private readonly currentTime = signal(Date.now());
 
-  readonly r = input.required<ReservationCustomer>();
+  readonly reservation = input.required<ReservationCustomer>();
   readonly role = input<string>(Roles.CUSTOMER);
   readonly statusEnum =
     input<Record<number, ReservationStatusView>>({});
@@ -95,7 +101,7 @@ export class CardReservationComponent {
   readonly showWaiterOrderModal = signal(false);
 
   readonly statusView = computed<ReservationStatusView>(() => {
-    const reservation = this.r();
+    const reservation = this.reservation();
 
     return (
       this.statusEnum()[reservation.status] ?? {
@@ -112,7 +118,7 @@ export class CardReservationComponent {
   readonly creatorName = computed(() => {
     return (
       this.createdByName() ||
-      this.r().createdByName ||
+      this.reservation().createdByName ||
       'Unknown'
     );
   });
@@ -120,13 +126,31 @@ export class CardReservationComponent {
   readonly creatorRole = computed(() => {
     return (
       this.createdByRole() ||
-      this.r().createdByRole ||
+      this.reservation().createdByRole ||
       Roles.CUSTOMER
     );
   });
 
   readonly preOrderItemCount = computed(() => {
-    return this.r().preOrder?.orderItems?.length ?? 0;
+    return this.reservation().preOrder?.orderItems?.length ?? 0;
+  });
+
+  readonly isNew = computed(() => {
+    const createdDate = this.reservation().createdDate;
+    console.log("createddate:"+createdDate);
+
+    if (!createdDate) {
+      return false;
+    }
+
+    const createdAt =createdDate.getTime();
+    const age = this.currentTime() - createdAt;
+
+    return (
+      Number.isFinite(createdAt) &&
+      age >= 0 &&
+      age < NEW_RESERVATION_DURATION_MS
+    );
   });
 
   readonly canOpenWaiterPreOrder = computed(() => {
@@ -137,11 +161,11 @@ export class CardReservationComponent {
   });
 
   readonly isAnonymous = computed(() => {
-    return !this.r().customerId;
+    return !this.reservation().customerId;
   });
 
   readonly hasFullFeedback = computed(() => {
-    const feedback = this.r().feedback;
+    const feedback = this.reservation().feedback;
 
     return (
       feedback?.cuisineExperience != null &&
@@ -149,8 +173,30 @@ export class CardReservationComponent {
     );
   });
 
+  ngOnInit(): void {
+    const createdDate = this.reservation().createdDate;
+
+    if (!createdDate) {
+      return;
+    }
+
+    const createdAt = createdDate.getTime();
+    const expiresIn = createdAt + NEW_RESERVATION_DURATION_MS - Date.now();
+
+    if (!Number.isFinite(createdAt) || expiresIn <= 0) {
+      return;
+    }
+
+    const timeoutId = setTimeout(
+      () => this.currentTime.set(Date.now()),
+      expiresIn,
+    );
+
+    this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
+  }
+
   onPreOrder(): void {
-    const reservation = this.r();
+    const reservation = this.reservation();
     const startTime = new Date(reservation.startTime);
     const endTime = new Date(reservation.endTime);
 
@@ -173,6 +219,7 @@ export class CardReservationComponent {
       queryParams,
     });
   }
+
   onPreOrderWaiter(): void {
     if (this.preOrderItemCount() > 0) {
       this.navigateToWaiterPreOrder();
@@ -194,7 +241,7 @@ export class CardReservationComponent {
   }
 
   onTableChange(label: string): void {
-    const reservation = this.r();
+    const reservation = this.reservation();
     const newTableId =
       this.availableTableOptionsMap().get(label);
 
@@ -212,13 +259,13 @@ export class CardReservationComponent {
     newStatus: ReservationStatusCustomer,
   ): void {
     this.statusChanged.emit({
-      id: this.r().id,
+      id: this.reservation().id,
       newStatus,
     });
   }
 
   private navigateToWaiterPreOrder(): void {
-    const reservation = this.r();
+    const reservation = this.reservation();
 
     const navigationData: WaiterPreOrderNavigationData = {
       reservationId: reservation.id,

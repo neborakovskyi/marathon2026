@@ -22,8 +22,10 @@ export class EditReservationComponent {
     status: ReservationStatus.Reserved,
     locationAddress: '1 Test Street',
     tableCapacity: 10,
+    waiterId: ''
   };
-  reservation = input<Reservation>(this.defaultReservation);
+
+  readonly reservation = input<Reservation>(this.defaultReservation);
   backdropClick = new EventEmitter<void>();
 
   timeOptions: string[];

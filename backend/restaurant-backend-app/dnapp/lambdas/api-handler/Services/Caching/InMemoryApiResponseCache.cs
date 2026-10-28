@@ -11,7 +11,7 @@ namespace APIHandler.Services.Caching;
 
 public sealed class InMemoryApiResponseCache(IMemoryCache memoryCache) : IApiResponseCache
 {
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(1);
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
 
     public async Task<T> GetOrCreateAsync<T>(
         string endpoint,

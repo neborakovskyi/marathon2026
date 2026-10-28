@@ -1,0 +1,28 @@
+<section class="reservation-editor" aria-labelledby="reservation-editor-title">
+	<h2 id="reservation-editor-title">Edit reservation</h2>
+
+	<form (submit)="submit()">
+		<label for="reservation-name">Name</label>
+		<input id="reservation-name" name="name" type="text" autocomplete="name" required />
+
+		<label for="reservation-email">Email</label>
+		<input id="reservation-email" name="email" type="email" autocomplete="email" required />
+
+		<label for="reservation-phone">Phone</label>
+		<input id="reservation-phone" name="phone" type="tel" autocomplete="tel" />
+
+		<label for="reservation-date">Date</label>
+		<input id="reservation-date" name="date" type="date" required />
+
+		<label for="reservation-time">Time</label>
+		<input id="reservation-time" name="time" type="time" required />
+
+		<label for="reservation-guests">Number of guests</label>
+		<input id="reservation-guests" name="guests" type="number" min="1" required />
+
+		<label for="reservation-notes">Special requests</label>
+		<textarea id="reservation-notes" name="notes" rows="3"></textarea>
+
+		<button type="submit">Save changes</button>
+	</form>
+</section>

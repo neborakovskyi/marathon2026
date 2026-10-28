@@ -74,7 +74,7 @@
   <ul class="reservation-list">
     @for (card of reservationCards(); track card.reservation.id) {
       <app-card-reservation
-        [r]="card.reservation"
+        [reservation]="card.reservation"
         [statusEnum]="statusEnum"
         [role]="role()"
         [selectedTableLabel]="card.selectedTableLabel"

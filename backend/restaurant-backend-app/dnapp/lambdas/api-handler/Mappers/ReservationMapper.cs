@@ -19,7 +19,8 @@ public static class ReservationMapper
         CustomerId = context.CustomerId,
         WaiterId = context.WaiterId!,
         CreatedByWaiter = context.CreatedByWaiter,
-        Status = ReservationStatus.Reserved
+        Status = ReservationStatus.Reserved,
+        CreatedDate = DateTime.UtcNow
     };
 
 
@@ -33,6 +34,7 @@ public static class ReservationMapper
         GuestCount = reservation.GuestCount,
         Status = reservation.Status,
         WaiterId = reservation.WaiterId,
+        CreatedDate = reservation.CreatedDate,
         Address = address,
         RestaurantName = restaurantName,
         CustomerId = reservation.CustomerId, // for waiter dashboard

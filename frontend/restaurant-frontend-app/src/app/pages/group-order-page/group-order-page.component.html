@@ -1,9 +1,187 @@
-<main class="page">
-  <h1>Group Pre-Order</h1>
-
-  <ul class="participants">
-    @for (person of participants(); track person.id) {
-      <li><app-participant-card [participant]="person" /></li>
+<!-- ФАЙЛ: src/app/pages/group-order-page/group-order-page.component.html -->
+<!-- main — семантичний елемент сторінки (вимога level-1) -->
+<main class="group-order-page">
+ 
+  <!-- ═══ LOADING ══════════════════════════════════════════════════════════ -->
+  @if (loadState() === 'loading') {
+    <div class="state-loading" role="status" aria-busy="true">
+      <span class="spinner" aria-hidden="true"></span>
+      Loading…
+    </div>
+  }
+ 
+  <!-- ═══ ERROR ════════════════════════════════════════════════════════════ -->
+  @if (loadState() === 'error') {
+    <div class="state-error" role="alert">
+      <!-- Тест level-2: textContent містить 'Group reservation not found' -->
+      <p>Group reservation not found</p>
+      <!-- Тест level-2: кнопка 'Try again' повторно викликає loadData() -->
+      <button class="btn btn--secondary" type="button" (click)="loadData()">Try again</button>
+    </div>
+  }
+ 
+  <!-- ═══ LOADED ═══════════════════════════════════════════════════════════ -->
+  @if (loadState() === 'loaded') {
+ 
+    <!-- ─── Заголовок з бейджем статусу ─────────────────────────────────── -->
+    <header class="page-header">
+      <!-- Один h1 на сторінці (вимога level-1) -->
+      <h1 class="page-title">Group Pre-Order</h1>
+      <!-- Бейдж: 'Collecting pre-orders' або 'Sent to Restaurant' (тест level-2) -->
+      <span class="status-badge" [class.status-badge--submitted]="isSubmitted()">
+        {{ statusLabel() }}
+      </span>
+    </header>
+ 
+    <!-- ─── Деталі бронювання (шапка — level-1) ──────────────────────────── -->
+    @if (invite(); as inv) {
+      <section class="reservation-info" aria-label="Reservation details">
+        <p class="reservation-address">{{ inv.LocationAddress }}</p>
+        <p class="reservation-time">
+          <!-- pipe date форматує ISO-рядок (вимога level-1: 'Oct 21, 2026') -->
+          {{ inv.StartTime | date:'MMM d, y' }}
+          · {{ inv.StartTime | date:'HH:mm' }}–{{ inv.EndTime | date:'HH:mm' }}
+        </p>
+        <!-- Тест level-1: textContent містить '4 of 5 guests' -->
+        <p class="reservation-guests">
+          {{ participants().length }} of {{ inv.MaxGuestCount }} guests
+        </p>
+      </section>
     }
-  </ul>
+ 
+    <!-- Level-3: рядок оновлення і кнопка Refresh ──────────────────────── -->
+    @if (lastUpdated()) {
+      <div class="sync-bar">
+        <!-- Тест level-3: textContent містить 'Updated at' -->
+        <span class="sync-time">Updated at {{ lastUpdated() | date:'HH:mm:ss' }}</span>
+        <!-- Тест level-3: кнопка 'Refresh' викликає getSessions$ ще раз -->
+        @if (!isSubmitted()) {
+          <button class="btn btn--ghost btn--sm" type="button" (click)="refresh()">Refresh</button>
+        }
+      </div>
+    }
+ 
+    <!-- Level-3: повідомлення про помилку фонового оновлення ────────────── -->
+    @if (refreshError()) {
+      <!-- Тест level-3: textContent.match(/Couldn.t refresh/) -->
+      <div class="refresh-error" role="alert">{{ refreshError() }}</div>
+    }
+ 
+    <!-- ─── Попередження про непідтверджені кошики ────────────────────────── -->
+    <!-- Тест level-2: '1 participant hasn't submitted their cart yet...' -->
+    @if (pendingCount() > 0 && !isSubmitted()) {
+      <div class="pending-warning" role="alert">
+        @if (pendingCount() === 1) {
+          1 participant hasn't submitted their cart yet
+          — their dishes won't be included in the order
+        } @else {
+          {{ pendingCount() }} participants haven't submitted their cart yet
+          — their dishes won't be included in the order
+        }
+      </div>
+    }
+ 
+    <!-- ─── Список учасників ──────────────────────────────────────────────── -->
+    <!-- ul/li — семантика (вимога level-1) -->
+    <ul class="participants-list">
+      @for (participant of participants(); track participant.id) {
+        <li>
+          <app-participant-card
+            [participant]="participant"
+            [isOwn]="isOwnCard(participant.id)"
+            [canRemove]="canRemove(participant)"
+            (removeClick)="openRemoveModal($event)" />
+        </li>
+      } @empty {
+        <!-- Тест level-2: 'Participants haven't added any dishes yet' -->
+        <li class="state-empty">
+          Participants haven't added any dishes yet
+        </li>
+      }
+    </ul>
+ 
+    <!-- ─── Консолідоване замовлення ──────────────────────────────────────── -->
+    @if (consolidated().items.length > 0) {
+      <section class="consolidated" aria-label="Consolidated pre-order">
+        <h2 class="section-title">Consolidated pre-order</h2>
+        <ul class="consolidated-list">
+          @for (item of consolidated().items; track item.dish.id) {
+            <li class="consolidated-item">
+              <!-- Тест level-2: 'Caesar Salad × 3' -->
+              <span>{{ item.dish.name }} × {{ item.quantity }}</span>
+              <span>{{ item.dish.price * item.quantity | currency }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+ 
+    <!-- ─── Footer: Grand Total + Submit ──────────────────────────────────── -->
+    <footer class="order-footer">
+      <div class="grand-total">
+        <!-- Тест level-1: textContent містить 'Grand Total' і суму -->
+        <span class="grand-total__label">Grand Total</span>
+        <!-- Тест level-2: $540.00 (тільки submitted), НЕ $760.00 (API total) -->
+        <span class="grand-total__amount">{{ grandTotal() | currency }}</span>
+      </div>
+ 
+      <!-- Кнопка Submit: показуємо тільки поки не Submitted -->
+      @if (!isSubmitted()) {
+        <button
+          class="btn btn--primary btn--submit"
+          type="button"
+          [disabled]="submitDisabled()"
+          (click)="openSubmitModal()">
+          <!-- Тест level-2: кнопка 'Submit Pre-Order' (точний текст) -->
+          @if (submitLoading()) {
+            Submitting…
+          } @else {
+            Submit Pre-Order
+          }
+        </button>
+      }
+    </footer>
+ 
+  } <!-- end @if loaded -->
+ 
 </main>
+ 
+<!-- ═══ MODAL: Submit Pre-Order ══════════════════════════════════════════════ -->
+<!-- Тест: element.querySelector('[role="dialog"]') — ModalComponent має role=dialog -->
+@if (showSubmitModal()) {
+  <app-modal title="Submit Pre-Order" (closed)="closeSubmitModal()">
+    <p>Are you sure you want to submit the group pre-order to the restaurant?</p>
+    <!-- Кнопки в ng-content -->
+    <button class="btn btn--secondary" type="button" (click)="closeSubmitModal()">
+      Cancel
+    </button>
+    <!-- Тест: кнопка 'Submit' в діалозі (точний текст — не 'Submit Pre-Order') -->
+    <button
+      class="btn btn--primary"
+      type="button"
+      [disabled]="submitLoading()"
+      (click)="confirmSubmit()">
+      Submit
+    </button>
+  </app-modal>
+}
+ 
+<!-- ═══ MODAL: Remove Guest (Бонус level-3) ══════════════════════════════════ -->
+@if (removingParticipant(); as participant) {
+  <app-modal title="Remove Guest" (closed)="closeRemoveModal()">
+    <p>
+      Are you sure you want to remove
+      <!-- Тест: dialog.textContent містить ім'я учасника -->
+      <strong>{{ participant.name }}</strong>
+      and their pre-order from this reservation?
+      This action cannot be undone.
+    </p>
+    <button class="btn btn--secondary" type="button" (click)="closeRemoveModal()">
+      Cancel
+    </button>
+    <!-- Тест бонусу: кнопка 'Remove Guest' (точний текст) -->
+    <button class="btn btn--danger" type="button" (click)="confirmRemove()">
+      Remove Guest
+    </button>
+  </app-modal>
+}

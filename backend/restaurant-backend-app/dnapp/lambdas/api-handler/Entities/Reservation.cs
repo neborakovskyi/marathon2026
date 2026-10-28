@@ -46,4 +46,8 @@ public class Reservation
     [DynamoDBProperty("status")]
     [JsonPropertyName("status")]
     public ReservationStatus Status { get; set; }
+
+    [DynamoDBProperty("createdDate")]
+    [JsonPropertyName("createdDate")]
+    public DateTime CreatedDate { get; set; }
 }

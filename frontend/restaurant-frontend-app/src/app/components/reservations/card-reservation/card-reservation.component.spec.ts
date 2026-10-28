@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { CardReservationComponent } from './card-reservation.component';
 import { API_BASE_URL } from '@app/shared/config/api-base-url.token';
@@ -25,15 +25,39 @@ describe('CardReservationComponent', () => {
       providers: [{ provide: API_BASE_URL, useValue: 'https://test.api' }, provideRouter([])],
       imports: [CardReservationComponent],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(CardReservationComponent);
-    component = fixture.componentInstance;
-    // r — обов'язковий input: без нього компонент падає з NG0950
-    fixture.componentRef.setInput('r', RESERVATION);
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    createFixture(RESERVATION);
+
     expect(component).toBeTruthy();
   });
+
+  it('shows New for five minutes after creation, then expires it', fakeAsync(() => {
+    const now = Date.now();
+    createFixture({
+      ...RESERVATION,
+      createdDate: new Date(now).toISOString(),
+    });
+
+    expect(fixture.nativeElement.querySelector('.new-badge')?.textContent.trim()).toBe('New');
+
+    tick(5 * 60 * 1000);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.new-badge')).toBeNull();
+  }));
+
+  it('does not show New when the creation timestamp is missing', () => {
+    createFixture(RESERVATION);
+
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.new-badge')).toBeNull();
+  });
+
+  function createFixture(reservation: ReservationCustomer): void {
+    fixture = TestBed.createComponent(CardReservationComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('r', reservation);
+    fixture.detectChanges();
+  }
 });
