@@ -1,6 +1,7 @@
 @use 'app/shared/styles/abstracts/colors' as color;
 
 .card {
+  cursor: pointer;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

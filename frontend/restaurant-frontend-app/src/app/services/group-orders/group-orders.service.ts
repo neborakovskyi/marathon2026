@@ -1,6 +1,6 @@
 // ФАЙЛ: src/app/services/group-orders/group-orders.service.ts
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -46,10 +46,10 @@ export class GroupOrdersService {
    * GET /guest/groups/{groupReservationId}/sessions
    * { silent: true } → context.get(SKIP_ERROR_TOAST) === true (level-3 тест)
    */
-  getSessions$(groupId: string, opts: SilentOptions = {}): Observable<GroupSessionsResponse> {
+  getSessions$(groupId: string, sessionToken: string| undefined, opts: SilentOptions = {}): Observable<GroupSessionsResponse> {
     return this.http.get<GroupSessionsResponse>(
       `${this.baseUrl}/guest/groups/${groupId}/sessions`,
-      opts.silent ? { context: this.silentCtx() } : {}
+      opts.silent ? { context: this.silentCtx(), headers: this.authHeaders(sessionToken)} : {headers: this.authHeaders(sessionToken)}
     );
   }
 
@@ -64,10 +64,10 @@ export class GroupOrdersService {
   }
 
   /** GET /guest/groups/{groupReservationId}/status */
-  getStatus$(groupId: string, opts: SilentOptions = {}): Observable<GroupStatusResponse> {
+  getStatus$(groupId: string, sessionToken: string| undefined, opts: SilentOptions = {}): Observable<GroupStatusResponse> {
     return this.http.get<GroupStatusResponse>(
       `${this.baseUrl}/guest/groups/${groupId}/status`,
-      opts.silent ? { context: this.silentCtx() } : {}
+      opts.silent ? { context: this.silentCtx(), headers: this.authHeaders(sessionToken)} : {headers: this.authHeaders(sessionToken)}
     );
   }
 
@@ -88,9 +88,14 @@ export class GroupOrdersService {
    * Відповідь — оновлений GroupSessionsResponse (Бонус)
    * Тест: req.request.method === 'DELETE'
    */
-  removeSession$(groupId: string, guestSessionId: string): Observable<GroupSessionsResponse> {
+  removeSession$(groupId: string, guestSessionId: string, sessionToken: string| undefined): Observable<GroupSessionsResponse> {
     return this.http.delete<GroupSessionsResponse>(
-      `${this.baseUrl}/guest/groups/${groupId}/sessions/${guestSessionId}`
+      `${this.baseUrl}/guest/groups/${groupId}/sessions/${guestSessionId}`,
+            { headers: this.authHeaders(sessionToken) }
     );
   }
+
+  private authHeaders(token: string| undefined) {
+        return new HttpHeaders({ Authorization: `Bearer ${token}` });
+    }
 }

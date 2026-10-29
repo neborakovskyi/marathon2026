@@ -68,8 +68,7 @@ export class CardReservationComponent implements OnInit {
 
   readonly createdByName = input<string | undefined>();
 
-  readonly createdByRole =
-    input<ReservationCustomer['createdByRole']>();
+  readonly createdByRole = input<ReservationCustomer['createdByRole']>();
   readonly tableChanged = output<{
     reservationId: string;
     newTableId: string;
@@ -77,20 +76,15 @@ export class CardReservationComponent implements OnInit {
 
   readonly cancelReservation = output<string>();
 
-  readonly editReservation =
-    output<ReservationCustomer>();
+  readonly editReservation = output<ReservationCustomer>();
 
-  readonly postponeReservation =
-    output<ReservationCustomer>();
+  readonly postponeReservation = output<ReservationCustomer>();
 
-  readonly leaveFeedbackReservation =
-    output<ReservationCustomer>();
+  readonly leaveFeedbackReservation = output<ReservationCustomer>();
 
-  readonly updateFeedbackReservation =
-    output<ReservationCustomer>();
+  readonly updateFeedbackReservation = output<ReservationCustomer>();
 
-  readonly sendAnonymousFeedback =
-    output<ReservationCustomer>();
+  readonly sendAnonymousFeedback = output<ReservationCustomer>();
 
   readonly statusChanged = output<{
     id: string;
@@ -147,7 +141,7 @@ export class CardReservationComponent implements OnInit {
 
     return (
       Number.isFinite(createdAt) &&
-      ( this.reservation().status === 0 || this.reservation().status === 2 ) &&
+      (this.reservation().status === 0 || this.reservation().status === 2) &&
       age >= 0 &&
       age < NEW_RESERVATION_DURATION_MS
     );

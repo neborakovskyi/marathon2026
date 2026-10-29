@@ -27,6 +27,7 @@
         (editReservation)="openEditModal($event)"
         (leaveFeedbackReservation)="openFeedback($event)"
         (updateFeedbackReservation)="openFeedback($event)"
+        [routerLink]="['/reservations', reservation.id,'group-order']"
       />
     }
   </ul>

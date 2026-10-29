@@ -5,20 +5,21 @@ import {
   DestroyRef, inject, OnInit, signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { EMPTY, forkJoin, interval } from 'rxjs';
 import { catchError, exhaustMap, takeWhile } from 'rxjs/operators';
 
-import { GroupOrdersService }      from '@app/services/group-orders/group-orders.service';
-import { ToastService }            from '@app/services/toast/toast.service';
-import { consolidatePreOrder }     from '@app/shared/helpers/consolidate-pre-order';
-import { ModalComponent }          from '@app/shared/custom-components/modal/modal.component';
+import { GroupOrdersService } from '@app/services/group-orders/group-orders.service';
+import { ToastService } from '@app/services/toast/toast.service';
+import { consolidatePreOrder } from '@app/shared/helpers/consolidate-pre-order';
+import { ModalComponent } from '@app/shared/custom-components/modal/modal.component';
 import { ParticipantCardComponent } from '@app/components/group-orders/participant-card/participant-card.component';
 
-import { GuestInvite }             from '@app/models/reservations/guest-invite.model';
-import { Participant }             from '@app/models/group-orders/participant.model';
-import { GroupReservationStatus }  from '@app/models/group-orders/group-status.model';
+import { GuestInvite } from '@app/models/reservations/guest-invite.model';
+import { Participant } from '@app/models/group-orders/participant.model';
+import { GroupReservationStatus } from '@app/models/group-orders/group-status.model';
+import { AuthenticationService } from '@app/auth/services/authentication.service';
 
 type LoadState = 'loading' | 'error' | 'loaded';
 
@@ -35,9 +36,12 @@ const POLL_MS = 15_000;
 export class GroupOrderPageComponent implements OnInit {
 
   // ── DI ──────────────────────────────────────────────────────────────────────
-  private readonly route      = inject(ActivatedRoute);
-  private readonly svc        = inject(GroupOrdersService);
-  private readonly toastSvc   = inject(ToastService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly svc = inject(GroupOrdersService);
+  private readonly toastSvc = inject(ToastService);
+
+  private readonly router = inject(Router);
+  private readonly authenticationService = inject(AuthenticationService);
   /**
    * DestroyRef → takeUntilDestroyed() зупиняє polling при виході зі сторінки.
    * Тест level-3: fixture.destroy() → tick(45s) → getSessions$ 1 раз (тільки initial)
@@ -45,28 +49,28 @@ export class GroupOrderPageComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   // ── IDs ─────────────────────────────────────────────────────────────────────
-  private readonly reservationId  = signal('');
-  private readonly groupId        = signal('');
+  private readonly reservationId = signal('');
+  private readonly groupId = signal('');
   private readonly ownerSessionId = signal('');
 
   // ── UI state ────────────────────────────────────────────────────────────────
-  readonly loadState     = signal<LoadState>('loading');
+  readonly loadState = signal<LoadState>('loading');
   /** true → кнопка Submit стає 'Submitting…', disabled */
   readonly submitLoading = signal(false);
 
   // ── Modals ──────────────────────────────────────────────────────────────────
   /** true → відображається <app-modal role="dialog"> для Submit */
-  readonly showSubmitModal     = signal(false);
+  readonly showSubmitModal = signal(false);
   /** не null → відображається <app-modal> для Remove Guest (Бонус) */
   readonly removingParticipant = signal<Participant | null>(null);
 
   // ── Data ────────────────────────────────────────────────────────────────────
-  readonly invite      = signal<GuestInvite | null>(null);
+  readonly invite = signal<GuestInvite | null>(null);
   readonly participants = signal<Participant[]>([]);
   readonly groupStatus = signal<GroupReservationStatus>('Open');
 
   // ── Level-3 sync ────────────────────────────────────────────────────────────
-  readonly lastUpdated  = signal<Date | null>(null);
+  readonly lastUpdated = signal<Date | null>(null);
   readonly refreshError = signal<string | null>(null);
 
   // ── Computed ────────────────────────────────────────────────────────────────
@@ -122,8 +126,18 @@ export class GroupOrderPageComponent implements OnInit {
     this.participants().some(p => p.items.length > 0)
   );
 
+  //Token
+  private token?: string = "";
+
   // ── Lifecycle ────────────────────────────────────────────────────────────────
   ngOnInit(): void {
+    this.token = this.authenticationService.getToken();
+    const user = this.authenticationService.getUser();
+
+    if (!this.token || !user) {
+      void this.router.navigate(['/login']);
+      return;
+    }
     // reservationId береться з URL: /reservations/:reservationId/group-order
     this.reservationId.set(
       this.route.snapshot.paramMap.get('reservationId') ?? ''
@@ -150,8 +164,8 @@ export class GroupOrderPageComponent implements OnInit {
   private loadSecondary(groupId: string): void {
     // Паралельно: sessions + status + ownerSessionId
     forkJoin({
-      sessions:       this.svc.getSessions$(groupId),
-      status:         this.svc.getStatus$(groupId),
+      sessions: this.svc.getSessions$(groupId, this.token),
+      status: this.svc.getStatus$(groupId, this.token),
       ownerSessionId: this.svc.getOwnerSessionId$(this.reservationId()),
     }).subscribe({
       next: ({ sessions, status, ownerSessionId }) => {
@@ -169,7 +183,7 @@ export class GroupOrderPageComponent implements OnInit {
   }
 
   // ── Submit ────────────────────────────────────────────────────────────────────
-  openSubmitModal(): void  { this.showSubmitModal.set(true);  }
+  openSubmitModal(): void { this.showSubmitModal.set(true); }
   closeSubmitModal(): void { this.showSubmitModal.set(false); }
 
   confirmSubmit(): void {
@@ -194,14 +208,14 @@ export class GroupOrderPageComponent implements OnInit {
 
   // ── Remove Guest (Бонус) ──────────────────────────────────────────────────────
   openRemoveModal(participant: Participant): void { this.removingParticipant.set(participant); }
-  closeRemoveModal(): void                        { this.removingParticipant.set(null); }
+  closeRemoveModal(): void { this.removingParticipant.set(null); }
 
   confirmRemove(): void {
     const participant = this.removingParticipant();
     if (!participant) return;
     this.removingParticipant.set(null); // закриваємо модал
 
-    this.svc.removeSession$(this.groupId(), participant.id).subscribe({
+    this.svc.removeSession$(this.groupId(), participant.id, "").subscribe({
       // Відповідь DELETE = оновлений список → computed() перерахується
       next: response => this.participants.set(response.participants),
       // Тест: помилка → participants не змінюються (список залишається)
@@ -230,8 +244,8 @@ export class GroupOrderPageComponent implements OnInit {
       takeWhile(() => this.groupStatus() === 'Open'),
       exhaustMap(() =>
         forkJoin({
-          sessions: this.svc.getSessions$(this.groupId(), { silent: true }),
-          status:   this.svc.getStatus$(this.groupId(),   { silent: true }),
+          sessions: this.svc.getSessions$(this.groupId(), this.token, { silent: true }),
+          status: this.svc.getStatus$(this.groupId(), this.token, { silent: true }),
         }).pipe(
           catchError(() => {
             // Зберігаємо поточні дані, показуємо повідомлення про помилку
@@ -253,8 +267,8 @@ export class GroupOrderPageComponent implements OnInit {
   refresh(): void {
     if (this.groupStatus() !== 'Open') return;
     forkJoin({
-      sessions: this.svc.getSessions$(this.groupId(), { silent: true }),
-      status:   this.svc.getStatus$(this.groupId(),   { silent: true }),
+      sessions: this.svc.getSessions$(this.groupId(), this.token, { silent: true }),
+      status: this.svc.getStatus$(this.groupId(), this.token, { silent: true }),
     }).subscribe({
       next: ({ sessions, status }) => {
         this.participants.set(sessions.participants);

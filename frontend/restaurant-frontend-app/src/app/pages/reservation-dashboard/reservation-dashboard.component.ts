@@ -87,8 +87,7 @@ export class ReservationDashboardComponent implements OnInit {
   readonly reservations = signal<ReservationCustomer[]>([]);
   readonly reservationsLoaded = signal(false);
 
-  readonly selectedReservation =
-    signal<ReservationCustomer | null>(null);
+  readonly selectedReservation = signal<ReservationCustomer | null>(null);
 
   readonly selectedTable = signal<Table | null>(null);
   readonly selectedTimeRange = signal<TimeRange | null>(null);
