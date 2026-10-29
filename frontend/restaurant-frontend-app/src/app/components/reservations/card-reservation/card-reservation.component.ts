@@ -137,13 +137,12 @@ export class CardReservationComponent implements OnInit {
 
   readonly isNew = computed(() => {
     const createdDate = this.reservation().createdDate;
-    console.log("createddate:"+createdDate);
 
     if (!createdDate) {
       return false;
     }
 
-    const createdAt =createdDate.getTime();
+    const createdAt = new Date(createdDate).getTime();
     const age = this.currentTime() - createdAt;
 
     return (
@@ -180,7 +179,7 @@ export class CardReservationComponent implements OnInit {
       return;
     }
 
-    const createdAt = createdDate.getTime();
+    const createdAt = new Date(createdDate).getTime();
     const expiresIn = createdAt + NEW_RESERVATION_DURATION_MS - Date.now();
 
     if (!Number.isFinite(createdAt) || expiresIn <= 0) {
