@@ -1,34 +1,30 @@
 // ФАЙЛ: src/app/pages/group-order-page/group-order-page.component.ts
-// Головна сторінка Owner Flow — читає reservationId з URL, завантажує дані,
-// керує Submit і (level-3) фоновою синхронізацією.
- 
+// Єдиний файл для Level 1→3 + Бонус. Замінюй повністю при переході на Level 2.
 import {
   ChangeDetectionStrategy, Component, computed,
   DestroyRef, inject, OnInit, signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute }    from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
- 
 import { EMPTY, forkJoin, interval } from 'rxjs';
 import { catchError, exhaustMap, takeWhile } from 'rxjs/operators';
- 
-import { GroupOrdersService }    from '@app/services/group-orders/group-orders.service';
-import { ToastService }          from '@app/services/toast/toast.service';
-import { consolidatePreOrder }   from '@app/shared/helpers/consolidate-pre-order';
-import { ModalComponent }        from '@app/shared/custom-components/modal/modal.component';
+
+import { GroupOrdersService }      from '@app/services/group-orders/group-orders.service';
+import { ToastService }            from '@app/services/toast/toast.service';
+import { consolidatePreOrder }     from '@app/shared/helpers/consolidate-pre-order';
+import { ModalComponent }          from '@app/shared/custom-components/modal/modal.component';
 import { ParticipantCardComponent } from '@app/components/group-orders/participant-card/participant-card.component';
- 
-import { GuestInvite }           from '@app/models/reservations/guest-invite.model';
-import { Participant }           from '@app/models/group-orders/participant.model';
-import { GroupReservationStatus } from '@app/models/group-orders/group-status.model';
- 
-/** Стани завантаження сторінки */
+
+import { GuestInvite }             from '@app/models/reservations/guest-invite.model';
+import { Participant }             from '@app/models/group-orders/participant.model';
+import { GroupReservationStatus }  from '@app/models/group-orders/group-status.model';
+
 type LoadState = 'loading' | 'error' | 'loaded';
- 
-/** Інтервал фонового оновлення (мс) */
-const POLL_INTERVAL_MS = 15_000;
- 
+
+/** 15 секунд — константа (тест використовує tick(15_000)) */
+const POLL_MS = 15_000;
+
 @Component({
   selector: 'app-group-order-page',
   templateUrl: './group-order-page.component.html',
@@ -37,104 +33,122 @@ const POLL_INTERVAL_MS = 15_000;
   imports: [CurrencyPipe, DatePipe, ParticipantCardComponent, ModalComponent],
 })
 export class GroupOrderPageComponent implements OnInit {
-  // ── DI ────────────────────────────────────────────────────────────────────
+
+  // ── DI ──────────────────────────────────────────────────────────────────────
   private readonly route      = inject(ActivatedRoute);
   private readonly svc        = inject(GroupOrdersService);
   private readonly toastSvc   = inject(ToastService);
   /**
-   * DestroyRef дозволяє takeUntilDestroyed() зупинити polling
-   * коли користувач іде зі сторінки (ngOnDestroy).
+   * DestroyRef → takeUntilDestroyed() зупиняє polling при виході зі сторінки.
+   * Тест level-3: fixture.destroy() → tick(45s) → getSessions$ 1 раз (тільки initial)
    */
   private readonly destroyRef = inject(DestroyRef);
- 
-  // ── Ідентифікатори ────────────────────────────────────────────────────────
-  private readonly reservationId = signal('');
-  private readonly groupId       = signal('');
+
+  // ── IDs ─────────────────────────────────────────────────────────────────────
+  private readonly reservationId  = signal('');
+  private readonly groupId        = signal('');
   private readonly ownerSessionId = signal('');
- 
-  // ── Стан завантаження ─────────────────────────────────────────────────────
-  readonly loadState    = signal<LoadState>('loading');
-  /** true — поки йде запит submit (блокує кнопку, запобігає подвійному кліку) */
+
+  // ── UI state ────────────────────────────────────────────────────────────────
+  readonly loadState     = signal<LoadState>('loading');
+  /** true → кнопка Submit стає 'Submitting…', disabled */
   readonly submitLoading = signal(false);
- 
-  // ── Модальні вікна ────────────────────────────────────────────────────────
-  readonly showSubmitModal = signal(false);
-  /** Учасник, якого збираємося видалити (null → модал закритий) */
+
+  // ── Modals ──────────────────────────────────────────────────────────────────
+  /** true → відображається <app-modal role="dialog"> для Submit */
+  readonly showSubmitModal     = signal(false);
+  /** не null → відображається <app-modal> для Remove Guest (Бонус) */
   readonly removingParticipant = signal<Participant | null>(null);
- 
-  // ── Дані ──────────────────────────────────────────────────────────────────
-  readonly invite       = signal<GuestInvite | null>(null);
+
+  // ── Data ────────────────────────────────────────────────────────────────────
+  readonly invite      = signal<GuestInvite | null>(null);
   readonly participants = signal<Participant[]>([]);
-  readonly groupStatus  = signal<GroupReservationStatus>('Open');
- 
-  // ── Level-3: синхронізація ────────────────────────────────────────────────
+  readonly groupStatus = signal<GroupReservationStatus>('Open');
+
+  // ── Level-3 sync ────────────────────────────────────────────────────────────
   readonly lastUpdated  = signal<Date | null>(null);
   readonly refreshError = signal<string | null>(null);
- 
-  // ── Обчислювані значення ──────────────────────────────────────────────────
+
+  // ── Computed ────────────────────────────────────────────────────────────────
   /**
-   * Консолідоване замовлення — лише підтверджені учасники.
-   * Пеперераховується автоматично при кожній зміні participants().
+   * Консолідоване замовлення — тільки isSubmitted=true учасники.
+   * Перераховується автоматично при кожному participants.set(...)
+   *
+   * Тест level-2: 'Caesar Salad × 3' (owner ×1 + andrii ×2, olena не враховується)
    */
   readonly consolidated = computed(() => consolidatePreOrder(this.participants()));
- 
+
   /**
-   * Grand Total = сума консолідованого (НЕ total з API).
-   * Тест level-2: $540, а не $760 — бо Olena (isSubmitted=false) не враховується.
+   * Grand Total = сума консолідованого (НЕ 'total' з API-відповіді).
+   * КЛЮЧОВА ПАСТКА: API повертає total=760, але тест очікує $540.00
+   * (olena isSubmitted=false → її страви не рахуємо)
    */
   readonly grandTotal = computed(() => this.consolidated().total);
- 
+
   /** Кількість учасників з непідтвердженим кошиком */
   readonly pendingCount = computed(() =>
     this.participants().filter(p => !p.isSubmitted).length
   );
- 
-  /** true коли статус не Open (readonly mode) */
+
+  /** true → Submitted або Closed (read-only режим, немає кнопки Submit) */
   readonly isSubmitted = computed(() => this.groupStatus() !== 'Open');
- 
-  /** Текст бейджа статусу */
+
+  /** Текст бейджа поруч з h1 */
   readonly statusLabel = computed(() =>
     this.isSubmitted() ? 'Sent to Restaurant' : 'Collecting pre-orders'
   );
- 
+
   /**
    * Кнопка Submit неактивна коли:
-   * - запит вже йде (подвійний клік)
+   * - запит вже іде (submitLoading=true → захист від подвійного кліку)
    * - немає підтверджених страв
-   * - вже submitted
+   * - статус вже Submitted
+   *
+   * Тест: Submit неактивна коли isSubmitted=false для всіх → disabled=true
    */
   readonly submitDisabled = computed(() =>
     this.submitLoading() ||
     this.consolidated().items.length === 0 ||
     this.isSubmitted()
   );
- 
-  // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+  /**
+   * ВИПРАВЛЕННЯ: true якщо хоч у когось є страви.
+   * Тест level-2 «порожньо»: empty.participants.forEach(p => p.items = [])
+   * → всі participants є, але items порожні → hasAnyDishes=false
+   * → показуємо "Participants haven't added any dishes yet"
+   */
+  readonly hasAnyDishes = computed(() =>
+    this.participants().some(p => p.items.length > 0)
+  );
+
+  // ── Lifecycle ────────────────────────────────────────────────────────────────
   ngOnInit(): void {
-    // Читаємо reservationId з URL: /reservations/:reservationId/group-order
+    // reservationId береться з URL: /reservations/:reservationId/group-order
     this.reservationId.set(
       this.route.snapshot.paramMap.get('reservationId') ?? ''
     );
     this.loadData();
   }
- 
-  // ── Завантаження даних ────────────────────────────────────────────────────
+
+  // ── Data loading ─────────────────────────────────────────────────────────────
   loadData(): void {
     this.loadState.set('loading');
- 
-    // Крок 1: отримати invite → GroupReservationId
+
+    // Крок 1: invite-token → invite (містить GroupReservationId)
     this.svc.getGroupInvite$(this.reservationId()).subscribe({
       next: invite => {
         this.invite.set(invite);
         this.groupId.set(invite.GroupReservationId);
         this.loadSecondary(invite.GroupReservationId);
       },
+      // Тест: 404 → loadState='error' → textContent.toContain('Group reservation not found')
       error: () => this.loadState.set('error'),
     });
   }
- 
+
   private loadSecondary(groupId: string): void {
-    // Крок 2: паралельно отримуємо sessions, status і ownerSessionId
+    // Паралельно: sessions + status + ownerSessionId
     forkJoin({
       sessions:       this.svc.getSessions$(groupId),
       status:         this.svc.getStatus$(groupId),
@@ -144,67 +158,74 @@ export class GroupOrderPageComponent implements OnInit {
         this.participants.set(sessions.participants);
         this.groupStatus.set(status.status);
         this.ownerSessionId.set(ownerSessionId);
-        this.lastUpdated.set(new Date());  // для «Updated at» (level-3)
+        // Level-3: "Updated at …" з'являється одразу після initial load
+        this.lastUpdated.set(new Date());
         this.loadState.set('loaded');
-        this.startPolling();  // запускаємо фонову синхронізацію (level-3)
+        // Level-3: запускаємо polling після успішного завантаження
+        this.startPolling();
       },
       error: () => this.loadState.set('error'),
     });
   }
- 
-  // ── Submit ────────────────────────────────────────────────────────────────
-  openSubmitModal(): void  { this.showSubmitModal.set(true); }
+
+  // ── Submit ────────────────────────────────────────────────────────────────────
+  openSubmitModal(): void  { this.showSubmitModal.set(true);  }
   closeSubmitModal(): void { this.showSubmitModal.set(false); }
- 
+
   confirmSubmit(): void {
-    // Захист від подвійного кліку — кнопка стає 'Submitting…' і disabled
+    // Захист від повторного виклику — submitLoading блокує кнопку
     if (this.submitLoading()) return;
     this.submitLoading.set(true);
+    // Закриваємо модал одразу — DOM оновиться після detectChanges()
+    // Тест: dialog стає detached → buttonByText(dialog, 'Submit')?.click() → undefined → нічого
     this.showSubmitModal.set(false);
- 
+
     this.svc.submit$(this.groupId(), this.reservationId()).subscribe({
       next: () => {
-        this.groupStatus.set('Submitted');
+        this.groupStatus.set('Submitted'); // бейдж → 'Sent to Restaurant', Submit кнопка зникає
         this.submitLoading.set(false);
-        // Toast про успіх — tokenInterceptor вже обробляє помилки,
-        // тому success toast показуємо самі тільки тут
         this.toastSvc.success('Pre-order sent to the restaurant');
       },
-      error: () => {
-        this.submitLoading.set(false);
-        // Помилку Submit показує tokenInterceptor (toast від API) — не дублюємо
-      },
+      // Тест: помилка → submitLoading=false → кнопку можна натиснути знову
+      // Toast з текстом API показує tokenInterceptor — не дублюємо
+      error: () => { this.submitLoading.set(false); },
     });
   }
- 
-  // ── Remove Guest (Бонус level-3) ──────────────────────────────────────────
-  openRemoveModal(participant: Participant): void {
-    this.removingParticipant.set(participant);
-  }
-  closeRemoveModal(): void { this.removingParticipant.set(null); }
- 
+
+  // ── Remove Guest (Бонус) ──────────────────────────────────────────────────────
+  openRemoveModal(participant: Participant): void { this.removingParticipant.set(participant); }
+  closeRemoveModal(): void                        { this.removingParticipant.set(null); }
+
   confirmRemove(): void {
     const participant = this.removingParticipant();
     if (!participant) return;
-    this.removingParticipant.set(null);
- 
+    this.removingParticipant.set(null); // закриваємо модал
+
     this.svc.removeSession$(this.groupId(), participant.id).subscribe({
-      // Відповідь DELETE містить оновлений список — computed() перерахується сам
+      // Відповідь DELETE = оновлений список → computed() перерахується
       next: response => this.participants.set(response.participants),
-      // При помилці список лишається без змін (тест bonus)
+      // Тест: помилка → participants не змінюються (список залишається)
     });
   }
- 
-  // ── Level-3: фонова синхронізація ─────────────────────────────────────────
+
+  // ── Level-3: polling ──────────────────────────────────────────────────────────
   /**
-   * Запускається один раз після успішного завантаження.
-   * takeUntilDestroyed → зупиняється коли компонент знищується.
-   * takeWhile          → зупиняється після Submit (status !== 'Open').
-   * exhaustMap         → якщо попередній запит ще не відповів, новий не стартує.
-   * catchError всередині → помилка не завершує outer interval.
+   * interval(15_000) запускається ПІСЛЯ initial load.
+   *
+   * takeUntilDestroyed(destroyRef):
+   *   Тест: fixture.destroy() → polling зупиняється → tick(45s) → getSessions$ 1 раз
+   *
+   * takeWhile(() => status === 'Open'):
+   *   Тест: після Submit, tick(45s) → getSessions$ 1 раз (initial load)
+   *
+   * exhaustMap:
+   *   Якщо попередній запит ще не відповів, новий не стартує
+   *
+   * catchError inside pipe → EMPTY:
+   *   Помилка не завершує outer interval (тест: Couldn't refresh, але список лишається)
    */
   private startPolling(): void {
-    interval(POLL_INTERVAL_MS).pipe(
+    interval(POLL_MS).pipe(
       takeUntilDestroyed(this.destroyRef),
       takeWhile(() => this.groupStatus() === 'Open'),
       exhaustMap(() =>
@@ -213,10 +234,10 @@ export class GroupOrderPageComponent implements OnInit {
           status:   this.svc.getStatus$(this.groupId(),   { silent: true }),
         }).pipe(
           catchError(() => {
-            // При помилці: зберігаємо поточні дані, показуємо повідомлення
+            // Зберігаємо поточні дані, показуємо повідомлення про помилку
             const time = this.lastUpdated()?.toLocaleTimeString() ?? '';
             this.refreshError.set(`Couldn't refresh. Showing data from ${time}`);
-            return EMPTY; // EMPTY щоб не завершувати outer interval
+            return EMPTY; // EMPTY → outer interval продовжує роботу
           })
         )
       )
@@ -227,11 +248,10 @@ export class GroupOrderPageComponent implements OnInit {
       this.refreshError.set(null);
     });
   }
- 
-  /** Ручне оновлення (кнопка Refresh) — Level-3 */
+
+  /** Ручне оновлення (кнопка «Refresh», Level-3) */
   refresh(): void {
     if (this.groupStatus() !== 'Open') return;
- 
     forkJoin({
       sessions: this.svc.getSessions$(this.groupId(), { silent: true }),
       status:   this.svc.getStatus$(this.groupId(),   { silent: true }),
@@ -248,14 +268,16 @@ export class GroupOrderPageComponent implements OnInit {
       },
     });
   }
- 
-  /** Допоміжний computed — чи є картка власною (для шаблону) */
-  isOwnCard(participantId: string): boolean {
-    return participantId === this.ownerSessionId();
-  }
- 
-  /** Чи можна видалити учасника */
-  canRemove(participant: Participant): boolean {
-    return participant.type === 'Guest' && !this.isSubmitted();
+
+  // ── Template helpers ─────────────────────────────────────────────────────────
+  /** Чи є картка «My Pre-Order» */
+  isOwnCard(id: string): boolean { return id === this.ownerSessionId(); }
+
+  /**
+   * canRemove: тільки гості (не Owner) і тільки поки статус Open
+   * Тест бонусу: після Submit (status=Submitted) → removeButtons.length === 0
+   */
+  canRemoveParticipant(p: Participant): boolean {
+    return p.type === 'Guest' && !this.isSubmitted();
   }
 }

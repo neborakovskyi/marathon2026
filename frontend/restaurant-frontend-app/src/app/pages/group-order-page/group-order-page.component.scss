@@ -1,251 +1,103 @@
 // ФАЙЛ: src/app/pages/group-order-page/group-order-page.component.scss
 @use 'app/shared/styles/abstracts/colors' as color;
- 
-// ─── Сторінка ─────────────────────────────────────────────────────────────────
+
 .group-order-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 24px 16px 48px;
- 
-  // Вимога: не ламається на 375px
-  @media (max-width: 375px) {
-    padding: 16px 12px 32px;
-  }
+  max-width: 800px; margin: 0 auto; padding: 24px 16px 48px;
+  // Вимога level-1: не ламається на 375px
+  @media (max-width: 375px) { padding: 16px 12px 32px; }
 }
- 
-// ─── Заголовок ───────────────────────────────────────────────────────────────
+
 .page-header {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 12px; margin-bottom: 20px;
 }
- 
-.page-title {
-  font-size: 24px;
-  font-weight: 900;
-  color: color.$neutral-900;
-  margin: 0;
-}
- 
-// Бейдж статусу
+.page-title { font-size: 24px; font-weight: 900; color: color.$neutral-900; margin: 0; }
+
 .status-badge {
-  display: inline-flex;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 700;
-  background: color.$green-100;
-  color: color.$green-600;
- 
-  &--submitted {
-    background: color.$blue-100;
-    color: color.$blue-500;
-  }
+  display: inline-flex; padding: 4px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 700;
+  background: color.$green-100; color: color.$green-600;
+  &--sent { background: color.$blue-100; color: color.$blue-500; }
 }
- 
-// ─── Інформація про бронювання ────────────────────────────────────────────────
+
 .reservation-info {
-  background: color.$neutral-100;
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  background: color.$neutral-100; border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 20px;
+  display: flex; flex-direction: column; gap: 4px;
 }
- 
-.reservation-address {
-  font-weight: 700;
-  color: color.$neutral-900;
-  margin: 0;
-}
- 
+.reservation-address { font-weight: 700; color: color.$neutral-900; margin: 0; }
 .reservation-time,
-.reservation-guests {
-  font-size: 13px;
-  color: color.$neutral-600;
-  margin: 0;
-}
- 
-// ─── Sync bar (level-3) ───────────────────────────────────────────────────────
-.sync-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
- 
-.sync-time {
-  font-size: 12px;
-  color: color.$neutral-400;
-}
- 
+.reservation-guests  { font-size: 13px; color: color.$neutral-600; margin: 0; }
+
+.sync-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.sync-time { font-size: 12px; color: color.$neutral-400; }
 .refresh-error {
-  font-size: 12px;
-  color: color.$orange-600;
-  background: color.$orange-100;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-bottom: 12px;
+  font-size: 12px; color: color.$orange-600; background: color.$orange-100;
+  padding: 8px 12px; border-radius: 6px; margin-bottom: 12px;
 }
- 
-// ─── Попередження непідтверджені ──────────────────────────────────────────────
+
 .pending-warning {
-  background: color.$orange-100;
-  border: 1px solid color.$orange-400;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 13px;
-  color: color.$orange-600;
-  margin-bottom: 16px;
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
+  background: color.$orange-100; border: 1px solid color.$orange-400;
+  border-radius: 8px; padding: 10px 14px; font-size: 13px;
+  color: color.$orange-600; margin-bottom: 16px;
 }
- 
-// ─── Стани ───────────────────────────────────────────────────────────────────
+
 .state-loading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 48px 0;
-  justify-content: center;
-  color: color.$neutral-600;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 48px 0; color: color.$neutral-600;
 }
- 
 .state-error {
-  padding: 48px 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  color: color.$neutral-900;
+  padding: 48px 0; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
 }
- 
-.state-empty {
-  list-style: none;
-  text-align: center;
-  padding: 32px 0;
-  color: color.$neutral-400;
-  font-style: italic;
+// ВИПРАВЛЕННЯ: окремий клас для «порожні страви» (не «порожній список учасників»)
+.state-empty-dishes {
+  text-align: center; padding: 24px 0;
+  color: color.$neutral-400; font-style: italic; font-size: 14px;
 }
- 
-// ─── Список учасників ────────────────────────────────────────────────────────
+
 .participants-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  list-style: none; padding: 0; margin: 0 0 24px;
+  display: flex; flex-direction: column; gap: 12px;
 }
- 
-// ─── Консолідоване замовлення ─────────────────────────────────────────────────
+
 .consolidated {
-  background: color.$neutral-0;
-  border: 1px solid color.$neutral-200;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
+  background: color.$neutral-0; border: 1px solid color.$neutral-200;
+  border-radius: 12px; padding: 16px; margin-bottom: 24px;
 }
- 
-.section-title {
-  font-size: 14px;
-  font-weight: 800;
-  color: color.$neutral-700;
-  margin: 0 0 12px;
-}
- 
-.consolidated-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
- 
+.section-title { font-size: 14px; font-weight: 800; color: color.$neutral-700; margin: 0 0 12px; }
+.consolidated-list { list-style: none; padding: 0; margin: 0; }
 .consolidated-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 13px;
-  color: color.$neutral-900;
+  display: flex; justify-content: space-between; padding: 6px 0;
+  font-size: 13px; color: color.$neutral-900;
   border-bottom: 1px solid color.$neutral-100;
- 
   &:last-child { border-bottom: none; }
 }
- 
-// ─── Footer: Grand Total + Submit ─────────────────────────────────────────────
+
 .order-footer {
   border-top: 2px solid color.$neutral-200;
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  padding-top: 20px; display: flex; flex-direction: column; gap: 16px;
 }
- 
-.grand-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
- 
-.grand-total__label {
-  font-size: 16px;
-  font-weight: 800;
-  color: color.$neutral-900;
-}
- 
-.grand-total__amount {
-  font-size: 28px;
-  font-weight: 900;
-  color: color.$green-800;
-}
- 
-// ─── Кнопки (загальні) ───────────────────────────────────────────────────────
+.grand-total { display: flex; justify-content: space-between; align-items: baseline; }
+.grand-total__label { font-size: 16px; font-weight: 800; color: color.$neutral-900; }
+.grand-total__amount { font-size: 28px; font-weight: 900; color: color.$green-800; }
+
+// Загальні кнопки
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.15s;
- 
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
- 
-  &--primary {
-    background: color.$green-600;
-    color: color.$neutral-0;
-    &:hover:not(:disabled) { background: color.$green-800; }
-  }
- 
-  &--secondary {
-    background: color.$neutral-0;
-    color: color.$neutral-900;
-    border: 1px solid color.$neutral-200;
-    &:hover:not(:disabled) { background: color.$neutral-100; }
-  }
- 
-  &--danger {
-    background: color.$red-400;
-    color: color.$neutral-0;
-    &:hover:not(:disabled) { opacity: 0.85; }
-  }
- 
-  &--ghost {
-    background: transparent;
-    color: color.$green-600;
-    border: 1px solid color.$green-150;
-    &:hover:not(:disabled) { background: color.$green-100; }
-  }
- 
-  &--sm { padding: 6px 12px; font-size: 12px; }
- 
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 10px 20px; border-radius: 8px;
+  font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: opacity .15s;
+  &:disabled { opacity: .5; cursor: not-allowed; }
+  &--primary   { background: color.$green-600;  color: color.$neutral-0;
+                 &:hover:not(:disabled) { background: color.$green-800; } }
+  &--secondary { background: color.$neutral-0;  color: color.$neutral-900;
+                 border: 1px solid color.$neutral-200;
+                 &:hover:not(:disabled) { background: color.$neutral-100; } }
+  &--danger    { background: color.$red-400;    color: color.$neutral-0;
+                 &:hover:not(:disabled) { opacity: .85; } }
+  &--ghost     { background: transparent;       color: color.$green-600;
+                 border: 1px solid color.$green-150;
+                 &:hover:not(:disabled) { background: color.$green-100; } }
+  &--sm     { padding: 6px 12px; font-size: 12px; }
   &--submit { width: 100%; padding: 14px 20px; font-size: 16px; }
 }

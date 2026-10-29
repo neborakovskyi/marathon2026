@@ -32,8 +32,8 @@ interface WaiterPreOrderNavigationData {
   createdByRole: string;
   tableName: string;
 }
-
-const NEW_RESERVATION_DURATION_MS = 5 * 60 * 1000;
+//                                      day * h * m * s *ms
+const NEW_RESERVATION_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
 
 @Component({
   selector: 'app-card-reservation',
@@ -147,6 +147,7 @@ export class CardReservationComponent implements OnInit {
 
     return (
       Number.isFinite(createdAt) &&
+      ( this.reservation().status === 0 || this.reservation().status === 2 ) &&
       age >= 0 &&
       age < NEW_RESERVATION_DURATION_MS
     );

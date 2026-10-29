@@ -2,10 +2,10 @@ import {
   Component,
   EventEmitter,
   inject,
-  Input,
   OnInit,
   Output,
   ChangeDetectionStrategy,
+  input
 } from '@angular/core';
 import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -31,9 +31,9 @@ export class PlaceOrderWaiterComponent implements OnInit {
   private readonly dishes = inject(DishesService);
   private readonly toast = inject(ToastService);
 
-  @Input() title = 'Place new Order';
-  @Input() reservationId = 'RSV-RST14-T3-170625';
-  @Input() customerId?: string;
+  readonly title = input('Place new Order');
+  readonly reservationId = input('RSV-RST14-T3-170625');
+  readonly customerId = input<string>();
 
   waiterName = 'Jane Smith';
   customerName = 'John Doe';
@@ -60,7 +60,7 @@ export class PlaceOrderWaiterComponent implements OnInit {
     this.dishNameForm = this.formBuilder.group({
       dishName: ['', [Validators.required, Validators.maxLength(100)]],
     });
-    this.auth.getUserNameById$(this.customerId ?? 'noid').subscribe({
+    this.auth.getUserNameById$(this.customerId() ?? 'noid').subscribe({
       next: (name) => {
         this.customerName = name;
       },
@@ -93,7 +93,7 @@ export class PlaceOrderWaiterComponent implements OnInit {
     }
 
     this.placeOrder.emit({
-      reservationId: this.reservationId,
+      reservationId: this.reservationId(),
       orderItems: this.orderItems,
     });
     this.closeModal.emit();

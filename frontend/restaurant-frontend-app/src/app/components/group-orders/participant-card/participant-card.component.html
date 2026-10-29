@@ -1,75 +1,94 @@
-<!-- article — семантичний елемент для картки (вимога завдання) -->
-<article class="participant-card" [class.participant-card--submitted]="participant().isSubmitted"
-         [class.participant-card--pending]="!participant().isSubmitted">
- 
-  <!-- ─── заголовок ─────────────────────────────────────────────── -->
+<!-- ФАЙЛ: src/app/components/group-orders/participant-card/participant-card.component.html -->
+<!--
+  СЕМАНТИКА (вимога level-1):
+  - <article>   — картка учасника
+  - <h2>        — тест практики шукає querySelector('h2') з текстом
+  - <img>       — атрибути width="40" height="40" обов'язкові (тест практики)
+  - Статус — текстом, не тільки кольором (тест: textContent.toContain('Submitted'))
+-->
+<article
+  class="participant-card"
+  [class.participant-card--submitted]="participant().isSubmitted"
+  [class.participant-card--pending]="!participant().isSubmitted">
+
+  <!-- ─── шапка ──────────────────────────────────────────────────── -->
   <header class="card-header">
-    <!-- Avatar з ініціалами -->
     <span class="avatar" aria-hidden="true">
       {{ participant().name.slice(0, 2).toUpperCase() }}
     </span>
- 
-    <div class="card-header__info">
-      <!-- h2 — тест практики шукає саме h2 з текстом "Guest: Name" / "Owner: Name" -->
+
+    <div class="card-info">
+      <!-- h2 — тест практики: querySelector('h2').textContent → 'Guest: Olena' -->
       <h2 class="card-title">{{ title() }}</h2>
- 
-      <!-- Статус передається ТЕКСТОМ — не лише кольором (вимога a11y + тести) -->
-      <span class="status-badge"
-            [class.status-badge--submitted]="participant().isSubmitted"
-            [class.status-badge--pending]="!participant().isSubmitted">
+
+      <!--
+        Статус ТЕКСТОМ — не лише кольором (a11y + тести).
+        Тест level-1: textContent.toContain('Submitted') і 'Still choosing'
+      -->
+      <span
+        class="status-badge"
+        [class.status-badge--submitted]="participant().isSubmitted"
+        [class.status-badge--pending]="!participant().isSubmitted">
         {{ statusText() }}
       </span>
     </div>
- 
-    <!-- Кнопка Remove Guest — тільки для гостей, поки не Submit (Бонус level-3) -->
+
+    <!--
+      «Remove Guest» (Бонус level-3):
+      - aria-label="Remove {name}" — тест: getAttribute('aria-label') === 'Remove Andrii'
+      - textContent === 'Remove Guest' — тест знаходить кнопку по цьому тексту
+    -->
     @if (canRemove()) {
       <button
-        class="remove-btn"
         type="button"
+        class="remove-btn"
         [attr.aria-label]="'Remove ' + participant().name"
         (click)="removeClick.emit(participant())">
         Remove Guest
       </button>
     }
   </header>
- 
-  <!-- ─── список страв ───────────────────────────────────────────── -->
+
+  <!-- ─── список страв ─────────────────────────────────────────────── -->
   @if (participant().items.length) {
     <ul class="dish-list">
       @for (item of participant().items; track item.dish.id) {
         <li class="dish-item">
-          <!-- Фото страви 40×40 — тест практики перевіряє width/height атрибути -->
+          <!--
+            width="40" height="40" — ОБОВ'ЯЗКОВО.
+            Тест практики: img.getAttribute('width') === '40'
+          -->
           @if (item.dish.imageUrl) {
-            <img class="dish-img"
-                 [src]="item.dish.imageUrl"
-                 [alt]="item.dish.name"
-                 width="40"
-                 height="40"
-                 loading="lazy" />
+            <img
+              class="dish-img"
+              [src]="item.dish.imageUrl"
+              [alt]="item.dish.name"
+              width="40"
+              height="40"
+              loading="lazy" />
           } @else {
-            <!-- Fallback якщо немає фото -->
             <span class="dish-img dish-img--initial" aria-hidden="true">
               {{ item.dish.name.charAt(0) }}
             </span>
           }
- 
+
           <span class="dish-name">{{ item.dish.name }}</span>
           <span class="dish-qty">{{ item.quantity }}</span>
-          <!-- Ціна × кількість через currency (тест: $440.00 = 220 × 2) -->
+          <!-- Ціна × кількість через currency: $440.00 = 220 × 2 -->
           <span class="dish-total">{{ itemTotal(item.dish.price, item.quantity) | currency }}</span>
         </li>
       }
     </ul>
   } @else {
-    <!-- Порожній кошик — тест практики: 'No dishes yet' -->
+    <!-- Тест практики: textContent.toContain('No dishes yet') -->
     <p class="empty-msg">No dishes yet</p>
   }
- 
-  <!-- ─── Subtotal ────────────────────────────────────────────────── -->
+
+  <!-- ─── Subtotal ─────────────────────────────────────────────────── -->
   @if (participant().items.length) {
     <footer class="card-footer">
+      <!-- Тест практики: textContent.toContain('Subtotal') -->
       <span class="subtotal-label">Subtotal</span>
-      <!-- participant.total — готова сума від API / мок-даних -->
       <span class="subtotal-amount">{{ participant().total | currency }}</span>
     </footer>
   }

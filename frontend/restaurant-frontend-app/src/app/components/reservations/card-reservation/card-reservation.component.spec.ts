@@ -34,10 +34,10 @@ describe('CardReservationComponent', () => {
   });
 
   it('shows New for five minutes after creation, then expires it', fakeAsync(() => {
-    const now = Date.now();
+    const now = new Date();
     createFixture({
       ...RESERVATION,
-      createdDate: new Date(now).toISOString(),
+      createdDate: now,
     });
 
     expect(fixture.nativeElement.querySelector('.new-badge')?.textContent.trim()).toBe('New');
