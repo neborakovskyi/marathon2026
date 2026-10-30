@@ -186,7 +186,7 @@ export class ReservationDashboardComponent implements OnInit {
 
   public onStatusSelected(reservationStatus: ReservationStatus): void {
     this.selectedReservationStatus = this.selectedReservationStatus === reservationStatus ? null : reservationStatus;
-
+// TODO :
     //this.reservations.filter();
   }
 
@@ -234,9 +234,9 @@ export class ReservationDashboardComponent implements OnInit {
       });
   }
 
-  public goToGroups(reservationId: string): void {
-    this.router.navigate(['/reservations', reservationId, 'group-order']);
-  }
+  // public goToGroups(reservationId: string): void {
+  //   this.router.navigate(['/reservations', reservationId, 'group-order']);
+  // }
 
   openEditModal(reservation: ReservationCustomer): void {
     this.selectedReservation.set(reservation);

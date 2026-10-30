@@ -20,6 +20,8 @@ import {
 import { PlaceOrderWaiterComponent } from '@app/components/place-order-waiter/place-order-waiter.component';
 import { Roles } from '@app/shared/constants/roles';
 import { CustomSelectComponent } from '@app/shared/custom-components/custom-select/custom-select.component';
+import { GroupOrderPageComponent } from '@app/pages/group-order-page/group-order-page.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface ReservationStatusView {
   class: string;
@@ -188,9 +190,27 @@ export class CardReservationComponent implements OnInit {
     this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
   }
 
+  private dialog = inject(MatDialog);
+
   public groupReservation(): void {
     const reservationId = this.reservation().id;
-    void this.router.navigate(['/reservations', reservationId, 'group-order']);
+    // void this.router.navigate(['/reservations', reservationId, 'group-order']);
+    this.dialog.open(GroupOrderPageComponent, {
+      data: { reservationId }, // Передаем ID внутрь диалога
+      // 1. Размеры
+      width: '800px',
+      height: '100vh',
+      maxWidth: '100vw', // Защита, если экран вдруг меньше 800px
+
+      // 2. Позиционирование
+      position: {
+        right: '0',
+        top: '0'
+      },
+
+      // 3. Подключаем стили анимации
+      panelClass: 'custom-right-drawer'
+    });
   }
 
   onPreOrder(): void {

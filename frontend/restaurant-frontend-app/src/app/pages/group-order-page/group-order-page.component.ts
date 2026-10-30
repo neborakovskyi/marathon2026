@@ -21,6 +21,8 @@ import { Participant } from '@app/models/group-orders/participant.model';
 import { GroupReservationStatus } from '@app/models/group-orders/group-status.model';
 import { AuthenticationService } from '@app/auth/services/authentication.service';
 
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 type LoadState = 'loading' | 'error' | 'loaded';
 
 /** 15 секунд — константа (тест використовує tick(15_000)) */
@@ -34,6 +36,7 @@ const POLL_MS = 15_000;
   imports: [CurrencyPipe, DatePipe, ParticipantCardComponent, ModalComponent],
 })
 export class GroupOrderPageComponent implements OnInit {
+  public dialogData = inject(MAT_DIALOG_DATA);
 
   // ── DI ──────────────────────────────────────────────────────────────────────
   private readonly route = inject(ActivatedRoute);
@@ -49,7 +52,7 @@ export class GroupOrderPageComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   // ── IDs ─────────────────────────────────────────────────────────────────────
-  private readonly reservationId = signal('');
+  private readonly reservationId = signal(this.dialogData.reservationId);
   private readonly groupId = signal('');
   private readonly ownerSessionId = signal('');
 
