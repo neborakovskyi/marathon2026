@@ -22,7 +22,6 @@ export class GroupOrdersService {
 
   // ── Тихий контекст — SKIP_ERROR_TOAST має default=false (з токена).
   //    При silent=true явно ставимо true.
-  //    Тест: context.get(SKIP_ERROR_TOAST) === true / false
   private silentCtx(): HttpContext {
     return new HttpContext().set(SKIP_ERROR_TOAST, true);
   }
@@ -30,7 +29,6 @@ export class GroupOrdersService {
   /**
    * Ланцюжок: GET /reservations/{id}/invite-token
    *   → GET /guest/invites/{token}
-   * Тест level-2: обидва запити перевіряються по URL
    */
   getGroupInvite$(reservationId: string): Observable<GuestInvite> {
     return this.http
@@ -44,7 +42,6 @@ export class GroupOrdersService {
 
   /**
    * GET /guest/groups/{groupReservationId}/sessions
-   * { silent: true } → context.get(SKIP_ERROR_TOAST) === true (level-3 тест)
    */
   getSessions$(groupId: string, sessionToken: string| undefined, opts: SilentOptions = {}): Observable<GroupSessionsResponse> {
     return this.http.get<GroupSessionsResponse>(
@@ -55,7 +52,6 @@ export class GroupOrdersService {
 
   /**
    * GET /reservations/{reservationId}/guest-session-id
-   * Тест: service.getOwnerSessionId$('res-1').subscribe(id => ...) — повертає string
    */
   getOwnerSessionId$(reservationId: string): Observable<string> {
     return this.http
@@ -73,8 +69,6 @@ export class GroupOrdersService {
 
   /**
    * POST /group-reservations/{groupReservationId}/submit
-   * Тіло: { reservationId }
-   * Тест: req.request.body === { reservationId: 'res-1' }
    */
   submit$(groupId: string, reservationId: string): Observable<SubmittedDish[]> {
     return this.http.post<SubmittedDish[]>(
@@ -85,8 +79,6 @@ export class GroupOrdersService {
 
   /**
    * DELETE /guest/groups/{groupReservationId}/sessions/{guestSessionId}
-   * Відповідь — оновлений GroupSessionsResponse (Бонус)
-   * Тест: req.request.method === 'DELETE'
    */
   removeSession$(groupId: string, guestSessionId: string, sessionToken: string| undefined): Observable<GroupSessionsResponse> {
     return this.http.delete<GroupSessionsResponse>(
@@ -96,6 +88,11 @@ export class GroupOrdersService {
   }
 
   private authHeaders(token: string| undefined) {
-        return new HttpHeaders({ Authorization: `Bearer ${token}` });
+        return new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          // "Access-Control-Allow-Origin": "*",
+          // "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          // "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        });
     }
 }
