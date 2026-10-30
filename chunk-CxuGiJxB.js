@@ -1,0 +1,1 @@
+import"./chunk-DXpILebh.js";import"./chunk-vRXztjQD.js";import{u as It}from"./main-HQP32WRQ.js";export{It as GroupOrderPageComponent};
