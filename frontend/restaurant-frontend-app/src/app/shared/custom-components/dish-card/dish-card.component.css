@@ -4,8 +4,9 @@
 
 .dish-card {
   border-radius: 1.5rem;
-  box-shadow: 0 0 0.625rem 0.25rem rgba(194, 194, 194, 0.5019607843);
-  background-color: #ffffff;
+  box-shadow: 0 0 0.625rem 0.625rem rgba(194, 194, 194, 0.5019607843);
+  /* background-color: #ffffff; */
+  /* background: linear-gradient(312deg, #90b9a0, #3d8357 80%); */
   display: flex;
   flex-direction: column;
   width: 100%;

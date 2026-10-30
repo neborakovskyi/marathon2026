@@ -13,11 +13,12 @@ $green-300: #48AF6F;
 $green-400: #15A84C;
 $green-600: #0F7A37;
 $green-800: #0B5B29;
-$green-gradient:  linear-gradient(
-    120deg,
-    #0B5B29,
-    #0F7A37 80%
-);
+// $green-gradient:  linear-gradient(
+//     120deg,
+//     #0B5B29,
+//     #0F7A37 80%
+// );
+$green-gradient:  linear-gradient(179deg, #90b9a0, #3d8357 80%);
 
 //Background colors
 $bg-green: #D9E5D9;

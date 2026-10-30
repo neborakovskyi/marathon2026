@@ -1,102 +1,145 @@
+<!-- ══════════════════════════════════════════════════════
+     HERO — Dark Immersive (Variant A)
+     Header рендерится снаружи (main-layout), поэтому
+     hero-section начинается с margin-top: -<header-height>.
+     HeaderModeService переключает header в dark-mode.
+════════════════════════════════════════════════════════ -->
 <section class="hero-section">
 
-  <div class="hero-text-block">
-    <div class="hero-heading-texts">
-      <h1 class="hero-heading">Green by nature, Ukraine by heart.</h1>
-      <p class="hero-tagline">Seasonal bowls • Vegan friendly • Kiev</p>
+  <!-- Декоративные blob'ы (CSS radial-gradient, pointer-events: none) -->
+  <div class="hero-blob hero-blob--1" aria-hidden="true"></div>
+  <div class="hero-blob hero-blob--2" aria-hidden="true"></div>
+  <div class="hero-blob hero-blob--3" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+
+    <!-- Левая колонка: текст + CTA -->
+    <div class="hero-left">
+
+      <div class="hero-badge">
+        <span class="hero-badge__dot" aria-hidden="true"></span>
+        SEASONAL &amp; FRESH — KYIV
+      </div>
+
+      <div class="hero-heading-block">
+        <h1 class="hero-heading">
+          Taste the Best<br />
+          <span class="hero-heading__accent">Ukraine</span> Has to Offer
+        </h1>
+        <p class="hero-tagline">
+          Seasonal bowls • Vegan friendly • Three locations in Kyiv
+        </p>
+      </div>
+
+      <div class="hero-price">
+        <span class="hero-price__label">Starting from</span>
+        <div class="hero-price__row">
+          <span class="hero-price__current">$12.00</span>
+          <span class="hero-price__old">$18.00</span>
+        </div>
+      </div>
+
+      <div class="hero-cta-group">
+        <a routerLink="/tables"
+           class="button button--primary button--extra-large hero-cta__primary">
+          Book a Table
+        </a>
+        <a routerLink="/menu"
+           class="button button--secondary button--extra-large hero-cta__ghost">
+          View Menu
+        </a>
+      </div>
+
     </div>
 
-    <div class="hero-cta-group">
-      <a routerLink="/tables" class="button button--primary button--extra-large">Book a table</a>
-      <a routerLink="/menu" class="button button--secondary button--extra-large">View Menu</a>
-    </div>
-  </div>
+    <!-- Правая колонка: круглая тарелка + float-карточки -->
+    <div class="hero-right" aria-hidden="true">
 
-  <div class="hero-image">
-    <img src="../../assets/img/main-page-cover.webp" alt="Delicious Ukraine food" />
+      <div class="hero-plate">
+        <img
+          src="../../assets/img/main-page-cover.webp"
+          alt="Delicious Ukrainian dish"
+          class="hero-plate__img"
+        />
+      </div>
+
+      <!-- Float: Today's special -->
+      <div class="hero-float hero-float--bottom">
+        <span class="hero-float__emoji">🥗</span>
+        <div class="hero-float__info">
+          <span class="hero-float__label">Today's special</span>
+          <span class="hero-float__value">Spring Bowl</span>
+        </div>
+      </div>
+
+      <!-- Float: Rating -->
+      <div class="hero-float hero-float--top">
+        <span class="hero-float__stars" aria-label="Rating 4.9">★★★★★</span>
+        <span class="hero-float__rating">4.9 (2.3k)</span>
+      </div>
+
+    </div>
   </div>
 </section>
 
+<!-- ══════════════════════════════════════════════════════
+     CONTENT SECTIONS
+════════════════════════════════════════════════════════ -->
 <section class="content-sections">
+
   <!-- Most Popular Dishes -->
   <div class="popular-dishes-section">
-    <h2 class="section-heading">Most Popular Dishes</h2>
-
-  @if (loadingDishes) {
-    <div class="common-loading" role="status" aria-live="polite">
-      <span class="common-spinner" aria-hidden="true"></span>
-      <p>Please wait while we load Most Popular Dishes.</p>
+    <div class="section-head">
+      <h2 class="section-heading">Most Popular Dishes</h2>
+      <a routerLink="/menu" class="section-see-all">See all</a>
     </div>
+
+    @if (loadingDishes) {
+      <div class="common-loading" role="status" aria-live="polite">
+        <span class="common-spinner" aria-hidden="true"></span>
+        <p>Please wait while we load Most Popular Dishes.</p>
+      </div>
     } @else if (dishes.length === 0) {
       <p class="empty-message">The Popular Dishes are empty</p>
     } @else {
-    <!-- <div class="dish-cards">
-        @for (dish of dishes; track dish) { -->
-    <!-- <cdk-virtual-scroll-viewport class="dish-viewport"
-                                                        itemSize="310"
-                                                        minBufferPx="660"
-                                                        maxBufferPx="990"
-                                                        (scrolledIndexChange)="onDishScroll($event)"
-                                                        aria-label="Popular dishes">
-
-      <a *cdkVirtualFor="let dish of dishesDataSource; trackBy: trackDish" routerLink="/dish/{{ dish.id }}" routerLinkActive="router-link-active" class="dish-card"> -->
-    <!-- ***** -->
-    <!-- <a routerLink="/dish/{{ dish.id }}" routerLinkActive="router-link-active" class="dish-card">
-        <img [src]="dish.imageUrl" alt="{{ dish.name }}" class="dish-image" />
-        <div class="dish-info">
-          <div class="dish-name">{{ dish.name }}</div>
-          <div class="dish-meta">
-            <span class="dish-price">{{ dish.price | currency: '$' }}</span>
-            <span class="dish-weight">{{ dish.weight }}</span>
-          </div>
-        </div>
-      </a> -->
-
-
-    <!-- </cdk-virtual-scroll-viewport> -->
-    <!-- }
-      </div> -->
-    <div class="dish-cards">
-      @for (dish of dishes; track dish) {
-      <app-dish-card [dish]="dish" (dishClicked)="openModal(dish)" maxWidth="288px"></app-dish-card>
-      }
-    </div>
-    }
-    <!-- @if (dishesDataSource.isLoading | async) {
-      <div class="dish-loading" role="status" aria-live="polite">
-        <span class="dish-spinner" aria-hidden="true"></span>
-        <span>Loading dishes…</span>
+      <div class="dish-cards">
+        @for (dish of dishes; track dish) {
+          <app-dish-card
+            [dish]="dish"
+            (dishClicked)="openModal(dish)"
+            maxWidth="288px"
+          ></app-dish-card>
+        }
       </div>
     }
-    @if (dishesDataSource.error | async; as loadError) {
-      <button class="dish-retry" type="button" (click)="dishesDataSource.loadNextPage()">
-        {{ loadError }} Retry
-      </button>
-    }-->
   </div>
 
   <!-- Locations -->
   <div class="locations-section">
-    <h2 class="section-heading">Locations</h2>
+    <div class="section-head">
+      <h2 class="section-heading">Our Locations</h2>
+      <a routerLink="/locations" class="section-see-all">See all</a>
+    </div>
 
     @if (loadingLocation) {
-    <div class="common-loading" role="status" aria-live="polite">
-      <span class="common-spinner" aria-hidden="true"></span>
-      <p>Please wait while we load Locations.</p>
-    </div>
+      <div class="common-loading" role="status" aria-live="polite">
+        <span class="common-spinner" aria-hidden="true"></span>
+        <p>Please wait while we load Locations.</p>
+      </div>
     } @else if (locations.length === 0) {
       <p class="empty-message">The Locations are empty</p>
     } @else {
-    <div class="location-cards">
-      @for (location of locations; track location) {
-      <app-location-card [location]="location" maxWidth="488px"></app-location-card>
-      }
-    </div>
+      <div class="location-cards">
+        @for (location of locations; track location) {
+          <app-location-card [location]="location" maxWidth="488px"></app-location-card>
+        }
+      </div>
     }
   </div>
-</section>
-<!-- </div> -->
 
+</section>
+
+<!-- ── Modals (без изменений) ─────────────────────────────────────────────── -->
 @if (showFeedbackModal) {
   <app-feedback-window
     [selectedReservation]="selectedReservationAsReservation || null"
@@ -111,5 +154,5 @@
 }
 
 @if (selectedDish) {
-<app-dish-modal [dish]="selectedDish" (closed)="closeModal()"></app-dish-modal>
+  <app-dish-modal [dish]="selectedDish" (closed)="closeModal()"></app-dish-modal>
 }

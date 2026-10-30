@@ -1,4 +1,13 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, signal, computed, effect, inject } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  effect,
+  inject,
+} from '@angular/core';
 import { Roles } from '@app/shared/constants/roles';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserModel } from '@app/auth/models/user.model';
@@ -9,6 +18,9 @@ import { NotificationsService } from '@app/services/notifications/notifications.
 import { Notification } from '@app/models/notifications/notification.model';
 import { CartComponent } from '@app/components/cart/cart.component';
 import { GuestPreorderStore } from '@app/pages/guest-pre-order-page/state/guest-preorder.store';
+// ── NEW ──────────────────────────────────────────────────────────────────────
+import { HeaderModeService } from '@app/services/header-mode.service';
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-header',
@@ -19,28 +31,23 @@ import { GuestPreorderStore } from '@app/pages/guest-pre-order-page/state/guest-
   standalone: true,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  private readonly POLLING_INTERVAL = 60000; // 60 sec
+  private readonly POLLING_INTERVAL = 60000;
   private isDestroyed = false;
 
   protected readonly Roles = Roles;
 
-  //user: UserModel | null = null;
-  //MIGRATION TO SIGNALS user -> signal
   user = signal<UserModel | null>(null);
-
-  //notifications: Notification[] = [];
-  //MIGRATION TO SIGNALS notifications -> signal
   notifications = signal<Notification[]>([]);
-
-  //unreadCount = 0;
-  //MIGRATION TO SIGNALS unreadCount -> computed (instead of manual set)
   unreadCount = computed(() => this.notifications().filter((n) => !n.isRead).length);
 
-  //MIGRATION: UI flags -> signals
   showDropdown = signal(false);
   showNotificationsDropdown = signal(false);
   isMobileMenuOpen = signal(false);
   showCart = signal(false);
+
+  // ── NEW: поиск ──────────────────────────────────────────────────────────
+  searchQuery = signal('');
+  // ─────────────────────────────────────────────────────────────────────────
 
   private pollingSubscription?: Subscription;
   private userSubscription?: Subscription;
@@ -49,6 +56,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private readonly notificationsService = inject(NotificationsService);
   private readonly router = inject(Router);
   private readonly guestPreorderStore = inject(GuestPreorderStore);
+  // ── NEW ──────────────────────────────────────────────────────────────────
+  protected readonly headerMode = inject(HeaderModeService);
+  // ─────────────────────────────────────────────────────────────────────────
 
   get isGuestPreorderRoute(): boolean {
     return this.router.url.startsWith('/join/');
@@ -59,7 +69,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   constructor() {
-    //MIGRATION: keep same behavior as previous user$.subscribe in ngOnInit
     effect(() => {
       const u = this.user();
       if (u?.role === Roles.WAITER) {
@@ -67,7 +76,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       } else {
         this.stopNotificationsPolling();
         this.notifications.set([]);
-        //this.unreadCount = 0;
       }
     });
   }
@@ -83,86 +91,51 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   startNotificationsPolling() {
-    if (this.isDestroyed) return;
-
-    //avoid multiple intervals
-    if (this.pollingSubscription) return;
-
+    if (this.isDestroyed || this.pollingSubscription) return;
     setTimeout(() => this.loadNotifications(), 100);
-
     this.pollingSubscription = interval(this.POLLING_INTERVAL).subscribe({
       next: () => this.loadNotifications(),
-      error: (err) => {
-        console.error('Polling error', err);
-        this.stopNotificationsPolling();
-      },
+      error: (err) => { console.error('Polling error', err); this.stopNotificationsPolling(); },
     });
   }
 
   stopNotificationsPolling() {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-      this.pollingSubscription = undefined;
-    }
+    this.pollingSubscription?.unsubscribe();
+    this.pollingSubscription = undefined;
   }
 
   loadNotifications() {
     this.notificationsService.loadNotifications().subscribe({
-      next: (notifications) => {
-        this.notifications.set(notifications);
-        //this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
-      },
-      error: (error) => {
-        console.error('Failed to load notifications', error);
-      },
+      next: (notifications) => this.notifications.set(notifications),
+      error: (error) => console.error('Failed to load notifications', error),
     });
   }
 
-  openDropdown(): void {
-    this.showDropdown.set(true);
-  }
+  openDropdown(): void { this.showDropdown.set(true); }
+  closeDropdown(): void { this.showDropdown.set(false); }
 
-  closeDropdown(): void {
-    this.showDropdown.set(false);
-  }
   onDropdownFocusOut(event: FocusEvent): void {
     const wrapper = event.currentTarget as HTMLElement;
-    const nextFocusedElement = event.relatedTarget as Node | null;
-    if (nextFocusedElement && wrapper.contains(nextFocusedElement)) {
-      return;
-    }
-
+    const next = event.relatedTarget as Node | null;
+    if (next && wrapper.contains(next)) return;
     this.closeDropdown();
   }
-  toggleMobileMenu() {
-    this.isMobileMenuOpen.update((v) => !v);
-  }
 
-  closeMobileMenu() {
-    this.isMobileMenuOpen.set(false);
-  }
-
+  toggleMobileMenu() { this.isMobileMenuOpen.update((v) => !v); }
+  closeMobileMenu() { this.isMobileMenuOpen.set(false); }
 
   logout(event?: Event): void {
     event?.stopPropagation();
-
     this.authService.signOut();
-
     this.closeDropdown();
     this.closeMobileMenu();
     this.closeNotificationsDropdown();
     this.showCart.set(false);
-
     void this.router.navigate(['/main']);
   }
 
-  toggleNotificationsDropdown() {
-    this.showNotificationsDropdown.update((v) => !v);
-  }
-
-  closeNotificationsDropdown() {
-    this.showNotificationsDropdown.set(false);
-  }
+  toggleNotificationsDropdown() { this.showNotificationsDropdown.update((v) => !v); }
+  closeNotificationsDropdown() { this.showNotificationsDropdown.set(false); }
 
   markNotificationAsRead(notificationId: string) {
     this.notificationsService.markAsRead(notificationId).subscribe({
@@ -170,15 +143,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.notifications.update((list) =>
           list.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n)),
         );
-        //this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
       },
-      error: (err) => {
-        console.error('Failed to mark notification as read', err);
-      },
+      error: (err) => console.error('Failed to mark notification as read', err),
     });
   }
 
-  toggleCart() {
-    this.showCart.update((v) => !v);
-  }
+  toggleCart() { this.showCart.update((v) => !v); }
 }
