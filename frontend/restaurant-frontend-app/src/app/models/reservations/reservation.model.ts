@@ -24,9 +24,16 @@ export interface Reservation {
 export enum ReservationStatus {
   Reserved = 0,
   Cancelled = 1,
-  InProggress = 2,
+  InProgress = 2,
   Finished = 3,
 }
+
+export const ReservationStatusLabels: Record<ReservationStatus, string> = {
+  [ReservationStatus.Reserved]: 'Reserved',
+  [ReservationStatus.Cancelled]: 'Cancelled',
+  [ReservationStatus.InProgress]: 'In Progress',
+  [ReservationStatus.Finished]: 'Finished',
+};
 
 export interface ReservationCustomer {
   id: string;

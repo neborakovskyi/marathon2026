@@ -1226,14 +1226,19 @@ Response: 200 OK
 ### `GET` /guest/groups/{groupReservationId}/sessions
 Response: 200 OK
 ```json
-[
-  {
-    "id": "string",
-    "groupReservationId": "string",
-    "guestName": "string",
-    "status": "string"
-  }
-]
+{
+  "participants": [
+    {
+      "id": "string|null",
+      "type": "Owner|Guest",
+      "name": "string",
+      "items": [],
+      "total": 0,
+      "isSubmitted": false
+    }
+  ],
+  "total": 0
+}
 ```
 
 ### `DELETE` /guest/groups/{groupReservationId}/sessions/{guestSessionId}

@@ -33,7 +33,8 @@ interface WaiterPreOrderNavigationData {
   tableName: string;
 }
 //                                      day * h * m * s *ms
-const NEW_RESERVATION_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
+// const NEW_RESERVATION_DURATION_MS = 3 * 24 * 60 * 60 * 1000; //prod
+const NEW_RESERVATION_DURATION_MS = 5 * 60 * 1000; //5 min local dev
 
 @Component({
   selector: 'app-card-reservation',
@@ -56,13 +57,11 @@ export class CardReservationComponent implements OnInit {
 
   readonly reservation = input.required<ReservationCustomer>();
   readonly role = input<string>(Roles.CUSTOMER);
-  readonly statusEnum =
-    input<Record<number, ReservationStatusView>>({});
+  readonly statusEnum = input<Record<number, ReservationStatusView>>({});
 
   readonly availableTableOptions = input<string[]>([]);
 
-  readonly availableTableOptionsMap =
-    input<Map<string, string>>(new Map<string, string>());
+  readonly availableTableOptionsMap = input<Map<string, string>>(new Map<string, string>());
 
   readonly selectedTableLabel = input('');
 
@@ -187,6 +186,11 @@ export class CardReservationComponent implements OnInit {
     );
 
     this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
+  }
+
+  public groupReservation(): void {
+    const reservationId = this.reservation().id;
+    void this.router.navigate(['/reservations', reservationId, 'group-order']);
   }
 
   onPreOrder(): void {

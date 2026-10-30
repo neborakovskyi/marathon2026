@@ -149,6 +149,8 @@ export class MenuPageComponent implements OnInit {
   }
 
   public addDishToCart(dish: DishListResponse): void {
+
+
     this.orderService
       .addDishToPreOrderByReservationId(this.preOrderReservationId!, dish, 1)
       .subscribe({

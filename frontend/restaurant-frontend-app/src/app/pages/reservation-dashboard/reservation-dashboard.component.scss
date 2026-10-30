@@ -61,3 +61,68 @@
     }
   }
 }
+
+// ✅ CONTENT SECTION
+.content-sections {
+  max-width: 100%;
+  margin: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+
+
+// ✅ MENU SECTION
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+.filter-sort-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 0.75rem;
+
+  button {
+    padding: 4px 12px;
+    border: 1px solid color.$color-success;
+    border-radius: 8px;
+    background-color: color.$neutral-0;
+    color: color.$color-success;
+    font-weight: 600;
+    cursor: pointer;
+
+    &.active {
+      background-color: color.$color-success;
+      color: color.$neutral-0;
+    }
+  }
+}
+
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.875rem;
+    color: color.$neutral-900;
+  }
+
+  select {
+    padding: 4px 8px;
+    border: 1px solid color.$color-success;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: color.$color-success;
+    font-weight: 600;
+  }
+}
+}

@@ -1,3 +1,5 @@
+import { ReservationStatusLabels } from './../../models/reservations/reservation.model';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -65,6 +67,7 @@ interface ReservationStatusView {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReservationDashboardComponent implements OnInit {
+
   private readonly authenticationService =
     inject(AuthenticationService);
 
@@ -146,6 +149,13 @@ export class ReservationDashboardComponent implements OnInit {
       };
     });
 
+
+  public menuReservationStatus = Object.values(ReservationStatus);
+  public selectedReservationStatus: ReservationStatus | null = null; // initially show all
+  public menuReservationStatusLabels= ReservationStatusLabels;
+
+
+
   ngOnInit(): void {
     const token = this.authenticationService.getToken();
     const user = this.authenticationService.getUser();
@@ -172,6 +182,12 @@ export class ReservationDashboardComponent implements OnInit {
     this.customerId.set(user.id);
 
     this.loadReservations();
+  }
+
+  public onStatusSelected(reservationStatus: ReservationStatus): void {
+    this.selectedReservationStatus = this.selectedReservationStatus === reservationStatus ? null : reservationStatus;
+
+    //this.reservations.filter();
   }
 
   cancelReservation(id: string): void {
@@ -216,6 +232,10 @@ export class ReservationDashboardComponent implements OnInit {
           );
         },
       });
+  }
+
+  public goToGroups(reservationId: string): void {
+    this.router.navigate(['/reservations', reservationId, 'group-order']);
   }
 
   openEditModal(reservation: ReservationCustomer): void {
@@ -468,13 +488,13 @@ export class ReservationDashboardComponent implements OnInit {
     forkJoin({
       reservations:
         this.reservationService.getReservationsForUser$(),
-        orders: this.ordersService.getPreOrders().pipe(
-          catchError((error) => {
-            console.error('Failed to load pre-orders:', error);
-            return of([]);
-          }),
-        ),
-      })
+      orders: this.ordersService.getPreOrders().pipe(
+        catchError((error) => {
+          console.error('Failed to load pre-orders:', error);
+          return of([]);
+        }),
+      ),
+    })
       .pipe(
         switchMap(({ reservations, orders }) => {
           if (reservations.length === 0) {

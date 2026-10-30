@@ -91,7 +91,10 @@ export class GroupOrderPageComponent implements OnInit {
 
   /** Кількість учасників з непідтвердженим кошиком */
   readonly pendingCount = computed(() =>
-    this.participants().filter(p => !p.isSubmitted).length
+    //this.participants().filter(p => !p.isSubmitted).length
+  {console.log(this.participants());
+    return 5;
+  }
   );
 
   /** true → Submitted або Closed (read-only режим, немає кнопки Submit) */
