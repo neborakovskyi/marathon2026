@@ -4,6 +4,7 @@ import { TestBed, discardPeriodicTasks, fakeAsync, tick } from '@angular/core/te
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { GroupOrdersService } from '@app/services/group-orders/group-orders.service';
 import { ToastService } from '@app/services/toast/toast.service';
 import { GroupSessionsResponse } from '@app/models/group-orders/group-sessions-response.model';
@@ -29,12 +30,14 @@ function buttonByText(root: ParentNode, text: string): HTMLButtonElement | undef
 
 describe('Рівень 3 · синхронізація', () => {
   let service: jasmine.SpyObj<GroupOrdersService>;
+  let authenticationService: jasmine.SpyObj<AuthenticationService>;
 
   function create() {
     TestBed.configureTestingModule({
       imports: [GroupOrderPageComponent],
       providers: [
         { provide: GroupOrdersService, useValue: service },
+        { provide: AuthenticationService, useValue: authenticationService },
         { provide: ToastService, useValue: jasmine.createSpyObj('ToastService', ['success', 'error', 'info']) },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ reservationId: 'res-1' }) } } },
       ],
@@ -48,6 +51,18 @@ describe('Рівень 3 · синхронізація', () => {
     service = jasmine.createSpyObj<GroupOrdersService>('GroupOrdersService', [
       'getGroupInvite$', 'getSessions$', 'getOwnerSessionId$', 'getStatus$', 'submit$',
     ]);
+    authenticationService = jasmine.createSpyObj<AuthenticationService>(
+      'AuthenticationService',
+      ['getToken', 'getUser'],
+    );
+    authenticationService.getToken.and.returnValue('test-token');
+    authenticationService.getUser.and.returnValue({
+      id: 'owner',
+      firstName: 'Test',
+      lastName: 'Owner',
+      email: 'owner@example.test',
+      role: 'Owner',
+    });
     service.getGroupInvite$.and.returnValue(of(INVITE));
     service.getSessions$.and.returnValue(of(structuredClone(SESSIONS)));
     service.getOwnerSessionId$.and.returnValue(of('owner'));

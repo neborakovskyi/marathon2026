@@ -3,7 +3,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject, of, throwError } from 'rxjs';
+import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { GroupOrdersService } from '@app/services/group-orders/group-orders.service';
 import { ToastService } from '@app/services/toast/toast.service';
 import { GroupSessionsResponse } from '@app/models/group-orders/group-sessions-response.model';
@@ -35,14 +37,31 @@ function buttonByText(root: ParentNode, text: string): HTMLButtonElement | undef
 
 describe('Рівень 2 · сторінка Owner Review', () => {
   let service: jasmine.SpyObj<GroupOrdersService>;
+  let authenticationService: jasmine.SpyObj<AuthenticationService>;
 
-  function create() {
+  function create(options: {
+    routeReservationId?: string | null;
+    dialogData?: { reservationId: string };
+  } = {}) {
+    const routeReservationId =
+      options.routeReservationId === undefined ? 'res-1' : options.routeReservationId;
     TestBed.configureTestingModule({
       imports: [GroupOrderPageComponent],
       providers: [
         { provide: GroupOrdersService, useValue: service },
+        { provide: AuthenticationService, useValue: authenticationService },
         { provide: ToastService, useValue: jasmine.createSpyObj('ToastService', ['success', 'error', 'info']) },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ reservationId: 'res-1' }) } } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap(
+                routeReservationId ? { reservationId: routeReservationId } : {},
+              ),
+            },
+          },
+        },
+        ...(options.dialogData ? [{ provide: MAT_DIALOG_DATA, useValue: options.dialogData }] : []),
       ],
     });
     const fixture = TestBed.createComponent(GroupOrderPageComponent);
@@ -54,6 +73,18 @@ describe('Рівень 2 · сторінка Owner Review', () => {
     service = jasmine.createSpyObj<GroupOrdersService>('GroupOrdersService', [
       'getGroupInvite$', 'getSessions$', 'getOwnerSessionId$', 'getStatus$', 'submit$',
     ]);
+    authenticationService = jasmine.createSpyObj<AuthenticationService>(
+      'AuthenticationService',
+      ['getToken', 'getUser'],
+    );
+    authenticationService.getToken.and.returnValue('test-token');
+    authenticationService.getUser.and.returnValue({
+      id: 'owner',
+      firstName: 'Test',
+      lastName: 'Owner',
+      email: 'owner@example.test',
+      role: 'Owner',
+    });
     service.getGroupInvite$.and.returnValue(of(INVITE));
     service.getSessions$.and.returnValue(of(structuredClone(SESSIONS)));
     service.getOwnerSessionId$.and.returnValue(of('owner'));
@@ -65,6 +96,12 @@ describe('Рівень 2 · сторінка Owner Review', () => {
       create();
       expect(service.getGroupInvite$).toHaveBeenCalledWith('res-1');
       expect(service.getSessions$.calls.mostRecent().args[0]).toBe('grp-1');
+    });
+
+    it('бере reservationId з даних MatDialog, якщо route-параметр відсутній', () => {
+      create({ routeReservationId: null, dialogData: { reservationId: 'dialog-res-1' } });
+
+      expect(service.getGroupInvite$).toHaveBeenCalledWith('dialog-res-1');
     });
 
     it('показує всіх учасників; власна картка — «My Pre-Order»', () => {

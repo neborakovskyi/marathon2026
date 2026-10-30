@@ -36,7 +36,10 @@ const POLL_MS = 15_000;
   imports: [CurrencyPipe, DatePipe, ParticipantCardComponent, ModalComponent],
 })
 export class GroupOrderPageComponent implements OnInit {
-  public dialogData = inject(MAT_DIALOG_DATA);
+  private readonly dialogData = inject<{ reservationId?: string } | null>(
+    MAT_DIALOG_DATA,
+    { optional: true },
+  );
 
   // ── DI ──────────────────────────────────────────────────────────────────────
   private readonly route = inject(ActivatedRoute);
@@ -52,7 +55,7 @@ export class GroupOrderPageComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   // ── IDs ─────────────────────────────────────────────────────────────────────
-  private readonly reservationId = signal(this.dialogData.reservationId);
+  private readonly reservationId = signal('');
   private readonly groupId = signal('');
   private readonly ownerSessionId = signal('');
 
@@ -146,7 +149,9 @@ export class GroupOrderPageComponent implements OnInit {
     }
     // reservationId береться з URL: /reservations/:reservationId/group-order
     this.reservationId.set(
-      this.route.snapshot.paramMap.get('reservationId') ?? ''
+      this.dialogData?.reservationId ??
+        this.route.snapshot.paramMap.get('reservationId') ??
+        '',
     );
     this.loadData();
   }
