@@ -1,0 +1,38 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Триггер при пуше в main
+
+permissions:
+  contents: write # Разрешаем запись для создания ветки gh-pages
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-size: 20 # Устанавливаем актуальную версию Node.js
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./frontend/restaurant-frontend-app
+
+      - name: Build Angular App
+        run: npm run build -- --base-href /${{ github.event.repository.name }}/
+        working-directory: ./frontend/restaurant-frontend-app
+        env:
+          BACKEND_URL: "https://e99vpjoot6.execute-api.us-west-2.amazonaws.com/develop"
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./frontend/restaurant-frontend-app/dist/restaurant-frontend-app/browser
+          branch: gh-pages # Ветка, куда зальются только собранные статические файлы
