@@ -234,10 +234,6 @@ export class ReservationDashboardComponent implements OnInit {
       });
   }
 
-  // public goToGroups(reservationId: string): void {
-  //   this.router.navigate(['/reservations', reservationId, 'group-order']);
-  // }
-
   openEditModal(reservation: ReservationCustomer): void {
     this.selectedReservation.set(reservation);
 
