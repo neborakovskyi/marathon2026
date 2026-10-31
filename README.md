@@ -1,4 +1,105 @@
-# Deployment Guide
+# Green & Tasty — Restaurant Booking and Pre-order Platform
+
+Green & Tasty is a restaurant platform for managing reservations, menus, pre-orders, guest sessions, and restaurant operations. This repository contains the Angular frontend, the AWS Lambda backend, shared AWS infrastructure, and supporting development and training materials.
+
+## Product overview
+
+The application supports these workflows:
+
+- Customers browse restaurant locations and menus, make reservations, and place orders.
+- Reservation guests can join a group session and submit pre-orders.
+- Customers can sign in, manage their profiles, and leave feedback.
+- Waiters and administrators have dashboards for restaurant operations and reporting.
+- Report-generation tasks are processed asynchronously.
+
+## Architecture
+
+| Component | Technology | Responsibility |
+|---|---|---|
+| Frontend | Angular 22, TypeScript | Single-page application for customer, waiter, and admin workflows |
+| API | .NET 10 AWS Lambda functions behind API Gateway | HTTP endpoints and application business logic |
+| Data and identity | Amazon DynamoDB and Amazon Cognito | Application persistence and user authentication |
+| Asynchronous reports | Amazon SQS and AWS Lambda | Report-generation and delivery pipeline |
+| Shared infrastructure | Terraform | AWS resources, including frontend hosting and supporting services |
+| Frontend hosting | Amazon S3 and CloudFront | Static application hosting and content delivery |
+
+The AWS region used by the repository's Terraform and Syndicate configurations is `us-west-2`.
+
+## Repository layout
+
+```text
+backend/restaurant-backend-app/   .NET Lambda solution, API contract, and backend tests
+frontend/restaurant-frontend-app/ Angular application, build scripts, and frontend tests
+infra/terraform/                  Shared AWS infrastructure
+data/                             JSON data files used by the project
+homework-design/                  Design references for the training assignment
+```
+
+## Local development
+
+### Frontend
+
+Install Node.js 22.22.3+ or 24.15.0+ (see `frontend/restaurant-frontend-app/.nvmrc`), then run:
+
+```bash
+cd frontend/restaurant-frontend-app
+npm ci
+npm start
+```
+
+Open `http://localhost:4200`. The development frontend uses the deployed API configured in `src/environments/environment.development.ts`; this repository does not provide a local HTTP backend.
+
+### Backend
+
+The backend is deployed to AWS and does not have a local API host. Backend unit tests can be run locally:
+
+```bash
+cd backend/restaurant-backend-app
+dotnet test Tests/APIHandler.Tests.csproj
+```
+
+For AWS credentials, Syndicate configuration, and deployment setup, see [backend/restaurant-backend-app/local-setup-guide.md](backend/restaurant-backend-app/local-setup-guide.md).
+
+## Tests and checks
+
+Run frontend checks from `frontend/restaurant-frontend-app`:
+
+```bash
+npm test
+npm run lint
+```
+
+Run backend unit tests from `backend/restaurant-backend-app`:
+
+```bash
+dotnet test Tests/APIHandler.Tests.csproj
+```
+
+The frontend package also provides `npm run test:hw` for the group pre-order assignment tests.
+
+## Documentation
+
+| Document | Description |
+|---|---|
+| [Frontend guide](frontend/restaurant-frontend-app/CLAUDE.md) | Frontend structure, conventions, and development guidance |
+| [Backend guide](backend/restaurant-backend-app/CLAUDE.md) | Lambda architecture, implementation conventions, and testing |
+| [API routes](backend/restaurant-backend-app/docs/ApiRoutes.md) | HTTP endpoint contract |
+| [Backend local setup](backend/restaurant-backend-app/local-setup-guide.md) | AWS CLI and Syndicate configuration |
+| [Contributor map](AGENTS.md) | Source-of-truth files and repository working agreements |
+
+## Deployment
+
+The standard AWS deployment has three stages:
+
+1. Provision shared resources with Terraform.
+2. Deploy the backend with AWS Syndicate.
+3. Build the frontend with the deployed API URL and upload it to S3.
+
+The detailed prerequisites, commands, and cleanup steps are documented below.
+
+---
+
+# AWS Deployment Guide
 
 Contributor and agent docs: [AGENTS.md](AGENTS.md). Frontend: `frontend/restaurant-frontend-app/CLAUDE.md`. Backend: `backend/restaurant-backend-app/CLAUDE.md`.
 
