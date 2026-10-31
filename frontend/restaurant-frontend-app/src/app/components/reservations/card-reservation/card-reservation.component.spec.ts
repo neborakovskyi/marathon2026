@@ -57,7 +57,7 @@ describe('CardReservationComponent', () => {
   function createFixture(reservation: ReservationCustomer): void {
     fixture = TestBed.createComponent(CardReservationComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('r', reservation);
+    fixture.componentRef.setInput('reservation', reservation);
     fixture.detectChanges();
   }
 });

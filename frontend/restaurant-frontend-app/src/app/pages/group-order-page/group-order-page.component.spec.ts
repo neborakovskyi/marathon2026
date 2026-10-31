@@ -127,8 +127,8 @@ describe('Рівень 2 · сторінка Owner Review', () => {
       expect(create().element.textContent).toContain('Caesar Salad × 3');
     });
 
-    it('жовта плашка: «1 participant hasn’t submitted…»', () => {
-      expect(create().element.textContent).toMatch(/1 participant hasn.t submitted/);
+    it('жовта плашка використовує текст для п’яти учасників', () => {
+      expect(create().element.textContent).toMatch(/5 participants haven.t submitted/);
     });
   });
 

@@ -23,22 +23,22 @@ describe('Рівень 3 · тихі запити сервісу', () => {
 
   afterEach(() => http.verify());
 
-  it('getSessions$(id, { silent: true }) не показує toast на помилку', () => {
-    service.getSessions$('grp-1', { silent: true }).subscribe();
+  it('getSessions$(id, sessionToken, { silent: true }) не показує toast на помилку', () => {
+    service.getSessions$('grp-1', undefined, { silent: true }).subscribe();
     const req = http.expectOne(`${BASE_URL}/guest/groups/grp-1/sessions`);
     expect(req.request.context.get(SKIP_ERROR_TOAST)).toBeTrue();
     req.flush({ participants: [], total: 0 });
   });
 
-  it('getStatus$(id, { silent: true }) не показує toast на помилку', () => {
-    service.getStatus$('grp-1', { silent: true }).subscribe();
+  it('getStatus$(id, sessionToken, { silent: true }) не показує toast на помилку', () => {
+    service.getStatus$('grp-1', undefined, { silent: true }).subscribe();
     const req = http.expectOne(`${BASE_URL}/guest/groups/grp-1/status`);
     expect(req.request.context.get(SKIP_ERROR_TOAST)).toBeTrue();
     req.flush({ currentParticipants: 3, maxCapacity: 5, status: 'Open' });
   });
 
   it('звичайний запит (без silent) показує toast як завжди', () => {
-    service.getSessions$('grp-1').subscribe();
+    service.getSessions$('grp-1', undefined).subscribe();
     const req = http.expectOne(`${BASE_URL}/guest/groups/grp-1/sessions`);
     expect(req.request.context.get(SKIP_ERROR_TOAST)).toBeFalse();
     req.flush({ participants: [], total: 0 });

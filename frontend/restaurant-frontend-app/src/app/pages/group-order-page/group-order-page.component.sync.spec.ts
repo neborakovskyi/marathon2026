@@ -87,7 +87,11 @@ describe('Рівень 3 · синхронізація', () => {
   it('фонові запити тихі: { silent: true }', fakeAsync(() => {
     create();
     tick(SYNC_MS);
-    expect(service.getSessions$.calls.mostRecent().args).toEqual(['grp-1', jasmine.objectContaining({ silent: true })]);
+    expect(service.getSessions$.calls.mostRecent().args).toEqual([
+      'grp-1',
+      'test-token',
+      jasmine.objectContaining({ silent: true }),
+    ]);
     discardPeriodicTasks();
   }));
 

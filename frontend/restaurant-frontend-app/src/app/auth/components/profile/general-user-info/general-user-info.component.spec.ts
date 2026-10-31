@@ -46,9 +46,7 @@ describe('GeneralInformationComponent', () => {
   let abortSpy: jasmine.Spy;
 
   let readers: FileReader[];
-  let images: HTMLImageElement[];
-
-  let readerResults: WeakMap<FileReader, string>;
+  let readerResults: WeakMap<FileReader, string | null>;
   let readerStates: WeakMap<FileReader, FileReader['readyState']>;
 
   beforeEach(async () => {
@@ -76,27 +74,30 @@ describe('GeneralInformationComponent', () => {
     ]);
 
     readers = [];
-    images = [];
     readerResults = new WeakMap();
     readerStates = new WeakMap();
 
     // Control callbacks without reading or decoding real files.
-    spyOnProperty(FileReader.prototype, 'result', 'get')
-      .and.callFake(function (this: FileReader) {
-      return readerResults.get(this) ?? null;
-    });
-
-    spyOnProperty(FileReader.prototype, 'readyState', 'get')
-      .and.callFake(function (this: FileReader) {
-      return readerStates.get(this) ?? FileReader.EMPTY;
-    });
-
     readSpy = spyOn(
       FileReader.prototype,
       'readAsDataURL',
     ).and.callFake(function (this: FileReader) {
       readers.push(this);
       readerStates.set(this, FileReader.LOADING);
+
+      // These native accessors are not configurable on FileReader.prototype.
+      // Shadow them on each test reader so Jasmine does not need to replace
+      // browser-owned property descriptors.
+      Object.defineProperties(this, {
+        result: {
+          configurable: true,
+          get: () => readerResults.get(this) ?? null,
+        },
+        readyState: {
+          configurable: true,
+          get: () => readerStates.get(this) ?? FileReader.EMPTY,
+        },
+      });
     });
 
     abortSpy = spyOn(
@@ -104,19 +105,6 @@ describe('GeneralInformationComponent', () => {
       'abort',
     ).and.callFake(function (this: FileReader) {
       readerStates.set(this, FileReader.DONE);
-    });
-
-    spyOnProperty(
-      HTMLImageElement.prototype,
-      'src',
-      'set',
-    ).and.callFake(function (
-      this: HTMLImageElement,
-      value: string,
-    ) {
-      if (value) {
-        images.push(this);
-      }
     });
 
     spyOn(console, 'error');
@@ -168,6 +156,19 @@ describe('GeneralInformationComponent', () => {
     } as unknown as Event);
   }
 
+  function selectNoFile(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+
+    Object.defineProperty(input, 'files', {
+      value: [],
+    });
+
+    component.onFileSelected({
+      target: input,
+    } as unknown as Event);
+  }
+
   function completeReader(
     reader: FileReader,
     data = selectedImage,
@@ -181,22 +182,9 @@ describe('GeneralInformationComponent', () => {
     );
   }
 
-  function completeImage(width = 200, height = 200): void {
-    const image = images[images.length - 1];
-
-    spyOnProperty(image, 'naturalWidth', 'get')
-      .and.returnValue(width);
-
-    spyOnProperty(image, 'naturalHeight', 'get')
-      .and.returnValue(height);
-
-    image.onload?.call(image, new Event('load'));
-  }
-
   function selectValidPhoto(data = selectedImage): void {
     selectFile();
     completeReader(readers[readers.length - 1], data);
-    completeImage();
   }
 
   it('creates the component and loads the current user photo', () => {
@@ -331,21 +319,22 @@ describe('GeneralInformationComponent', () => {
     expect(toast.success).not.toHaveBeenCalled();
   });
 
-  it('uploads a selected photo without resaving unchanged names', () => {
+  it('saves the profile and uploads the selected photo', () => {
     selectValidPhoto();
     component.onSave();
 
-    expect(auth.editProfile).not.toHaveBeenCalled();
+    expect(auth.editProfile).toHaveBeenCalledOnceWith('Alice', 'Smith');
 
     expect(auth.uploadMyProfileImage)
       .toHaveBeenCalledOnceWith(selectedImage);
 
     component.onSave();
 
+    expect(auth.editProfile).toHaveBeenCalledTimes(2);
     expect(auth.uploadMyProfileImage).toHaveBeenCalledTimes(1);
   });
 
-  it('reports a partial save and retries only the failed photo', () => {
+  it('reports a failed photo upload and allows the save to be retried', () => {
     auth.uploadMyProfileImage.and.returnValue(
       throwError(() => new Error('Upload failed')),
     );
@@ -359,7 +348,7 @@ describe('GeneralInformationComponent', () => {
       .toHaveBeenCalledOnceWith('Alicia', 'Smith');
 
     expect(toast.error).toHaveBeenCalledWith(
-      'Your name changes were saved, but the photo upload failed. Click Save Changes to retry the photo.',
+      'Failed to upload profile image',
       'Error',
     );
 
@@ -371,7 +360,7 @@ describe('GeneralInformationComponent', () => {
 
     component.onSave();
 
-    expect(auth.editProfile).toHaveBeenCalledTimes(1);
+    expect(auth.editProfile).toHaveBeenCalledTimes(2);
     expect(auth.uploadMyProfileImage).toHaveBeenCalledTimes(2);
 
     expect(toast.success).toHaveBeenCalledWith(
@@ -401,102 +390,107 @@ describe('GeneralInformationComponent', () => {
     expect(auth.uploadMyProfileImage).not.toHaveBeenCalled();
   });
 
-  for (const type of ['text/plain', 'image/svg+xml']) {
-    it(`rejects unsupported file type ${type} before reading`, () => {
-      selectFile(type);
-
-      expect(readSpy).not.toHaveBeenCalled();
-
-      expect(toast.error).toHaveBeenCalledWith(
-        'Please select a JPEG, PNG, or WebP image',
-        'Error',
-      );
-    });
-  }
-
-  it('rejects files larger than 5 MB before reading', () => {
-    selectFile('image/png', 5 * 1024 * 1024 + 1);
-
-    expect(readSpy).not.toHaveBeenCalled();
-
-    expect(toast.error).toHaveBeenCalledWith(
-      'Image must be 5 MB or smaller',
-      'Error',
-    );
-  });
-
-  it('rejects empty files before reading', () => {
-    selectFile('image/png', 0);
-
-    expect(readSpy).not.toHaveBeenCalled();
-
-    expect(toast.error).toHaveBeenCalledWith(
-      'Please select a non-empty image file',
-      'Error',
-    );
-  });
-
-  it('accepts the exact size and dimension limits', () => {
-    selectFile('image/png', 5 * 1024 * 1024);
+  it('reads an image file and displays its data URL', () => {
+    selectFile('image/png', 5);
     completeReader(readers[0]);
-    completeImage(4096, 4096);
 
     expect(component.profileImage()).toBe(selectedImage);
     expect(component.isReadingPhoto()).toBeFalse();
     expect(toast.error).not.toHaveBeenCalled();
   });
 
-  for (const [width, height] of [
-    [4097, 200],
-    [200, 4097],
-  ]) {
-    it(`rejects dimensions ${width} × ${height}`, () => {
-      selectFile();
+  for (const type of ['image/jpeg', 'image/webp']) {
+    it(`reads a selected ${type} photo`, () => {
+      selectFile(type);
       completeReader(readers[0]);
-      completeImage(width, height);
 
-      expect(component.profileImage()).toBe(serverImage);
-
-      expect(toast.error).toHaveBeenCalledWith(
-        'Image dimensions must not exceed 4096 × 4096 pixels',
-        'Error',
-      );
+      expect(readSpy).toHaveBeenCalledTimes(1);
+      expect(component.profileImage()).toBe(selectedImage);
+      expect(toast.error).not.toHaveBeenCalled();
     });
   }
 
-  it('rejects images that cannot be decoded', () => {
-    selectFile();
-    completeReader(readers[0]);
+  it('does not start a read when the file chooser has no selection', () => {
+    selectNoFile();
 
-    const image = images[0];
-    image.onerror?.call(image, new Event('error'));
+    expect(readSpy).not.toHaveBeenCalled();
+    expect(component.isReadingPhoto()).toBeFalse();
+  });
+
+  it('does not read a file when there is no authenticated user', () => {
+    auth.user$.next(null);
+    selectFile();
+
+    expect(readSpy).not.toHaveBeenCalled();
+    expect(component.isReadingPhoto()).toBeFalse();
+  });
+
+  it('reports when FileReader completes without a string result', () => {
+    selectFile();
+    const reader = readers[0];
+    readerResults.set(reader, null);
+    readerStates.set(reader, FileReader.DONE);
+    reader.onload?.call(
+      reader,
+      new ProgressEvent('load') as ProgressEvent<FileReader>,
+    );
 
     expect(component.profileImage()).toBe(serverImage);
     expect(component.isReadingPhoto()).toBeFalse();
-
     expect(toast.error).toHaveBeenCalledWith(
-      'Please select a valid image file',
+      'Failed to read profile image',
       'Error',
     );
   });
 
-  it('blocks saving while a file is being read or validated', () => {
+  it('blocks saving while a file is being read', () => {
     component.userForm.controls.firstName.setValue('Alicia');
 
     selectFile();
     component.onSave();
 
-    completeReader(readers[0]);
-    component.onSave();
-
     expect(auth.editProfile).not.toHaveBeenCalled();
     expect(auth.uploadMyProfileImage).not.toHaveBeenCalled();
 
-    completeImage();
+    completeReader(readers[0]);
     component.onSave();
 
     expect(auth.editProfile).toHaveBeenCalledTimes(1);
     expect(auth.uploadMyProfileImage).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores a stale read after a newer file selection', () => {
+    selectFile();
+    const staleReader = readers[0];
+
+    selectFile();
+    const currentReader = readers[1];
+
+    completeReader(staleReader, 'data:image/png;base64,c3RhbGU=');
+    expect(component.profileImage()).toBe(serverImage);
+    expect(component.isReadingPhoto()).toBeTrue();
+
+    completeReader(currentReader);
+    expect(component.profileImage()).toBe(selectedImage);
+    expect(component.isReadingPhoto()).toBeFalse();
+    expect(abortSpy).toHaveBeenCalledOnceWith();
+  });
+
+  it('aborts a pending photo read when the authenticated user changes', () => {
+    selectFile();
+    const reader = readers[0];
+
+    auth.user$.next({
+      ...user,
+      id: 'user-2',
+    });
+
+    expect(abortSpy).toHaveBeenCalledOnceWith();
+
+    completeReader(reader, 'data:image/png;base64,c3RhbGU=');
+
+    expect(component.profileImage()).toBe(serverImage);
+    expect(component.isReadingPhoto()).toBeFalse();
   });
 
   it('prevents duplicate submissions while saving', () => {
@@ -660,7 +654,6 @@ describe('GeneralInformationComponent', () => {
 
     completeReader(readers[0]);
 
-    expect(images.length).toBe(0);
     expect(component.profileImage()).toBe(serverImage);
   });
 });

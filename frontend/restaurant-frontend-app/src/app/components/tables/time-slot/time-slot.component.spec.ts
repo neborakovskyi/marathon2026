@@ -13,6 +13,10 @@ describe('TimeSlotComponent', () => {
 
     fixture = TestBed.createComponent(TimeSlotComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('timeRange', {
+      start: '2026-10-31T12:00:00Z',
+      end: '2026-10-31T13:30:00Z',
+    });
     fixture.detectChanges();
   });
 

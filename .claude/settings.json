@@ -1,12 +1,16 @@
 {
-  "env": {
-    "ANTHROPIC_BASE_URL": "http://localhost:20129/v1",
-    "ANTHROPIC_AUTH_TOKEN": "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",
-    "ANTHROPIC_API_KEY": "",
-    "ANTHROPIC_MODEL": "nvidia/nemotron-3-ultra-550b-a55b:free",
-    "ANTHROPIC_SMALL_FAST_MODEL": "nvidia/nemotron-3-ultra-550b-a55b:free"
-  },
-  "permissions": {
-    "allow": ["Bash(aws *)"]
-  }
+	"maxEffortLevel": "medium",
+	"permissions": {
+		"defaultMode": "acceptEdits"
+	},
+	"env": {
+		"ANTHROPIC_BASE_URL": "http://localhost:20129",
+		"ANTHROPIC_AUTH_TOKEN": "omniroute",
+		"ANTHROPIC_MODEL": "claude-free",
+		"ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-free",
+		"ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-free",
+		"ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-free",
+		"CLAUDE_CODE_MAX_CONTEXT_TOKENS": "131072",
+		"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+	}
 }

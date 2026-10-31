@@ -33,7 +33,7 @@ describe('Рівень 2 · GroupOrdersService', () => {
   });
 
   it('getSessions$: GET /guest/groups/{id}/sessions', () => {
-    service.getSessions$('grp-1').subscribe();
+    service.getSessions$('grp-1', undefined).subscribe();
     const req = http.expectOne(`${BASE_URL}/guest/groups/grp-1/sessions`);
     expect(req.request.method).toBe('GET');
     req.flush({ participants: [], total: 0 });
@@ -49,7 +49,7 @@ describe('Рівень 2 · GroupOrdersService', () => {
   });
 
   it('getStatus$: GET /guest/groups/{id}/status', () => {
-    service.getStatus$('grp-1').subscribe();
+    service.getStatus$('grp-1', undefined).subscribe();
     const req = http.expectOne(`${BASE_URL}/guest/groups/grp-1/status`);
     expect(req.request.method).toBe('GET');
     req.flush({ currentParticipants: 3, maxCapacity: 5, status: 'Open' });
