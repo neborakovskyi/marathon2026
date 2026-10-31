@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\dnapp\lambdas\api-handler\APIHandler.csproj" />
+    <ProjectReference Include="..\dnapp\lambdas\reports-handler\ReportsHandler.csproj" />
+    <ProjectReference Include="..\dnapp\lambdas\report-sender\ReportSender.csproj" />
   </ItemGroup>
 
   <ItemGroup>
