@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
-          cache-dependency-path: aqa/restaurant-aqa-framework/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Node dependencies
         run: npm ci
