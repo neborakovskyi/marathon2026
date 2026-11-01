@@ -39,8 +39,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: 'npm'
-          cache-dependency-path: aqa/restaurant-aqa-framework/package-lock.json
 
       - name: Install Node dependencies
         run: npm ci
