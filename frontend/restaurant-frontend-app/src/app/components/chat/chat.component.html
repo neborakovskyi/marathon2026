@@ -1,0 +1,50 @@
+   <!-- button open/close chat -->
+    <button class="chat-toggle-btn" (click)="isOpen.set(!isOpen())">
+      @if (isOpen()) {
+        ✕
+      } @else {
+        💬
+      }
+    </button>
+
+    <!-- chat window -->
+    @if (isOpen()) {
+      <div class="chat-container">
+        <!-- chat head -->
+        <div class="chat-header">
+          <h3>AI Valera</h3>
+          <span class="status-badge">online</span>
+        </div>
+
+        <!-- Message list -->
+        <div class="messages-list">
+          @for (msg of chatService.messages(); track $index) {
+            <div [class]="'message-wrapper ' + msg.role">
+              <div class="message-bubble">
+                {{ msg.text }}
+              </div>
+            </div>
+          }
+          @if (chatService.isStreaming()) {
+            <div class="message-wrapper assistant">
+              <div class="message-bubble typing">
+                <span>.</span><span>.</span><span>.</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Input panel -->
+        <div class="input-panel">
+          <input
+            [(ngModel)]="inputQuery"
+            (keyup.enter)="send()"
+            placeholder="Ask me to make a order ..."
+            [disabled]="chatService.isStreaming()"
+          />
+          <button (click)="send()" [disabled]="chatService.isStreaming() || !inputQuery.trim()">
+            ➔
+          </button>
+        </div>
+      </div>
+    }
