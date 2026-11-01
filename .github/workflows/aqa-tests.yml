@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: aqa/restaurant-aqa-framework
+        working-directory: ./aqa/restaurant-aqa-framework
 
     env:
       UI_URL: ${{ vars.AQA_UI_URL }}

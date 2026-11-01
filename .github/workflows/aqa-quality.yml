@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: aqa/restaurant-aqa-framework
+        working-directory: ./aqa/restaurant-aqa-framework
 
     steps:
       - name: Checkout repository
@@ -44,6 +44,7 @@ jobs:
 
       - name: Install Node dependencies
         run: npm ci
+        working-directory: ./aqa/restaurant-aqa-framework
 
       - name: Check for generated files tracked by git
         run: |
@@ -51,15 +52,20 @@ jobs:
             echo "::error::Generated files are tracked. Remove them from git."
             exit 1
           fi
+        working-directory: ./aqa/restaurant-aqa-framework
 
       - name: Verify dotnet format
         run: dotnet format restaurant-aqa-framework.csproj --verify-no-changes --no-restore
+        working-directory: ./aqa/restaurant-aqa-framework
 
       - name: Gherkin lint on all feature files
         run: npx gherkin-lint -c .gherkin-lintrc "Features/*.feature"
+        working-directory: ./aqa/restaurant-aqa-framework
 
       - name: Build (warnings as errors)
         run: dotnet build restaurant-aqa-framework.csproj --nologo -v q
+        working-directory: ./aqa/restaurant-aqa-framework
 
       - name: Test discovery (verify test project compiles and tests are discoverable)
         run: dotnet test restaurant-aqa-framework.csproj --list-tests --nologo -v q
+        working-directory: ./aqa/restaurant-aqa-framework
