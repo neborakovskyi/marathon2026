@@ -1,0 +1,65 @@
+name: AQA Quality Gates
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'aqa/restaurant-aqa-framework/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'aqa/restaurant-aqa-framework/**'
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aqa/restaurant-aqa-framework
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore .NET tools (husky, gherkin-lint)
+        run: dotnet tool restore --tool-manifest .config/dotnet-tools.json
+
+      - name: Setup Node.js (for gherkin-lint)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Check for generated files tracked by git
+        run: |
+          if git ls-files --others --ignored --exclude-standard | grep -qE '\.(cs|feature)$'; then
+            echo "::error::Generated files are tracked. Remove them from git."
+            exit 1
+          fi
+
+      - name: Verify dotnet format
+        run: dotnet format restaurant-aqa-framework.csproj --verify-no-changes --no-restore
+
+      - name: Gherkin lint on all feature files
+        run: npx gherkin-lint -c .gherkin-lintrc "Features/*.feature"
+
+      - name: Build (warnings as errors)
+        run: dotnet build restaurant-aqa-framework.csproj --nologo -v q
+
+      - name: Test discovery (verify test project compiles and tests are discoverable)
+        run: dotnet test restaurant-aqa-framework.csproj --list-tests --nologo -v q

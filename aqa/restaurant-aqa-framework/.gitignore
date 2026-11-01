@@ -16,3 +16,11 @@ TestResults/
 
 # Local configuration and credentials: never committed. Copy .env.example to .env.
 .env
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

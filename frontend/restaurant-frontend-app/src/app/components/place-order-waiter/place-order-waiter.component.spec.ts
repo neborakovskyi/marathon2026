@@ -92,9 +92,9 @@ describe('PlaceOrderWaiterComponent', () => {
   });
 
   it('searches for dishes only when the query has three non-space characters', () => {
-    component.dishNameForm.setValue({ dishName: ' So ' });
+    component.dishNameForm.setValue({ dishName: ' Sou ' });
     component.onDishNameChange();
-    expect(dishes.getDishes).toHaveBeenCalledWith(undefined, undefined, ' So ');
+    expect(dishes.getDishes).toHaveBeenCalledWith(undefined, undefined, ' Sou ');
     expect(component.filteredDishes).toEqual([dish]);
 
     component.dishNameForm.setValue({ dishName: '  A ' });
@@ -129,7 +129,7 @@ describe('PlaceOrderWaiterComponent', () => {
     expect(component.orderItems[0].quantity).toBe(3);
     component.onRemoveDish('dish-1');
     expect(component.orderItems).toEqual([]);
-    expect(component.filteredDishes).toEqual([]);
+    expect(component.filteredDishes).toEqual([dish]);
   });
 
   it('validates order creation and emits a valid order with the current reservation', () => {

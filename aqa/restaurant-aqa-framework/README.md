@@ -2,6 +2,9 @@
 
 End-to-end tests for the Green & Tasty restaurant application: Reqnroll (Gherkin) + TUnit + Playwright for .NET, with the Screenplay pattern.
 
+**Chosen direction:** Направление 2 (Existing functionality) — testing the original deployed application
+**Approach:** BDD + Screenplay pattern (Reqnroll + TUnit + Playwright for .NET)
+
 Guidance for extending the suite (writing Gherkin, steps, Screenplay, test data, working with an AI assistant) is in [CLAUDE.md](CLAUDE.md).
 
 ## Run the tests
@@ -16,6 +19,34 @@ dotnet run --no-build -- --treenode-filter "/*/*/*/*[Category=smoke]"   # by tag
 Everything a run produces lands in `TestResults/`: the TUnit report and TRX, the Reqnroll report in `reqnroll/`, and Playwright traces in `traces/` (open one with `npx playwright show-trace <file>.zip`).
 
 Some scenarios are expected to fail (`@known-defect`, bugs in the application) or are skipped (`@wip`, no admin account configured). That is intentional.
+
+## Running test subsets
+
+```bash
+# By tag (Reqnroll tags)
+dotnet run --no-build -- --where "@smoke"
+dotnet run --no-build -- --where "@api and not @wip"
+dotnet run --no-build -- --where "@ui and @validation"
+
+# By TUnit filter (test tree nodes)
+dotnet run --no-build -- --treenode-filter "/*/*/*/*[Category=smoke]"
+dotnet run --no-build -- --treenode-filter "*PreOrder*"
+
+# By feature file
+dotnet run --no-build -- --where "@smoke and @api" --features "Features/Reservations.feature"
+```
+
+## Reports
+
+| Artifact | Location |
+|----------|----------|
+| TUnit HTML report | `TestResults/*.html` |
+| TRX (for CI) | `TestResults/*.trx` |
+| Reqnroll report | `TestResults/reqnroll/*.html` |
+| Playwright traces | `TestResults/traces/*.zip` |
+| Screenshots (on failure) | `TestResults/screenshots/*.png` |
+
+Open traces: `npx playwright show-trace TestResults/traces/<file>.zip`
 
 ## Quality gates
 
@@ -33,6 +64,62 @@ git config core.hooksPath aqa/restaurant-aqa-framework/.husky
 ```
 
 The hooks only act on commits and pushes that touch `aqa/restaurant-aqa-framework`. Gherkin lint needs Node.js.
+
+## CI Configuration
+
+### GitHub Actions Workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `aqa-quality.yml` | Push/PR to main/master | Format check, build (warnings as errors), Gherkin lint, test discovery |
+| `aqa-tests.yml` | Nightly (02:00 UTC), manual dispatch | Full test run with reports and artifacts |
+
+### Required Repository Variables
+
+| Variable | Description |
+|----------|-------------|
+| `AQA_UI_URL` | Frontend URL (e.g., `https://your-app.gh-pages.com`) |
+| `AQA_API_URL` | Backend API URL including stage (e.g., `https://api.execute-api.region.amazonaws.com/develop`) |
+| `AQA_TESTTABLE_ID` | Pre-existing table ID for deterministic tests |
+
+### Required Repository Secrets
+
+| Secret | Description |
+|--------|-------------|
+| `AQA_WAITER_USERNAME` | Waiter account email |
+| `AQA_WAITER_PASSWORD` | Waiter account password |
+| `AQA_ADMIN_USERNAME` | Admin account email (optional) |
+| `AQA_ADMIN_PASSWORD` | Admin account password (optional) |
+| `AQA_TESTTABLE_WAITER_USERNAME` | Waiter assigned to test table |
+| `AQA_TESTTABLE_WAITER_PASSWORD` | Waiter password for test table |
+
+### Report Portal (⭐ Starred Task)
+
+To enable Report Portal integration:
+1. Deploy Report Portal (Docker Compose locally or cloud)
+2. Add `RP_ENDPOINT`, `RP_UUID`, `RP_PROJECT` as repository variables
+3. Add `RP_API_KEY` as a repository secret
+4. Update test runner to use Report Portal listener
+
+### AWS / Cloud Pipeline (⭐ Starred Task)
+
+The `aqa-tests.yml` workflow runs on GitHub Actions (cloud). For AWS-specific deployment:
+- Use `aws-actions/configure-aws-credentials` in the workflow
+- Deploy to ECS Fargate, CodeBuild, or similar for test execution
+- Store artifacts in S3
+
+## Behavior Decisions (Undefined in Homework)
+
+For scenarios where the specification doesn't define exact behavior:
+
+| Scenario | Decision | Rationale |
+|----------|----------|-----------|
+| Duplicate pre-order submission | Returns 400 with "Already submitted" | Idempotency protects against double-clicks |
+| Non-owner confirming group pre-order | Returns 403 Forbidden | Only group owner can submit |
+| Delete non-existent participant | Returns 404 Not Found | Standard REST convention |
+| Delete participant from another group | Returns 400 Bad Request | Cross-group access denied |
+| Delete last participant | Allowed, group becomes empty with `participants: []` and `total: 0` | Explicitly allowed per homework |
+| Feedback for non-completed reservation | Returns 400 "Reservation not completed" | Business rule: only after visit |
 
 ## Configuration
 

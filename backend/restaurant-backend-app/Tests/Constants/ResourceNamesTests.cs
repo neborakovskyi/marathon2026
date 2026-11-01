@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace APIHandler.Tests.Constants;
 
+[Collection("ResourceNamesEnvironment")]
 public class ResourceNamesTests
 {
     [Fact]
@@ -66,4 +67,10 @@ public class ResourceNamesTests
         Assert.Equal("GSI_ReservationId", ResourceNames.OrdersTableReservationIdGlobalIndex);
         Assert.Equal("UserIdIndex", ResourceNames.ReportsHistoryTableUserIdGlobalIndex);
     }
+
+}
+
+[CollectionDefinition("ResourceNamesEnvironment", DisableParallelization = true)]
+public sealed class ResourceNamesEnvironmentCollection
+{
 }

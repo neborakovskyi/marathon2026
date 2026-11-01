@@ -1,0 +1,110 @@
+name: AQA Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'TUnit filter (e.g. "/*/*/*/*[Category=smoke]")'
+        required: false
+        default: ''
+      tags:
+        description: 'Reqnroll tags (e.g. "@smoke and not @wip")'
+        required: false
+        default: ''
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 02:00 UTC
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aqa/restaurant-aqa-framework
+
+    env:
+      UI_URL: ${{ vars.AQA_UI_URL }}
+      API_URL: ${{ vars.AQA_API_URL }}
+      WAITER_USERNAME: ${{ secrets.AQA_WAITER_USERNAME }}
+      WAITER_PASSWORD: ${{ secrets.AQA_WAITER_PASSWORD }}
+      ADMIN_USERNAME: ${{ secrets.AQA_ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.AQA_ADMIN_PASSWORD }}
+      TESTTABLE_ID: ${{ vars.AQA_TESTTABLE_ID }}
+      TESTTABLE_WAITER_USERNAME: ${{ secrets.AQA_TESTTABLE_WAITER_USERNAME }}
+      TESTTABLE_WAITER_PASSWORD: ${{ secrets.AQA_TESTTABLE_WAITER_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install Playwright browsers
+        run: |
+          dotnet build restaurant-aqa-framework.csproj --nologo -v q
+          pwsh bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
+
+      - name: Run tests
+        id: test-run
+        run: |
+          FILTER="${{ github.event.inputs.filter }}"
+          TAGS="${{ github.event.inputs.tags }}"
+
+          CMD="dotnet run --no-build --project restaurant-aqa-framework.csproj -- --results-directory TestResults"
+
+          if [ -n "$FILTER" ]; then
+            CMD="$CMD --treenode-filter \"$FILTER\""
+          fi
+
+          if [ -n "$TAGS" ]; then
+            CMD="$CMD --where \"$TAGS\""
+          fi
+
+          echo "Running: $CMD"
+          eval $CMD || true  # Don't fail the workflow on test failures
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aqa-test-results
+          path: |
+            aqa/restaurant-aqa-framework/TestResults/**
+          retention-days: 30
+
+      - name: Upload Playwright traces
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aqa-playwright-traces
+          path: |
+            aqa/restaurant-aqa-framework/TestResults/traces/**
+          retention-days: 30
+
+      - name: Upload Reqnroll report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aqa-reqnroll-report
+          path: |
+            aqa/restaurant-aqa-framework/TestResults/reqnroll/**
+          retention-days: 30
+
+      - name: Summarize results
+        if: always()
+        run: |
+          TRX=$(find TestResults -name "*.trx" | head -1)
+          if [ -f "$TRX" ]; then
+            echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```xml' >> $GITHUB_STEP_SUMMARY
+            head -50 "$TRX" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
