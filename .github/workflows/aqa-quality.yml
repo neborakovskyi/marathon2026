@@ -35,6 +35,9 @@ jobs:
       - name: Restore .NET tools (husky, gherkin-lint)
         run: dotnet tool restore --tool-manifest .config/dotnet-tools.json
 
+      - name: Checkout code Node.js (for gherkin-lint)
+        uses: actions/checkout@v4
+
       - name: Setup Node.js (for gherkin-lint)
         uses: actions/setup-node@v4
         with:
