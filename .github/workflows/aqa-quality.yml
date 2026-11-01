@@ -38,7 +38,7 @@ jobs:
       - name: Setup Node.js (for gherkin-lint)
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-size: 20
 
       - name: Install Node dependencies
         run: npm ci
