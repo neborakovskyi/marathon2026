@@ -4,12 +4,14 @@ import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '@app/shared/config/api-base-url.token';
 import { GuestPreorderStore } from '@app/pages/guest-pre-order-page/state/guest-preorder.store';
 import { ChatHistoryMessage, ChatMessage, ChatRequest, ChatResponse } from './chat.model';
+import { AuthenticationService } from '@app/auth/services/authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
   private readonly guestPreorderStore = inject(GuestPreorderStore);
+  private readonly authenticationService = inject(AuthenticationService);
 
   readonly messages = signal<ChatMessage[]>([]);
   readonly isLoading = signal(false);
@@ -19,16 +21,19 @@ export class ChatService {
     const message = userText.trim();
     if (!message || this.isLoading()) return false;
 
-    const guestSessionId = this.guestPreorderStore.guestSessionId();
-    const guestSessionToken = this.guestPreorderStore.guestSessionToken();
-    if (
-      this.guestPreorderStore.status() !== 'active' ||
-      !guestSessionId ||
-      !guestSessionToken
-    ) {
-      this.error.set('Chat is available during an active guest pre-order session.');
-      return false;
-    }
+    const token = this.authenticationService.getToken();
+    const user = this.authenticationService.getUser();
+
+    // const guestSessionId = this.guestPreorderStore.guestSessionId();
+    // const guestSessionToken = this.guestPreorderStore.guestSessionToken();
+    // if (
+    //   this.guestPreorderStore.status() !== 'active' ||
+    //   !guestSessionId ||
+    //   !guestSessionToken
+    // ) {
+    //   this.error.set('Chat is available during an active guest pre-order session.');
+    //   return false;
+    // }
 
     const history: ChatHistoryMessage[] = this.messages()
       .slice(-8)
@@ -41,13 +46,14 @@ export class ChatService {
     const requestBody: ChatRequest = {
       message,
       history,
-      context: { guestSessionId },
+      context: { guestSessionId: token?.toString() || "" },
+      //guestSessionId },
     };
 
     try {
       const response = await firstValueFrom(
         this.http.post<ChatResponse>(`${this.baseUrl}/chat`, requestBody, {
-          headers: new HttpHeaders({ 'X-Guest-Session-Token': guestSessionToken }),
+          //  headers: new HttpHeaders({ 'X-Guest-Session-Token': guestSessionToken }),
         }),
       );
       if (!response || typeof response.message !== 'string' || !response.message.trim()) {

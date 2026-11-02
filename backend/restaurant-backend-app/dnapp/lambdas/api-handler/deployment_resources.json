@@ -13,9 +13,13 @@
     "policy_content": {
       "Statement": [
         {
-          "Action": "bedrock:InvokeModel",
+          "Sid": "BedrockInvokeModel",
           "Effect": "Allow",
-          "Resource": "arn:aws:bedrock:us-west-2::foundation-model/amazon.nova-lite-v1:0"
+          "Action": [
+            "bedrock:InvokeModel",
+            "bedrock:InvokeModelWithResponseStream"
+          ],
+          "Resource": "arn:aws:bedrock:us-west-2::foundation-model/*"
         }
       ],
       "Version": "2012-10-17"

@@ -138,10 +138,7 @@
       },
       "/chat": {
         "enable_cors": {
-          "state": true,
-          "custom_headers": [
-            "X-Guest-Session-Token"
-          ]
+          "state": true
         },
         "POST": {
           "authorization_type": "NONE",
