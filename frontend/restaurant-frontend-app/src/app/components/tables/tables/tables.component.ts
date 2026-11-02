@@ -73,7 +73,8 @@ export class TablesComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor() {
+  //constructor() {
+  ngOnInit(): void {
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.selectedLocationId = params['locationId'] ?? undefined;
       console.log('location id: ' + this.selectedLocationId);
@@ -85,7 +86,7 @@ export class TablesComponent implements OnInit {
       .subscribe((locations) => {
         this.locationOptions = [
           ALL_LOCATIONS_LABEL,
-          ...locations.map((location) => location.address),
+          ...locations.map((location) => location.address ?? UNKNOWN_LOCATION_LABEL),
         ];
         this.locations = locations;
 
@@ -98,8 +99,8 @@ export class TablesComponent implements OnInit {
           console.log(this.selectedFilter);
         }
       });
-  }
-  ngOnInit(): void {
+
+
     this.dateOptions = generateDateOptions();
     console.log('Date options:', this.dateOptions);
     this.timeOptions = generateTimeOptions(this.dateOptions[0]);

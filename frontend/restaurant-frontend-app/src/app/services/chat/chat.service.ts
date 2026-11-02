@@ -22,18 +22,6 @@ export class ChatService {
     if (!message || this.isLoading()) return false;
 
     const token = this.authenticationService.getToken();
-    const user = this.authenticationService.getUser();
-
-    // const guestSessionId = this.guestPreorderStore.guestSessionId();
-    // const guestSessionToken = this.guestPreorderStore.guestSessionToken();
-    // if (
-    //   this.guestPreorderStore.status() !== 'active' ||
-    //   !guestSessionId ||
-    //   !guestSessionToken
-    // ) {
-    //   this.error.set('Chat is available during an active guest pre-order session.');
-    //   return false;
-    // }
 
     const history: ChatHistoryMessage[] = this.messages()
       .slice(-8)
@@ -47,13 +35,12 @@ export class ChatService {
       message,
       history,
       context: { guestSessionId: token?.toString() || "" },
-      //guestSessionId },
     };
 
     try {
       const response = await firstValueFrom(
         this.http.post<ChatResponse>(`${this.baseUrl}/chat`, requestBody, {
-          //  headers: new HttpHeaders({ 'X-Guest-Session-Token': guestSessionToken }),
+            headers: new HttpHeaders({ 'X-Guest-Session-Token': token?.toString() || "" }),
         }),
       );
       if (!response || typeof response.message !== 'string' || !response.message.trim()) {
