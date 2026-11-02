@@ -15,9 +15,10 @@ export class ChatComponent {
   readonly isOpen = signal(false); // state open/close
   inputQuery = '';
 
-  send() {
+  async send() {
     if (!this.inputQuery.trim()) return;
-    this.chatService.sendMessage(this.inputQuery);
-    this.inputQuery = '';
+    if (await this.chatService.sendMessage(this.inputQuery)) {
+      this.inputQuery = '';
+    }
   }
 }

@@ -14,7 +14,8 @@
         <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.2.0" />
         <PackageReference Include="Amazon.Lambda.SQSEvents" Version="2.2.0" />
         <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="4.0.1.4" />
-        <PackageReference Include="AWSSDK.Core" Version="4.0.101" />
+        <PackageReference Include="AWSSDK.Core" Version="4.0.102.14" />
+        <PackageReference Include="AWSSDK.BedrockRuntime" Version="4.0.101.14" />
         <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.1.5" />
         <PackageReference Include="AWSSDK.S3" Version="4.0.1.7" />
         <PackageReference Include="AWSSDK.SQS" Version="4.0.0.12" />

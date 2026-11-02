@@ -1,4 +1,5 @@
 using Amazon;
+using Amazon.BedrockRuntime;
 using Amazon.CognitoIdentityProvider;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
@@ -6,6 +7,7 @@ using Amazon.S3;
 using Amazon.SQS;
 using APIHandler.Constants;
 using APIHandler.Handlers;
+using APIHandler.Handlers.Chat;
 using APIHandler.Handlers.Dishes;
 using APIHandler.Handlers.Feedbacks;
 using APIHandler.Handlers.GroupReservations;
@@ -37,6 +39,7 @@ using APIHandler.Repositories.Waiters;
 using APIHandler.Services;
 using APIHandler.Services.Auth;
 using APIHandler.Services.Caching;
+using APIHandler.Services.Chat;
 using APIHandler.Services.Dishes;
 using APIHandler.Services.Feedbacks;
 using APIHandler.Services.GroupReservations;
@@ -85,6 +88,9 @@ public static class RouteRegistry
         services.AddSingleton(s3Client);
         services.AddSingleton<IAmazonS3>(s3Client);
 
+        var bedrockRuntimeClient = new AmazonBedrockRuntimeClient(region);
+        services.AddSingleton<IAmazonBedrockRuntime>(bedrockRuntimeClient);
+
         // 2. Repositories
         services.AddSingleton<IUserRepository, UserRepository>();
         services.AddSingleton<IDishRepository, DishRepository>();
@@ -116,6 +122,10 @@ public static class RouteRegistry
         services.AddSingleton<IFeedbackService, FeedbackService>();
         services.AddSingleton<IGuestSessionService, GuestSessionService>();
         services.AddSingleton<IGuestAuthorizationService, GuestAuthorizationService>();
+        services.AddSingleton<IChatService>(serviceProvider => new BedrockChatService(
+            serviceProvider.GetRequiredService<IAmazonBedrockRuntime>(),
+            serviceProvider.GetRequiredService<IGuestSessionService>(),
+            ResourceNames.BedrockModelId));
         services.AddSingleton<IReportService, ReportService>();
 
         var provider = services.BuildServiceProvider();
@@ -209,6 +219,7 @@ public static class RouteRegistry
 
 
         List<RouteHandler> GetAuxiliaryRoutes() => [
+            new RouteHandler(new Route(HttpMethods.POST, "/chat"), ActivatorUtilities.CreateInstance<ChatHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.GET, "/feedback"), ActivatorUtilities.CreateInstance<GetFeedbackForLocationHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.POST, "/feedback"), ActivatorUtilities.CreateInstance<CreateFeedbackHandler>(provider)),
             new RouteHandler(new Route(HttpMethods.PUT, "/feedback"), ActivatorUtilities.CreateInstance<UpdateFeedbackHandler>(provider)),
@@ -230,5 +241,4 @@ public static class RouteRegistry
         return allRoutes;
     }
 }
-
 

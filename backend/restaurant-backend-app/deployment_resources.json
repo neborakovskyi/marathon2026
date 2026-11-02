@@ -136,6 +136,26 @@
           "enable_proxy": true
         }
       },
+      "/chat": {
+        "enable_cors": {
+          "state": true,
+          "custom_headers": [
+            "X-Guest-Session-Token"
+          ]
+        },
+        "POST": {
+          "authorization_type": "NONE",
+          "integration_type": "lambda",
+          "lambda_name": "api-handler",
+          "api_key_required": false,
+          "method_request_parameters": {},
+          "integration_request_body_template": {},
+          "responses": [],
+          "integration_responses": [],
+          "default_error_pattern": true,
+          "enable_proxy": true
+        }
+      },
       "/feedback": {
         "enable_cors": {
           "state": true
@@ -1382,6 +1402,4 @@
     }
   }
 }
-
-
 

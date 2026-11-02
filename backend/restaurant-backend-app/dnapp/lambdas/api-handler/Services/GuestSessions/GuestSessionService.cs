@@ -70,7 +70,7 @@ public class GuestSessionService : IGuestSessionService
         if (guestSession is null)
             return false;
 
-        return guestSession.Id == guestSessionId;
+        return guestSession.Id == guestSessionId && !guestSession.IsSubmitted;
     }
 
     public async Task<CreatGuestSessionResponse> CreateGuestSessionAsync(CreateGuestSessionRequest request)
@@ -498,7 +498,6 @@ public class GuestSessionService : IGuestSessionService
     }
 
 }
-
 
 
 

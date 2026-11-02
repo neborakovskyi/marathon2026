@@ -154,6 +154,13 @@
   100% { opacity: .2; }
 }
 
+.chat-error {
+  padding: 8px 12px;
+  color: #b42318;
+  background: #fef3f2;
+  font-size: 13px;
+}
+
 /* Нижняя панель ввода */
 .input-panel {
   padding: 12px;

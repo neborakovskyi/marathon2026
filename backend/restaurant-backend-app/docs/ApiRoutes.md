@@ -1,5 +1,49 @@
 # API Routes
 
+## Chat
+
+### `POST` /chat
+Requires an active guest pre-order session. Send the guest session token only in the
+`X-Guest-Session-Token` request header; never include it in the JSON body or conversation
+history. The backend validates it against `context.guestSessionId`.
+
+Request body:
+```json
+{
+  "message": "Show me the menu",
+  "history": [
+    { "role": "user", "content": "Hello" },
+    { "role": "assistant", "content": "Hello! How can I help?" }
+  ],
+  "context": {
+    "guestSessionId": "guest-session-id"
+  }
+}
+```
+
+`message` is limited to 1,000 characters; `history` is limited to eight messages with
+roles `user` or `assistant`, each no longer than 2,000 characters. The only available
+tool is the read-only `GetMenu` tool. Chat history is supplied by the client and is not
+persisted.
+
+Response: `200 OK`
+```json
+{
+  "message": "Here is the menu...",
+  "toolCalls": [
+    { "name": "GetMenu", "status": "succeeded" }
+  ]
+}
+```
+
+Errors: `400` invalid request, `401` missing/invalid guest-session token, `502` Bedrock
+failure or unsupported tool response.
+
+The Lambda's `BEDROCK_MODEL_ID` setting defaults to `amazon.nova-lite-v1:0`. The
+Syndicate-managed `api-handler-role` is granted only `bedrock:InvokeModel` for that
+foundation model; update both the setting and the role policy when selecting a different
+model.
+
 ## Auth
 
 ### `POST` /register

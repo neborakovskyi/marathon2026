@@ -8,6 +8,10 @@ public static class ResourceNames
         Environment.GetEnvironmentVariable("REGION")
         ?? throw new InvalidOperationException("Environment variable 'REGION' is not set.");
 
+    public static string BedrockModelId =>
+        Environment.GetEnvironmentVariable("BEDROCK_MODEL_ID")
+        ?? throw new InvalidOperationException("Environment variable 'BEDROCK_MODEL_ID' is not set.");
+
     public static string FeedbackTableName =>
         Environment.GetEnvironmentVariable("FEEDBACK_TABLE_NAME")
         ?? throw new ArgumentException("Environment variable 'FEEDBACK_TABLE_NAME' is not set.");

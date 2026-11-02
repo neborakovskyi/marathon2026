@@ -24,6 +24,7 @@
     "reports_queue_name": "${reports_queue_name}",
     "OrderIndexReservationId": "${orders_index_reservationid}",
     "REGION": "${region}",
+    "BEDROCK_MODEL_ID": "amazon.nova-lite-v1:0",
     "notificationsTable": "${notifications_table_name}",
     "FEEDBACK_TABLE_NAME": "${feedback_table_name}",
     "locationsTable": "${locations-table}",

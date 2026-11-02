@@ -45,6 +45,7 @@ import {
   formatTime,
   revertFormatDate,
 } from '@app/shared/helpers/date-helpers';
+import { ChatComponent } from '@app/components/chat/chat.component';
 
 interface ReservationStatusView {
   class: string;
@@ -61,7 +62,8 @@ interface ReservationStatusView {
     MakeReservationComponent,
     ReservationConfirmedComponent,
     FeedbackWindowComponent,
-  ],
+    ChatComponent
+],
   templateUrl: './reservation-dashboard.component.html',
   styleUrl: './reservation-dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

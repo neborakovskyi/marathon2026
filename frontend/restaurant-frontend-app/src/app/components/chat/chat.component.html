@@ -25,7 +25,7 @@
               </div>
             </div>
           }
-          @if (chatService.isStreaming()) {
+          @if (chatService.isLoading()) {
             <div class="message-wrapper assistant">
               <div class="message-bubble typing">
                 <span>.</span><span>.</span><span>.</span>
@@ -34,15 +34,19 @@
           }
         </div>
 
+        @if (chatService.error(); as errorMessage) {
+          <div class="chat-error" role="alert">{{ errorMessage }}</div>
+        }
+
         <!-- Input panel -->
         <div class="input-panel">
           <input
             [(ngModel)]="inputQuery"
             (keyup.enter)="send()"
-            placeholder="Ask me to make a order ..."
-            [disabled]="chatService.isStreaming()"
+            placeholder="Ask about the menu ..."
+            [disabled]="chatService.isLoading()"
           />
-          <button (click)="send()" [disabled]="chatService.isStreaming() || !inputQuery.trim()">
+          <button (click)="send()" [disabled]="chatService.isLoading() || !inputQuery.trim()">
             ➔
           </button>
         </div>

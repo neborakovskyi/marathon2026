@@ -426,6 +426,7 @@ public class GuestSessionServiceTests
     [AutoData]
     public async Task IsAuthorizedAsync_ValidTokenAndId_ReturnsTrue(GuestSession guestSession, byte[] tokenBytes)
     {
+        guestSession.IsSubmitted = false;
         string tokenString = Convert.ToBase64String(tokenBytes);
         var hashString = Convert.ToBase64String(SHA256.HashData(tokenBytes));
         guestSession.SessionTokenHash = hashString;
@@ -437,6 +438,22 @@ public class GuestSessionServiceTests
         bool result = await _guestSessionService.IsAuthorizedAsync(tokenString, guestSession.Id);
 
         Assert.True(result);
+    }
+
+    [Theory]
+    [AutoData]
+    public async Task IsAuthorizedAsync_SubmittedSession_ReturnsFalse(GuestSession guestSession, byte[] tokenBytes)
+    {
+        guestSession.IsSubmitted = true;
+        string tokenString = Convert.ToBase64String(tokenBytes);
+        string hashString = Convert.ToBase64String(SHA256.HashData(tokenBytes));
+        _mockGuestSessionRepository
+            .Setup(repository => repository.GetByTokenHash(hashString))
+            .ReturnsAsync(guestSession);
+
+        bool result = await _guestSessionService.IsAuthorizedAsync(tokenString, guestSession.Id);
+
+        Assert.False(result);
     }
 
     [Theory]
@@ -730,7 +747,6 @@ public class GuestSessionServiceTests
         };
     }
 }
-
 
 
 

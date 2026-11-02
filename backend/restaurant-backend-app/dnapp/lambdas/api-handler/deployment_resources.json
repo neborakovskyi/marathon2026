@@ -3,9 +3,24 @@
     "predefined_policies": [],
     "principal_service": "lambda",
     "custom_policies": [
-      "lambda-basic-execution"
+      "lambda-basic-execution",
+      "api-handler-bedrock-invoke-policy"
     ],
     "resource_type": "iam_role",
+    "tags": {}
+  },
+  "api-handler-bedrock-invoke-policy": {
+    "policy_content": {
+      "Statement": [
+        {
+          "Action": "bedrock:InvokeModel",
+          "Effect": "Allow",
+          "Resource": "arn:aws:bedrock:us-west-2::foundation-model/amazon.nova-lite-v1:0"
+        }
+      ],
+      "Version": "2012-10-17"
+    },
+    "resource_type": "iam_policy",
     "tags": {}
   }
 }

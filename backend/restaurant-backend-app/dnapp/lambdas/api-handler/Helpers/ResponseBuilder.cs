@@ -17,7 +17,7 @@ public static class ResponseBuilder
         { "Content-Type", "application/json" },
         { "Access-Control-Allow-Origin", "*" },
         { "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS" },
-        { "Access-Control-Allow-Headers", "Content-Type, Authorization" }
+        { "Access-Control-Allow-Headers", "Content-Type, Authorization, X-Guest-Session-Token" }
     };
 
     public static APIGatewayProxyResponse CreateErrorResponse(
@@ -128,7 +128,7 @@ public static class ResponseBuilder
                 { "Content-Disposition", $"attachment; filename=\"{fileName}\"" },
                 { "Access-Control-Allow-Origin", "*" },
                 { "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS" },
-                { "Access-Control-Allow-Headers", "Content-Type, Authorization" }
+                { "Access-Control-Allow-Headers", "Content-Type, Authorization, X-Guest-Session-Token" }
             }
         };
     }
