@@ -37,26 +37,26 @@ public sealed class BedrockChatService(
 
     public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken)
     {
-        ValidateRequest(request, guestSessionToken);
+        //ValidateRequest(request, guestSessionToken);
 
-        string guestSessionId = request.Context!.GuestSessionId!;
-        bool authorized = true;
+        //string guestSessionId = request.Context!.GuestSessionId!;
+        //bool authorized = true;
 
         // If token is provided, validate it; otherwise allow anonymous access
-        if (!string.IsNullOrWhiteSpace(guestSessionToken))
-        {
-            try
-            {
-                authorized = await guestSessionService.IsAuthorizedAsync(guestSessionToken, guestSessionId);
-            }
-            catch (FormatException)
-            {
-                authorized = false;
-            }
+        // if (!string.IsNullOrWhiteSpace(guestSessionToken))
+        // {
+        //     try
+        //     {
+        //         authorized = await guestSessionService.IsAuthorizedAsync(guestSessionToken, guestSessionId);
+        //     }
+        //     catch (FormatException)
+        //     {
+        //         authorized = false;
+        //     }
 
-            if (!authorized)
-                throw new UnauthorizedAccessException("The guest session token is invalid.");
-        }
+        //     if (!authorized)
+        //         throw new UnauthorizedAccessException("The guest session token is invalid.");
+        // }
 
         var messages = CreateHistory(request);
         messages.Add(new Message
