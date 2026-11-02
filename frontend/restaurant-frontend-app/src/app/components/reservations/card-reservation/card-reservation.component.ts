@@ -35,8 +35,8 @@ interface WaiterPreOrderNavigationData {
   tableName: string;
 }
 //                                      day * h * m * s *ms
-// const NEW_RESERVATION_DURATION_MS = 3 * 24 * 60 * 60 * 1000; //prod
-const NEW_RESERVATION_DURATION_MS = 5 * 60 * 1000; //5 min local dev
+const NEW_RESERVATION_DURATION_MS = 3 * 24 * 60 * 60 * 1000; //prod
+//const NEW_RESERVATION_DURATION_MS = 5 * 60 * 1000; //5 min local dev
 
 @Component({
   selector: 'app-card-reservation',

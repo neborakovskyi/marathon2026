@@ -14,7 +14,8 @@ export class ChatService {
     this.messages.update(prev => [...prev, { role: 'assistant', text: '' }]);
 
     try {
-      const response = await fetch('https://amazonaws.com', {
+        const response = await fetch('https://r9jb3uyz4l.execute-api.us-west-2.amazonaws.com/chat', {
+        // const response = await fetch('https://<api-key>.execute-api.us-west-2.amazonaws.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userText })

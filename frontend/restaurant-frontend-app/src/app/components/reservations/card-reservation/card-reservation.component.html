@@ -138,13 +138,15 @@
         >
           Cancel
         </button>
-        <button
+        @if(reservation().guestCount>1){
+          <button
             type="button"
             class="button button--secondary button--large"
             (click)="groupReservation()"
           >
             Group Order
           </button>
+        }
 
         @if (role() === Roles.CUSTOMER) {
           <button

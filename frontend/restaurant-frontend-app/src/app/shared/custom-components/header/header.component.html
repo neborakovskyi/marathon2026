@@ -132,11 +132,12 @@
       <div class="search-box">
         <img src="assets/svg/search.svg" alt="" aria-hidden="true" class="search-icon" />
         <input
+          #searchInput
           type="search"
           class="search-input"
           placeholder="Search dishes…"
           [value]="searchQuery()"
-          (input)="searchQuery.set($any($event.target).value)"
+          (input)="onSearchInput(searchInput.value)"
           aria-label="Search dishes"
         />
       </div>

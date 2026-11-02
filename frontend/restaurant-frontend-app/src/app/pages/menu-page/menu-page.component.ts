@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { DishCardComponent } from '@app/shared/custom-components/dish-card/dish-card.component';
 import { DishesService } from '@app/services/dishes/dishes.service';
 import { DishListResponse } from '@app/models/dishes/dish-list-response.model';
@@ -10,6 +11,18 @@ import { DishSortingLabels, DishTypeLabels } from '@app/shared/mappers/dish-enum
 import { DishModalComponent } from '@app/components/dish-modal/dish-modal.component';
 import { PreOrdersService } from '@app/services/pre-orders/pre-orders.service';
 import { ToastService } from '@app/services/toast/toast.service';
+import { SearchStateService } from '@app/services/search-state.service';
+import {
+  combineLatest,
+  catchError,
+  distinctUntilChanged,
+  map,
+  of,
+  Subscription,
+  switchMap,
+  tap,
+  timer,
+} from 'rxjs';
 
 @Component({
   selector: 'app-menu-page',
@@ -25,8 +38,10 @@ import { ToastService } from '@app/services/toast/toast.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [DishesService],
 })
-export class MenuPageComponent implements OnInit {
+export class MenuPageComponent implements OnDestroy, OnInit {
+  private readonly SEARCH_DEBOUNCE_MS = 300;
   private toast = inject(ToastService);
+  private menuStateSubscription?: Subscription;
   public dishes: DishListResponse[] = [];
   public filteredDishes: DishListResponse[] = [];
   public loadingDishes = true;
@@ -48,41 +63,91 @@ export class MenuPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly orderService = inject(PreOrdersService);
-
+  private readonly searchState = inject(SearchStateService);
+  private readonly searchQuery$ = toObservable(this.searchState.query);
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const preOrder = params['preOrder'];
-      this.isPreOrderEnabled = !!preOrder;
-      if (this.isPreOrderEnabled) {
-        this.preOrderReservationId = params['reservationId'];
-        this.preOrderReservationLabel = params['reservationLabel'];
-        if (!this.preOrderReservationId) {
-          console.error('Pre-order is enabled but no reservation ID provided.');
-          this.toast.error('Pre-order is enabled but no reservation ID provided.', 'Error');
-          this.isPreOrderEnabled = false;
+    const routeState$ = this.route.queryParams
+      .pipe(
+        map((params) => {
+          const preOrder = params['preOrder'];
+          this.isPreOrderEnabled = !!preOrder;
+          if (this.isPreOrderEnabled) {
+            this.preOrderReservationId = params['reservationId'];
+            this.preOrderReservationLabel = params['reservationLabel'];
+            if (!this.preOrderReservationId) {
+              console.error('Pre-order is enabled but no reservation ID provided.');
+              this.toast.error('Pre-order is enabled but no reservation ID provided.', 'Error');
+              this.isPreOrderEnabled = false;
+            }
+          } else {
+            this.preOrderReservationId = undefined;
+            this.preOrderReservationLabel = undefined;
+          }
+
+          const categoryValue = params['category'];
+          const sortValue = params['sort'];
+
+          this.selectedCategory =
+            typeof categoryValue === 'string' &&
+            Object.values(DishType).includes(categoryValue as DishType)
+              ? (categoryValue as DishType)
+              : null;
+          this.selectedSort =
+            typeof sortValue === 'string' && Object.values(DishSort).includes(sortValue as DishSort)
+              ? (sortValue as DishSort)
+              : DishSort.PopularityDescending;
+
+          return {
+            category: this.selectedCategory ?? undefined,
+            sort: this.selectedSort,
+          };
+        }),
+        distinctUntilChanged(
+          (previous, current) =>
+            previous.category === current.category && previous.sort === current.sort,
+        ),
+      );
+    const searchQuery$ = this.searchQuery$.pipe(
+      map((query) => query.trim()),
+      distinctUntilChanged(),
+    );
+    let appliedSearchTerm = this.searchState.query().trim();
+
+    this.menuStateSubscription = combineLatest([routeState$, searchQuery$])
+      .pipe(
+        distinctUntilChanged(
+          ([previousRoute, previousSearch], [currentRoute, currentSearch]) =>
+            previousRoute.category === currentRoute.category &&
+            previousRoute.sort === currentRoute.sort &&
+            previousSearch === currentSearch,
+        ),
+        switchMap(([{ category, sort }, searchTerm]) => {
+          this.loadingDishes = true;
+
+          const waitForSearch = searchTerm !== appliedSearchTerm;
+          const request$ = waitForSearch ? timer(this.SEARCH_DEBOUNCE_MS) : of(0);
+
+          return request$.pipe(
+            tap(() => {
+              appliedSearchTerm = searchTerm;
+            }),
+            switchMap(() =>
+              this.dishesService.getDishes(category, sort, searchTerm || undefined),
+            ),
+            catchError((error: unknown) => {
+              console.error(error);
+              return of(null);
+            }),
+          );
+        }),
+      )
+      .subscribe((data) => {
+        this.loadingDishes = false;
+        if (data === null) {
+          return;
         }
-      }
 
-      const category = params['category'] as DishType;
-      const sort = params['sort'] as DishSort;
-
-      this.selectedCategory =
-        category && Object.values(DishType).includes(category) ? category : null;
-      this.selectedSort =
-        sort && Object.values(DishSort).includes(sort) ? sort : DishSort.PopularityDescending;
-
-      this.loadDishes();
-    });
-  }
-
-  loadDishes(): void {
-    const category = this.selectedCategory ?? undefined;
-    const sort = this.selectedSort;
-
-    this.loadingDishes = true;
-    this.dishesService.getDishes(category, sort).subscribe({
-      next: (data) => {
         this.dishes = data.map((dish) => ({
           ...dish,
           imageUrl: dish.imageUrl || 'assets/img/dish.png',
@@ -100,13 +165,12 @@ export class MenuPageComponent implements OnInit {
         }));
 
         this.filteredDishes = this.dishes;
-        this.loadingDishes = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loadingDishes = false;
-      }
-    });
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.menuStateSubscription?.unsubscribe();
+    this.searchState.setQuery('');
   }
 
   onCategorySelected(category: DishType): void {

@@ -9,7 +9,11 @@ import {
   inject,
 } from '@angular/core';
 import { Roles } from '@app/shared/constants/roles';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { UserModel } from '@app/auth/models/user.model';
 import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
@@ -20,6 +24,7 @@ import { CartComponent } from '@app/components/cart/cart.component';
 import { GuestPreorderStore } from '@app/pages/guest-pre-order-page/state/guest-preorder.store';
 // ── NEW ──────────────────────────────────────────────────────────────────────
 import { HeaderModeService } from '@app/services/header-mode.service';
+import { SearchStateService } from '@app/services/search-state.service';
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Component({
@@ -36,18 +41,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   protected readonly Roles = Roles;
 
-  user = signal<UserModel | null>(null);
-  notifications = signal<Notification[]>([]);
-  unreadCount = computed(() => this.notifications().filter((n) => !n.isRead).length);
+  public readonly user = signal<UserModel | null>(null);
+  public readonly notifications = signal<Notification[]>([]);
+  public readonly unreadCount = computed(() => this.notifications().filter((n) => !n.isRead).length);
 
-  showDropdown = signal(false);
-  showNotificationsDropdown = signal(false);
-  isMobileMenuOpen = signal(false);
-  showCart = signal(false);
+  public readonly showDropdown = signal(false);
+  public readonly showNotificationsDropdown = signal(false);
+  public readonly isMobileMenuOpen = signal(false);
+  public readonly showCart = signal(false);
 
-  // ── NEW: поиск ──────────────────────────────────────────────────────────
-  searchQuery = signal('');
-  // ─────────────────────────────────────────────────────────────────────────
+  private readonly searchState = inject(SearchStateService);
+  public readonly searchQuery = this.searchState.query;
+  private isSearchNavigationPending = false;
 
   private pollingSubscription?: Subscription;
   private userSubscription?: Subscription;
@@ -88,6 +93,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isDestroyed = true;
     this.stopNotificationsPolling();
     this.userSubscription?.unsubscribe();
+  }
+
+  onSearchInput(query: string): void {
+    this.searchState.setQuery(query);
+
+    const primaryRoute = this.router.parseUrl(this.router.url).root.children['primary'];
+    const isMenuRoute = primaryRoute?.segments[0]?.path === 'menu';
+    if (!query.trim() || isMenuRoute || this.isSearchNavigationPending) return;
+
+    this.isSearchNavigationPending = true;
+    void this.router
+      .navigate(['/menu'])
+      .catch((error: unknown) => {
+        console.error('Failed to navigate to menu from search', error);
+      })
+      .finally(() => {
+        this.isSearchNavigationPending = false;
+      });
   }
 
   startNotificationsPolling() {
