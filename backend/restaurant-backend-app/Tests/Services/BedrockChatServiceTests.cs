@@ -4,6 +4,7 @@ using Amazon.Runtime;
 using APIHandler.Models.Chat;
 using APIHandler.Models.GuestSessions;
 using APIHandler.Services.Chat;
+using APIHandler.Services.Dishes;
 using APIHandler.Services.GuestSessions;
 using Moq;
 using System.Collections.Generic;
@@ -18,11 +19,38 @@ public class BedrockChatServiceTests
 
     private readonly Mock<IAmazonBedrockRuntime> _bedrock = new();
     private readonly Mock<IGuestSessionService> _guestSessions = new();
+    private readonly Mock<IDishService> _dishService = new();
     private readonly BedrockChatService _service;
 
     public BedrockChatServiceTests()
     {
-        _service = new BedrockChatService(_bedrock.Object, _guestSessions.Object, "model-id");
+        _service = new BedrockChatService(_bedrock.Object, _guestSessions.Object, _dishService.Object, "model-id");
+    }
+
+    [Fact]
+    public async Task SendAsync_AnonymousUser_NoTokenProvided_AllowsAccess()
+    {
+        var requests = new List<ConverseRequest>();
+        _bedrock
+            .Setup(client => client.ConverseAsync(
+                It.IsAny<ConverseRequest>(),
+                It.IsAny<CancellationToken>()))
+            .Callback<ConverseRequest, CancellationToken>((request, _) => requests.Add(request))
+            .Returns((ConverseRequest _, CancellationToken _) => Task.FromResult(
+                requests.Count == 1
+                    ? CreateToolRequest("GetMenu")
+                    : CreateTextResponse("The menu includes soup.")));
+        // For anonymous users, we don't call IsAuthorizedAsync
+        _guestSessions
+            .Setup(service => service.GetGuestMenuAsync(SessionId))
+            .ReturnsAsync(new GuestMenuResponse(new Dictionary<APIHandler.Constants.Dishes.DishType, IEnumerable<APIHandler.Models.Dishes.GuestMenuDish>>()));
+
+        ChatResponse response = await _service.SendAsync(CreateRequest(), "");
+
+        Assert.Equal("The menu includes soup.", response.Message);
+        Assert.Equal(new ChatToolCall("GetMenu", "succeeded"), Assert.Single(response.ToolCalls));
+        _guestSessions.Verify(service => service.IsAuthorizedAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _guestSessions.Verify(service => service.GetGuestMenuAsync(SessionId), Times.Once);
     }
 
     [Fact]
@@ -115,7 +143,7 @@ public class BedrockChatServiceTests
     }
 
     [Fact]
-    public async Task SendAsync_TokenInMessage_RejectsRequestBeforeAuthorization()
+    public async Task SendAsync_TokenInMessageWithToken_RejectsRequestBeforeAuthorization()
     {
         ChatRequest request = new()
         {
@@ -129,6 +157,36 @@ public class BedrockChatServiceTests
         _guestSessions.Verify(
             service => service.IsAuthorizedAsync(It.IsAny<string>(), It.IsAny<string>()),
             Times.Never);
+    }
+
+    [Fact]
+    public async Task SendAsync_TokenInMessageWithoutToken_AllowsRequest()
+    {
+        var requests = new List<ConverseRequest>();
+        _bedrock
+            .Setup(client => client.ConverseAsync(
+                It.IsAny<ConverseRequest>(),
+                It.IsAny<CancellationToken>()))
+            .Callback<ConverseRequest, CancellationToken>((request, _) => requests.Add(request))
+            .Returns((ConverseRequest _, CancellationToken _) => Task.FromResult(
+                requests.Count == 1
+                    ? CreateToolRequest("GetMenu")
+                    : CreateTextResponse("The menu includes soup.")));
+        _guestSessions
+            .Setup(service => service.GetGuestMenuAsync(SessionId))
+            .ReturnsAsync(new GuestMenuResponse(new Dictionary<APIHandler.Constants.Dishes.DishType, IEnumerable<APIHandler.Models.Dishes.GuestMenuDish>>()));
+
+        // When no token is provided, we don't check for token leakage in the message
+        ChatRequest request = new()
+        {
+            Message = "What is on the menu?",
+            Context = new ChatContext { GuestSessionId = SessionId }
+        };
+
+        ChatResponse response = await _service.SendAsync(request, "");
+
+        Assert.Equal("The menu includes soup.", response.Message);
+        _guestSessions.Verify(service => service.GetGuestMenuAsync(SessionId), Times.Once);
     }
 
     [Fact]

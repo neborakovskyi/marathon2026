@@ -3,9 +3,9 @@
 ## Chat
 
 ### `POST` /chat
-Requires an active guest pre-order session. Send the guest session token only in the
+Allows both authenticated guest sessions and anonymous access. For guest sessions, send the guest session token only in the
 `X-Guest-Session-Token` request header; never include it in the JSON body or conversation
-history. The backend validates it against `context.guestSessionId`.
+history. The backend validates it against `context.guestSessionId`. Anonymous users can omit the token and provide an empty or missing `guestSessionId`.
 
 Request body:
 ```json
@@ -16,7 +16,7 @@ Request body:
     { "role": "assistant", "content": "Hello! How can I help?" }
   ],
   "context": {
-    "guestSessionId": "guest-session-id"
+    "guestSessionId": "guest-session-id"  // optional for anonymous users
   }
 }
 ```
@@ -36,7 +36,7 @@ Response: `200 OK`
 }
 ```
 
-Errors: `400` invalid request, `401` missing/invalid guest-session token, `502` Bedrock
+Errors: `400` invalid request, `401` invalid guest-session token (only if token was provided), `502` Bedrock
 failure or unsupported tool response.
 
 The Lambda's `BEDROCK_MODEL_ID` setting defaults to `amazon.nova-lite-v1:0`. The

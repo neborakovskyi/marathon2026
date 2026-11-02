@@ -39,7 +39,7 @@ describe('ChatService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('posts the JSON request with the session token only in its dedicated header', async () => {
+  it('posts the JSON request with the session token only in its dedicated header when guest session exists', async () => {
     const sending = service.sendMessage('  Show the menu  ');
     const request = httpMock.expectOne('https://api.example.test/develop/chat');
 
@@ -51,6 +51,32 @@ describe('ChatService', () => {
       context: { guestSessionId: 'guest-123' },
     });
     expect(JSON.stringify(request.request.body)).not.toContain('private-token');
+    expect(service.isLoading()).toBeTrue();
+
+    request.flush({ message: 'Here is the menu.', toolCalls: [] });
+    await sending;
+
+    expect(service.messages()).toEqual([
+      { role: 'user', text: 'Show the menu' },
+      { role: 'assistant', text: 'Here is the menu.' },
+    ]);
+    expect(service.isLoading()).toBeFalse();
+  });
+
+  it('posts the JSON request without guest session token when no guest session exists', async () => {
+    sessionId.set(null);
+    sessionToken.set(null);
+
+    const sending = service.sendMessage('  Show the menu  ');
+    const request = httpMock.expectOne('https://api.example.test/develop/chat');
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.headers.has('X-Guest-Session-Token')).toBeFalse();
+    expect(request.request.body).toEqual({
+      message: 'Show the menu',
+      history: [],
+      context: { guestSessionId: '' },
+    });
     expect(service.isLoading()).toBeTrue();
 
     request.flush({ message: 'Here is the menu.', toolCalls: [] });
@@ -101,13 +127,29 @@ describe('ChatService', () => {
     expect(service.isLoading()).toBeFalse();
   });
 
-  it('does not send a request without an active guest session', async () => {
+  it('sends request even without guest session (anonymous user)', async () => {
     sessionStatus.set('submitted');
+    sessionId.set(null);
+    sessionToken.set(null);
 
-    await service.sendMessage('Show the menu');
+    const sending = service.sendMessage('Show the menu');
+    const request = httpMock.expectOne('https://api.example.test/develop/chat');
 
-    httpMock.expectNone('https://api.example.test/develop/chat');
-    expect(service.error()).toContain('active guest pre-order session');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.headers.has('X-Guest-Session-Token')).toBeFalse();
+    expect(request.request.body).toEqual({
+      message: 'Show the menu',
+      history: [],
+      context: { guestSessionId: '' },
+    });
+
+    request.flush({ message: 'Here is the menu.', toolCalls: [] });
+    await sending;
+
+    expect(service.messages()).toEqual([
+      { role: 'user', text: 'Show the menu' },
+      { role: 'assistant', text: 'Here is the menu.' },
+    ]);
   });
 
   it('includes only the last eight messages in conversation history', async () => {

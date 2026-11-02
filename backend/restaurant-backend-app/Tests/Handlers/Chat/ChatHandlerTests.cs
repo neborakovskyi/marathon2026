@@ -8,6 +8,7 @@ using APIHandler.Services.GuestSessions;
 using Moq;
 using System.Collections.Generic;
 using System.Text.Json;
+using APIHandler.Services.Dishes;
 
 namespace APIHandler.Tests.Handlers.Chat;
 
@@ -50,8 +51,13 @@ public class ChatHandlerTests
     }
 
     [Fact]
-    public async Task HandleRequest_MissingSessionToken_ReturnsUnauthorizedWithoutCallingService()
+    public async Task HandleRequest_MissingSessionToken_AllowsAnonymousAccessAndCallsService()
     {
+        _chatService
+            .Setup(service => service.SendAsync(
+                It.IsAny<ChatRequest>(),
+                ""))
+            .ReturnsAsync(new ChatResponse("Here is the menu.", []));
         var handler = new ChatHandler(_chatService.Object);
         var request = new APIGatewayProxyRequest
         {
@@ -65,10 +71,14 @@ public class ChatHandlerTests
 
         APIGatewayProxyResponse response = await handler.HandleRequest(request, _context.Object);
 
-        Assert.Equal(401, response.StatusCode);
+        Assert.Equal(200, response.StatusCode);
         _chatService.Verify(
-            service => service.SendAsync(It.IsAny<ChatRequest>(), It.IsAny<string>()),
-            Times.Never);
+            service => service.SendAsync(
+                It.Is<ChatRequest>(chatRequest =>
+                    chatRequest.Context!.GuestSessionId == "guest-1" &&
+                    chatRequest.Message == "Show the menu"),
+                ""),
+            Times.Once);
     }
 
     [Fact]
@@ -145,7 +155,8 @@ public class ChatHandlerTests
     {
         var bedrock = new Mock<IAmazonBedrockRuntime>();
         var guestSessions = new Mock<IGuestSessionService>();
-        var handler = new ChatHandler(new BedrockChatService(bedrock.Object, guestSessions.Object, "model-id"));
+        var dishService = new Mock<IDishService>();
+        var handler = new ChatHandler(new BedrockChatService(bedrock.Object, guestSessions.Object, dishService.Object, "model-id"));
         var request = new APIGatewayProxyRequest
         {
             Body = """

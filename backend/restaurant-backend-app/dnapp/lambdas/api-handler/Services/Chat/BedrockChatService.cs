@@ -9,12 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
+using APIHandler.Services.Dishes;
 
 namespace APIHandler.Services.Chat;
 
 public sealed class BedrockChatService(
     IAmazonBedrockRuntime bedrockRuntime,
     IGuestSessionService guestSessionService,
+    IDishService dishService,
     string modelId) : IChatService
 {
     public const int MaxTokens = 512;
@@ -38,18 +40,23 @@ public sealed class BedrockChatService(
         ValidateRequest(request, guestSessionToken);
 
         string guestSessionId = request.Context!.GuestSessionId!;
-        bool authorized;
-        try
-        {
-            authorized = await guestSessionService.IsAuthorizedAsync(guestSessionToken, guestSessionId);
-        }
-        catch (FormatException)
-        {
-            authorized = false;
-        }
+        bool authorized = true;
 
-        if (!authorized)
-            throw new UnauthorizedAccessException("The guest session token is invalid.");
+        // If token is provided, validate it; otherwise allow anonymous access
+        if (!string.IsNullOrWhiteSpace(guestSessionToken))
+        {
+            try
+            {
+                authorized = await guestSessionService.IsAuthorizedAsync(guestSessionToken, guestSessionId);
+            }
+            catch (FormatException)
+            {
+                authorized = false;
+            }
+
+            if (!authorized)
+                throw new UnauthorizedAccessException("The guest session token is invalid.");
+        }
 
         var messages = CreateHistory(request);
         messages.Add(new Message
@@ -70,7 +77,7 @@ public sealed class BedrockChatService(
         if (toolUses.Count != 1 || toolUses[0].Name != GetMenuToolName)
             throw new ChatUpstreamException("Bedrock requested an unsupported tool.");
 
-        var menu = await guestSessionService.GetGuestMenuAsync(guestSessionId);
+        var menu = await dishService.GetAllDishesAsync();
         var toolResult = new ToolResultBlock
         {
             ToolUseId = toolUses[0].ToolUseId,
@@ -175,10 +182,11 @@ public sealed class BedrockChatService(
         if (string.IsNullOrWhiteSpace(request.Message) || request.Message.Length > MaxMessageLength)
             throw new ChatValidationException($"Message must contain 1 to {MaxMessageLength} characters.");
 
-        if (string.IsNullOrWhiteSpace(request.Context?.GuestSessionId) ||
-            request.Context.GuestSessionId.Length > 128)
+        // Allow empty guestSessionId for anonymous users
+        // Only validate length if provided
+        if (request.Context?.GuestSessionId != null && request.Context.GuestSessionId.Length > 128)
         {
-            throw new ChatValidationException("An active guestSessionId is required.");
+            throw new ChatValidationException("Guest session ID must not exceed 128 characters.");
         }
 
         if (request.History is { Count: > MaxHistoryMessages })
@@ -197,12 +205,16 @@ public sealed class BedrockChatService(
                     $"History messages must contain 1 to {MaxHistoryMessageLength} characters.");
         }
 
-        if (request.Context.GuestSessionId.Contains(guestSessionToken, StringComparison.Ordinal) ||
-            request.Message.Contains(guestSessionToken, StringComparison.Ordinal) ||
-            (request.History ?? []).Any(item =>
-                item.Content!.Contains(guestSessionToken, StringComparison.Ordinal)))
+        // Only check for token leakage if token is provided
+        if (!string.IsNullOrWhiteSpace(guestSessionToken))
         {
-            throw new ChatValidationException("The guest session token must be sent only in its request header.");
+            if ((request.Context?.GuestSessionId?.Contains(guestSessionToken, StringComparison.Ordinal) ?? false) ||
+                request.Message.Contains(guestSessionToken, StringComparison.Ordinal) ||
+                (request.History ?? []).Any(item =>
+                    item.Content!.Contains(guestSessionToken, StringComparison.Ordinal)))
+            {
+                throw new ChatValidationException("The guest session token must be sent only in its request header.");
+            }
         }
     }
 }

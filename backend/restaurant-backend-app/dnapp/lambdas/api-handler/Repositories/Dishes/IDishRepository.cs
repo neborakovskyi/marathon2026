@@ -9,6 +9,7 @@ public interface IDishRepository
     Task<Dish?> GetDishByIdAsync(string dishId);
     Task<IEnumerable<Dish>> GetDishesByIdsAsync(IEnumerable<string> dishIds);
     Task<IEnumerable<Dish>> GetDishesByLocationIdAsync(string locationId);
+    Task<IEnumerable<Dish>> GetDishesAsync();
     Task SaveDishAsync(Dish dish);
     Task DeleteDishAsync(Dish dish);
 }

@@ -45,12 +45,10 @@ public sealed class ChatHandler(IChatService chatService) : IApiRequestHandler
                 StringComparison.OrdinalIgnoreCase))
             .Value;
 
-        if (string.IsNullOrWhiteSpace(token))
-            return ResponseBuilder.CreateErrorResponse(401, "A guest session token is required.", context.Logger);
-
+        // Token is now optional - pass null/empty if not provided
         try
         {
-            ChatResponse result = await chatService.SendAsync(chatRequest!, token);
+            ChatResponse result = await chatService.SendAsync(chatRequest!, token ?? string.Empty);
             return ResponseBuilder.CreateJsonResponse(200, result);
         }
         catch (ChatValidationException exception)

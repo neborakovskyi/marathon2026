@@ -104,4 +104,6 @@ public class DishService : IDishService
 
         await _dishRepository.DeleteDishAsync(existingDish);
     }
+
+    public async Task<IEnumerable<Dish>> GetAllDishesAsync() => await _dishRepository.GetDishesAsync();
 }

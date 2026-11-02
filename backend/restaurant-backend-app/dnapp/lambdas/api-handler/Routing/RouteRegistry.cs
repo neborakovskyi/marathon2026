@@ -125,6 +125,7 @@ public static class RouteRegistry
         services.AddSingleton<IChatService>(serviceProvider => new BedrockChatService(
             serviceProvider.GetRequiredService<IAmazonBedrockRuntime>(),
             serviceProvider.GetRequiredService<IGuestSessionService>(),
+            serviceProvider.GetRequiredService<IDishService>(),
             ResourceNames.BedrockModelId));
         services.AddSingleton<IReportService, ReportService>();
 

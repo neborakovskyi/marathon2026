@@ -13,4 +13,5 @@ public interface IDishService
     Task<Dish> UpdateDishAsync(string dishId, Models.Dishes.CreateDishRequest request, string? newImageUrl);
 
     Task DeleteDishAsync(string dishId, bool force = false);
+    Task<IEnumerable<Dish>> GetAllDishesAsync();
 }

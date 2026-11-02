@@ -22,6 +22,7 @@ export class ChatService {
     if (!message || this.isLoading()) return false;
 
     const token = this.authenticationService.getToken();
+    const guestSessionId = this.guestPreorderStore.guestSessionId() || '';
 
     const history: ChatHistoryMessage[] = this.messages()
       .slice(-8)
@@ -34,13 +35,18 @@ export class ChatService {
     const requestBody: ChatRequest = {
       message,
       history,
-      context: { guestSessionId: token?.toString() || "" },
+      context: { guestSessionId },
     };
+
+    const headers: Record<string, string> = {};
+    if (guestSessionId) {
+      headers['X-Guest-Session-Token'] = this.guestPreorderStore.guestSessionToken() || '';
+    }
 
     try {
       const response = await firstValueFrom(
         this.http.post<ChatResponse>(`${this.baseUrl}/chat`, requestBody, {
-            headers: new HttpHeaders({ 'X-Guest-Session-Token': token?.toString() || "" }),
+            headers: new HttpHeaders(headers),
         }),
       );
       if (!response || typeof response.message !== 'string' || !response.message.trim()) {
