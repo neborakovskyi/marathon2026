@@ -1,6 +1,7 @@
 using Amazon.BedrockRuntime;
 using Amazon.BedrockRuntime.Model;
 using Amazon.Runtime;
+using APIHandler.Entities;
 using APIHandler.Models.Chat;
 using APIHandler.Models.GuestSessions;
 using APIHandler.Services.Chat;
@@ -41,16 +42,16 @@ public class BedrockChatServiceTests
                     ? CreateToolRequest("GetMenu")
                     : CreateTextResponse("The menu includes soup.")));
         // For anonymous users, we don't call IsAuthorizedAsync
-        _guestSessions
-            .Setup(service => service.GetGuestMenuAsync(SessionId))
-            .ReturnsAsync(new GuestMenuResponse(new Dictionary<APIHandler.Constants.Dishes.DishType, IEnumerable<APIHandler.Models.Dishes.GuestMenuDish>>()));
+        _dishService
+            .Setup(service => service.GetAllDishesAsync())
+            .ReturnsAsync(new List<Dish>());
 
         ChatResponse response = await _service.SendAsync(CreateRequest(), "");
 
         Assert.Equal("The menu includes soup.", response.Message);
         Assert.Equal(new ChatToolCall("GetMenu", "succeeded"), Assert.Single(response.ToolCalls));
         _guestSessions.Verify(service => service.IsAuthorizedAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-        _guestSessions.Verify(service => service.GetGuestMenuAsync(SessionId), Times.Once);
+        _dishService.Verify(service => service.GetAllDishesAsync(), Times.Once);
     }
 
     [Fact]
@@ -69,9 +70,9 @@ public class BedrockChatServiceTests
         _guestSessions
             .Setup(service => service.IsAuthorizedAsync(SessionToken, SessionId))
             .ReturnsAsync(true);
-        _guestSessions
-            .Setup(service => service.GetGuestMenuAsync(SessionId))
-            .ReturnsAsync(new GuestMenuResponse(new Dictionary<APIHandler.Constants.Dishes.DishType, IEnumerable<APIHandler.Models.Dishes.GuestMenuDish>>()));
+        _dishService
+            .Setup(service => service.GetAllDishesAsync())
+            .ReturnsAsync(new List<Dish>());
 
         ChatResponse response = await _service.SendAsync(CreateRequest(), SessionToken);
 
@@ -85,7 +86,7 @@ public class BedrockChatServiceTests
                 .Where(content => content.Text is not null)
                 .Select(content => content.Text),
             text => text!.Contains(SessionToken, StringComparison.Ordinal));
-        _guestSessions.Verify(service => service.GetGuestMenuAsync(SessionId), Times.Once);
+        _dishService.Verify(service => service.GetAllDishesAsync(), Times.Once);
     }
 
     [Fact]
@@ -118,7 +119,7 @@ public class BedrockChatServiceTests
         await Assert.ThrowsAsync<ChatUpstreamException>(
             () => _service.SendAsync(CreateRequest(), SessionToken));
 
-        _guestSessions.Verify(service => service.GetGuestMenuAsync(It.IsAny<string>()), Times.Never);
+        _dishService.Verify(service => service.GetAllDishesAsync(), Times.Never);
     }
 
     [Fact]
@@ -172,9 +173,9 @@ public class BedrockChatServiceTests
                 requests.Count == 1
                     ? CreateToolRequest("GetMenu")
                     : CreateTextResponse("The menu includes soup.")));
-        _guestSessions
-            .Setup(service => service.GetGuestMenuAsync(SessionId))
-            .ReturnsAsync(new GuestMenuResponse(new Dictionary<APIHandler.Constants.Dishes.DishType, IEnumerable<APIHandler.Models.Dishes.GuestMenuDish>>()));
+        _dishService
+            .Setup(service => service.GetAllDishesAsync())
+            .ReturnsAsync(new List<Dish>());
 
         // When no token is provided, we don't check for token leakage in the message
         ChatRequest request = new()
@@ -186,7 +187,7 @@ public class BedrockChatServiceTests
         ChatResponse response = await _service.SendAsync(request, "");
 
         Assert.Equal("The menu includes soup.", response.Message);
-        _guestSessions.Verify(service => service.GetGuestMenuAsync(SessionId), Times.Once);
+        _dishService.Verify(service => service.GetAllDishesAsync(), Times.Once);
     }
 
     [Fact]
@@ -231,7 +232,8 @@ public class BedrockChatServiceTests
                     }
                 ]
             }
-        }
+        },
+        StopReason = StopReason.Tool_use
     };
 
     private static ConverseResponse CreateTextResponse(string text) => new()
@@ -243,6 +245,7 @@ public class BedrockChatServiceTests
                 Role = ConversationRole.Assistant,
                 Content = [new ContentBlock { Text = text }]
             }
-        }
+        },
+        StopReason = StopReason.End_turn
     };
 }

@@ -53,7 +53,10 @@ using APIHandler.Services.Reservations;
 using APIHandler.Services.Tables;
 using APIHandler.Services.Waiters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace APIHandler.Routing;
 
@@ -107,6 +110,7 @@ public static class RouteRegistry
 
         // 3. Services
         services.AddMemoryCache();
+        services.AddHttpClient();
         services.AddSingleton<IApiResponseCache, InMemoryApiResponseCache>();
         services.AddSingleton<S3ImageService>();
         services.AddSingleton<IReportFileService, ReportFileService>();
@@ -122,13 +126,24 @@ public static class RouteRegistry
         services.AddSingleton<IFeedbackService, FeedbackService>();
         services.AddSingleton<IGuestSessionService, GuestSessionService>();
         services.AddSingleton<IGuestAuthorizationService, GuestAuthorizationService>();
-        services.AddSingleton<IChatService>(serviceProvider => new BedrockChatService(
-            serviceProvider.GetRequiredService<IAmazonBedrockRuntime>(),
-            serviceProvider.GetRequiredService<IGuestSessionService>(),
-            serviceProvider.GetRequiredService<IDishService>(),
-            ResourceNames.BedrockModelId));
         services.AddSingleton<IReportService, ReportService>();
 
+        // select strategy based on environment variable
+        if (string.Equals(ResourceNames.ChatProvider, "ollama", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IChatService>(serviceProvider => new OllamaChatService(
+                serviceProvider.GetRequiredService<IHttpClientFactory>(),
+                serviceProvider.GetRequiredService<IDishService>(),
+                ResourceNames.OllamaApiKey,
+                ResourceNames.OllamaModelName));  
+        }else{
+            services.AddSingleton<IChatService>(serviceProvider => new BedrockChatService(
+                serviceProvider.GetRequiredService<IAmazonBedrockRuntime>(),
+                serviceProvider.GetRequiredService<IGuestSessionService>(),
+                serviceProvider.GetRequiredService<IDishService>(),
+                ResourceNames.BedrockModelId));
+        }        
+        
         var provider = services.BuildServiceProvider();
 
         List<RouteHandler> GetAuthAndUserRoutes() => [

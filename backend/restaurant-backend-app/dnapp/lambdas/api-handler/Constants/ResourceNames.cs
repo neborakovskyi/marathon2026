@@ -12,6 +12,18 @@ public static class ResourceNames
         Environment.GetEnvironmentVariable("BEDROCK_MODEL_ID")
         ?? throw new InvalidOperationException("Environment variable 'BEDROCK_MODEL_ID' is not set.");
 
+    public static string OllamaApiKey =>
+        Environment.GetEnvironmentVariable("OLLAMA_API_KEY")
+        ?? throw new InvalidOperationException("Environment variable 'OLLAMA_API_KEY' is not set.");
+
+    public static string ChatProvider =>
+        Environment.GetEnvironmentVariable("CHAT_PROVIDER")
+        ?? throw new InvalidOperationException("Environment variable 'CHAT_PROVIDER' is not set.");
+
+    public static string OllamaModelName =>
+        Environment.GetEnvironmentVariable("OLLAMA_MODEL_NAME")
+        ?? throw new InvalidOperationException("Environment variable 'OLLAMA_MODEL_NAME' is not set.");
+
     public static string FeedbackTableName =>
         Environment.GetEnvironmentVariable("FEEDBACK_TABLE_NAME")
         ?? throw new ArgumentException("Environment variable 'FEEDBACK_TABLE_NAME' is not set.");

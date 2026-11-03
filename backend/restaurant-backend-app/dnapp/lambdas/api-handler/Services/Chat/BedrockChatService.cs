@@ -37,12 +37,12 @@ public sealed class BedrockChatService(
 
     public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken)
     {
-        //ValidateRequest(request, guestSessionToken);
+        // ValidateRequest(request, guestSessionToken);
 
-        //string guestSessionId = request.Context!.GuestSessionId!;
-        //bool authorized = true;
+        // string guestSessionId = request.Context!.GuestSessionId!;
+        // bool authorized = true;
 
-        // If token is provided, validate it; otherwise allow anonymous access
+        // // If token is provided, validate it; otherwise allow anonymous access
         // if (!string.IsNullOrWhiteSpace(guestSessionToken))
         // {
         //     try
@@ -70,6 +70,12 @@ public sealed class BedrockChatService(
             .Where(block => block.ToolUse is not null)
             .Select(block => block.ToolUse!)
             .ToList();
+
+        if (response.StopReason == StopReason.End_turn)
+            return new ChatResponse(GetText(response.Output.Message), []);
+
+        if (response.StopReason != StopReason.Tool_use)
+            throw new ChatUpstreamException($"Unexpected stop reason: {response.StopReason}");
 
         if (toolUses.Count == 0)
             return new ChatResponse(GetText(response.Output.Message), []);
@@ -144,6 +150,7 @@ public sealed class BedrockChatService(
         }
         catch (AmazonServiceException exception)
         {
+            Console.WriteLine($"[Bedrock Error] Code={exception.ErrorCode}, Status={exception.StatusCode}, Message={exception.Message}");
             throw new ChatUpstreamException("Bedrock could not complete the chat request.", exception);
         }
     }

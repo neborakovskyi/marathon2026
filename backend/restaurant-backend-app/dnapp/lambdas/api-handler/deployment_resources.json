@@ -19,7 +19,10 @@
             "bedrock:InvokeModel",
             "bedrock:InvokeModelWithResponseStream"
           ],
-          "Resource": "arn:aws:bedrock:us-west-2::foundation-model/*"
+          "Resource": [
+              "arn:aws:bedrock:*::foundation-model/amazon.nova-lite-v1:0",
+              "arn:aws:bedrock:us-west-2:385804997269:inference-profile/us.amazon.nova-lite-v1:0"
+          ]
         }
       ],
       "Version": "2012-10-17"
