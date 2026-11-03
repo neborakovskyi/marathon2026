@@ -103,16 +103,18 @@ public class DishRepository : IDishRepository
 
     public async Task SaveDishAsync(Dish dish)
     {
-        await _dynamoDbContext.SaveAsync(dish, DynamoConfig.SaveConfig(ResourceNames.DishesTableName));
+        await _dynamoDbContext.SaveAsync(dish, DynamoConfig.SaveConfig(DishTableName));
     }
 
     public async Task DeleteDishAsync(Dish dish)
     {
-        await _dynamoDbContext.DeleteAsync(dish, DynamoConfig.DeleteConfig(ResourceNames.DishesTableName));
+        await _dynamoDbContext.DeleteAsync(dish, DynamoConfig.DeleteConfig(DishTableName));
     }
 
     public async Task<IEnumerable<Dish>> GetDishesAsync()
     {
-        return await _dynamoDbContext.LoadAsync<IEnumerable<Dish>>(DynamoConfig.LoadConfig(LocationsTableName));
+        return await _dynamoDbContext
+                .ScanAsync<Dish>([], DynamoConfig.ScanConfig(DishTableName))
+                .GetRemainingAsync();
     }
 }

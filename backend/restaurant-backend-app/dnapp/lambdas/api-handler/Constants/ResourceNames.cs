@@ -24,6 +24,14 @@ public static class ResourceNames
         Environment.GetEnvironmentVariable("OLLAMA_MODEL_NAME")
         ?? throw new InvalidOperationException("Environment variable 'OLLAMA_MODEL_NAME' is not set.");
 
+    public static string GroqApiKey =>
+        Environment.GetEnvironmentVariable("GROQ_API_KEY")
+        ?? throw new InvalidOperationException("Environment variable 'GROQ_API_KEY' is not set.");
+
+    public static string GroqModelId =>
+        Environment.GetEnvironmentVariable("GROQ_MODEL_ID")
+        ?? throw new InvalidOperationException("Environment variable 'GROQ_MODEL_ID' is not set.");
+
     public static string FeedbackTableName =>
         Environment.GetEnvironmentVariable("FEEDBACK_TABLE_NAME")
         ?? throw new ArgumentException("Environment variable 'FEEDBACK_TABLE_NAME' is not set.");

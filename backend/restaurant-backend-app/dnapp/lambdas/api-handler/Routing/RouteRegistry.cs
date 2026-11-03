@@ -135,8 +135,17 @@ public static class RouteRegistry
                 serviceProvider.GetRequiredService<IHttpClientFactory>(),
                 serviceProvider.GetRequiredService<IDishService>(),
                 ResourceNames.OllamaApiKey,
-                ResourceNames.OllamaModelName));  
-        }else{
+                ResourceNames.OllamaModelName));
+        }
+        else if (string.Equals(ResourceNames.ChatProvider, "groq", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IChatService>(serviceProvider => new GroqChatService(
+                serviceProvider.GetRequiredService<IDishService>(),
+                ResourceNames.GroqApiKey,
+                ResourceNames.GroqModelId));
+        }
+        else
+        {
             services.AddSingleton<IChatService>(serviceProvider => new BedrockChatService(
                 serviceProvider.GetRequiredService<IAmazonBedrockRuntime>(),
                 serviceProvider.GetRequiredService<IGuestSessionService>(),
