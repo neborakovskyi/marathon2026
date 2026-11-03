@@ -13,4 +13,5 @@ public interface ITableService
     Task<IEnumerable<Table>> GetAllTablesForLocationAsync(string locationId);
     Task<Table> UpdateTableAsync(string tableId, UpdateTableRequest request);
     Task DeleteTableAsync(string tableId);
+    Task<IEnumerable<Table>> GetAllTablesAsync();
 }

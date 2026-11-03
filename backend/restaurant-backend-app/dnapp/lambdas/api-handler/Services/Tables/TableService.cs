@@ -133,4 +133,7 @@ public class TableService : ITableService
 
         return (workingDayEnd - current) >= minSlotLength;
     }
+
+    public async Task<IEnumerable<Table>> GetAllTablesAsync()=> await _tableRepository.GetAllTablesAsync();
+    
 }

@@ -1,5 +1,6 @@
 using APIHandler.Entities;
 using APIHandler.Models.Locations;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace APIHandler.Services.Locations;
@@ -18,4 +19,5 @@ public interface ILocationService
     Task RemoveDishFromLocationAsync(string locationId, string dishId);
 
     Task DeleteLocationAsync(string locationId, bool force = false);
+    Task<IEnumerable<Location>> GetAllLocationsAsync();
 }

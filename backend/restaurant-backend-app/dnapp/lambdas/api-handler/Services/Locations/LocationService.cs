@@ -5,6 +5,7 @@ using APIHandler.Repositories.Locations;
 using APIHandler.Repositories.Tables;
 using APIHandler.Services.Waiters;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -140,4 +141,6 @@ public class LocationService : ILocationService
 
         await _locationRepository.DeleteLocationAsync(existingLocation);
     }
+
+    public async Task<IEnumerable<Location>> GetAllLocationsAsync() => await _locationRepository.GetAllLocationsAsync();
 }

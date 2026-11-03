@@ -7,16 +7,24 @@ using APIHandler.Services.Dishes;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
+using APIHandler.Services.Locations;
+using APIHandler.Services.Tables;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace APIHandler.Services.Chat;
 
 public sealed class GroqChatService(
     IDishService dishService,
+    ILocationService locationService,
+    ITableService tableService,
+    IMemoryCache memoryCache,
     string apiKey,
     string modelId = "llama-3.3-70b-versatile") : IChatService
 {
     public const int MaxTokens = 512;
     public const int MaxHistoryMessages = 8;
+
+    public const int CACHE_EXPIRATION_DAYS = 5;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -25,15 +33,45 @@ public sealed class GroqChatService(
 
     public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken)
     {
-        // Меню как база знаний
-        var menu = await dishService.GetAllDishesAsync();
-        var menuJson = JsonSerializer.Serialize(menu, JsonOptions);
+        // Create knowledge base - try cache first, fallback to service calls
+        var cacheOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(CACHE_EXPIRATION_DAYS)
+        };
+
+        var dishesTask = memoryCache.GetOrCreateAsync("chat:dishes", async entry =>
+        {
+            entry.SetOptions(cacheOptions);
+            return await dishService.GetAllDishesAsync();
+        });
+
+        var locationsTask = memoryCache.GetOrCreateAsync("chat:locations", async entry =>
+        {
+            entry.SetOptions(cacheOptions);
+            return await locationService.GetAllLocationsAsync();
+        });
+
+        var tablesTask = memoryCache.GetOrCreateAsync("chat:tables", async entry =>
+        {
+            entry.SetOptions(cacheOptions);
+            return await locationService.GetAllLocationsAsync();
+        });
+
+        await Task.WhenAll(dishesTask, locationsTask, tablesTask);
+
+        var dishesJson = JsonSerializer.Serialize(await dishesTask, JsonOptions);
+        var locationsJson = JsonSerializer.Serialize(await locationsTask, JsonOptions);
+        var tablesJson = JsonSerializer.Serialize(await tablesTask, JsonOptions);
 
         var systemPrompt = $"""
             You are a friendly restaurant assistant. 
             Help guests explore the menu, get recommendations and descriptions of dishes.
-            Here is the current menu (JSON):
-            {menuJson}
+            Here is the dishes (JSON):
+            {dishesJson}
+            Here is the locations (JSON):
+            {locationsJson}
+            Here is the tables (JSON):
+            {tablesJson}
             Rules:
             - Only describe dishes that exist in the menu above.
             - Do not invent dishes or prices.

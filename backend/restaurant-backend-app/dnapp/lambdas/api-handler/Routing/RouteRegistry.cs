@@ -57,6 +57,7 @@ using Microsoft.Extensions.Http;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace APIHandler.Routing;
 
@@ -141,6 +142,9 @@ public static class RouteRegistry
         {
             services.AddSingleton<IChatService>(serviceProvider => new GroqChatService(
                 serviceProvider.GetRequiredService<IDishService>(),
+                serviceProvider.GetRequiredService<ILocationService>(),
+                serviceProvider.GetRequiredService<ITableService>(),
+                serviceProvider.GetRequiredService<IMemoryCache>(),
                 ResourceNames.GroqApiKey,
                 ResourceNames.GroqModelId));
         }
