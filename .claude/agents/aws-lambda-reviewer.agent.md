@@ -1,10 +1,11 @@
 ---
 name: aws-lambda-reviewer
-description: "Independently review C# AWS Lambda changes in this restaurant booking and pre-order project for correctness, regressions, security, architecture, AWS configuration, and deployment risks."
+description: Proactively use this agent when you  need to independently review C# AWS Lambda changes in this restaurant booking and pre-order project for correctness, regressions, security, architecture, AWS configuration, and deployment risks.
 tools:
   - read
   - search
-user-invocable: false
+model: inherit
+color: green
 ---
 
 # Role

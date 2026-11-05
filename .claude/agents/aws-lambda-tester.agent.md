@@ -1,12 +1,13 @@
 ---
 name: aws-lambda-tester
-description: "Author or update focused automated tests and run verification for C# AWS Lambda and backend changes in this restaurant booking and pre-order project."
+description: Proactively use this agent when you  need to author or update focused automated tests and run verification for C# AWS Lambda and backend changes in this restaurant booking and pre-order project.
 tools:
   - read
   - search
   - edit
   - execute
-user-invocable: false
+model: inherit
+color: yellow
 ---
 
 # Role

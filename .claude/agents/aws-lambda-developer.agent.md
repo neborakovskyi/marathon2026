@@ -1,14 +1,12 @@
 ---
 name: aws-lambda-developer
-description: "Coordinate implementation, review, and testing for C# AWS Lambda work in this restaurant booking and pre-order project. Use for new Lambda functions, backend changes, bug fixes, and requests to build or verify Lambda features."
+description: Proactively use this agent when you  need to coordinate implementation, review, and testing for C# AWS Lambda work in this restaurant booking and pre-order project. Use for new Lambda functions, backend changes, bug fixes, and requests to build or verify Lambda features.
 tools:
   - read
   - search
   - agent
-agents:
-  - aws-lambda-writer
-  - aws-lambda-reviewer
-  - aws-lambda-tester
+model: inherit
+color: purple
 ---
 
 # Role

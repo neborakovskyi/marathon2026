@@ -1,12 +1,13 @@
 ---
 name: aws-lambda-writer
-description: "Create or modify C# AWS Lambda functions, backend handlers and services, project files, tests when needed, and AWS Syndicate configuration for this restaurant booking and pre-order project."
+description: Proactively use this agent when you  need to create or modify C# AWS Lambda functions, backend handlers and services, project files, tests when needed, and AWS Syndicate configuration for this restaurant booking and pre-order project.
 tools:
   - read
   - search
   - edit
   - execute
-user-invocable: false
+model: inherit
+color: blue
 ---
 
 # Role and Context
