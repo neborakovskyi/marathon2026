@@ -7,46 +7,48 @@
   </h3>
 </div>
 
-@if (!reservationsLoaded()) {
-<div class="common-loading" role="status" aria-live="polite">
-  <span class="common-spinner" aria-hidden="true"></span>
-  <p>Please wait while we load your reservations.</p>
-</div>
-} @else if (reservations().length===0) {
-<p class="reservation-empty">
-  There are no reservations.
-</p>
-} @else if (reservations().length > 0) {
-
-  <section class="content-sections">
+<section class="content-sections">
   <div class="menu-section">
     <div class="filter-sort-bar">
       <div class="status-buttons">
         @for (statusIndex of [0,1,2,3]; track statusIndex) {
         <button
           (click)="onStatusSelected(statusIndex)"
-          [class.active]="selectedReservationStatus === statusIndex">
+          [class.active]="selectedReservationStatus() === statusIndex">
           {{ menuReservationStatus[statusIndex] }}
         </button>
         }
       </div>
 
-      <div class="sort-dropdown">
+    <!-- <div class="sort-dropdown">
         <label for="sortSelect">Sort by:</label>
-        <!-- <select id="sortSelect" (change)="onSortChanged($event)">
+        <select id="sortSelect" (change)="onSortChanged($event)">
             @for (sort of sortOptions; track sort) {
               <option [value]="sort" [selected]="sort === selectedSort">
                 {{ sortLabels[sort] }}
               </option>
             }
-          </select> -->
-      </div>
+          </select>
+      </div> -->
     </div>
   </div>
 </section>
 
+@if (!reservationsLoaded()) {
+<div class="common-loading" role="status" aria-live="polite">
+  <span class="common-spinner" aria-hidden="true"></span>
+  <p>Please wait while we load your reservations.</p>
+</div>
+} @else if (filteredReservations().length===0) {
+<p class="reservation-empty">
+  There are no reservations.
+</p>
+} @else if (filteredReservations().length > 0) {
+
+
+
 <ul class="reservation-list">
-  @for (reservation of reservations(); track reservation.id) {
+  @for (reservation of filteredReservations(); track reservation.id) {
   <app-card-reservation [reservation]="reservation" [role]="role()" [statusEnum]="statusEnum"
     (cancelReservation)="cancelReservation($event)" (editReservation)="openEditModal($event)"
     (leaveFeedbackReservation)="openFeedback($event)" (updateFeedbackReservation)="openFeedback($event)" />

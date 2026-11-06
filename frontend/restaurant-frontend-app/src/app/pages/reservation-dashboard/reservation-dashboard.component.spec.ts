@@ -139,9 +139,9 @@ describe('ReservationDashboardComponent', () => {
 
   it('toggles the selected reservation status filter', () => {
     component.onStatusSelected(ReservationStatus.Reserved);
-    expect(component.selectedReservationStatus).toBe(ReservationStatus.Reserved);
+    expect(component.selectedReservationStatus()).toBe(ReservationStatus.Reserved);
     component.onStatusSelected(ReservationStatus.Reserved);
-    expect(component.selectedReservationStatus).toBeNull();
+    expect(component.selectedReservationStatus()).toBeNull();
   });
 
   it('maps the selected customer reservation into a reservation view model', () => {

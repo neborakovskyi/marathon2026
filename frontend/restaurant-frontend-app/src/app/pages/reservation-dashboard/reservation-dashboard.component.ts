@@ -63,7 +63,7 @@ interface ReservationStatusView {
     ReservationConfirmedComponent,
     FeedbackWindowComponent,
     ChatComponent
-],
+  ],
   templateUrl: './reservation-dashboard.component.html',
   styleUrl: './reservation-dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,7 +120,7 @@ export class ReservationDashboardComponent implements OnInit {
     },
   };
 
-  readonly selectedReservationAsReservation =
+  public readonly selectedReservationAsReservation =
     computed<Reservation | null>(() => {
       const reservation = this.selectedReservation();
 
@@ -153,8 +153,19 @@ export class ReservationDashboardComponent implements OnInit {
 
 
   public menuReservationStatus = Object.values(ReservationStatus);
-  public selectedReservationStatus: ReservationStatus | null = null; // initially show all
-  public menuReservationStatusLabels= ReservationStatusLabels;
+  public readonly selectedReservationStatus = signal<ReservationStatus | null>(null);
+  public menuReservationStatusLabels = ReservationStatusLabels;
+
+  public readonly filteredReservations = computed(() => {
+    const status = this.selectedReservationStatus();
+    const all = this.reservations();
+
+    if (status === null) {
+      return all;
+    }
+
+    return all.filter(r => r.status === (status as unknown as ReservationStatusCustomer));
+  });
 
 
 
@@ -187,9 +198,9 @@ export class ReservationDashboardComponent implements OnInit {
   }
 
   public onStatusSelected(reservationStatus: ReservationStatus): void {
-    this.selectedReservationStatus = this.selectedReservationStatus === reservationStatus ? null : reservationStatus;
-// TODO :
-    //this.reservations.filter();
+    this.selectedReservationStatus.set(
+      this.selectedReservationStatus() === reservationStatus ? null as ReservationStatus | null : reservationStatus
+    );
   }
 
   cancelReservation(id: string): void {
