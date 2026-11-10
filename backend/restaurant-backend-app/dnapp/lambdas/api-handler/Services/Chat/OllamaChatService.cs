@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace APIHandler.Services.Chat;
@@ -29,7 +30,7 @@ public sealed class OllamaChatService(
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken)
+    public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken, CancellationToken ct = default)
     {
         var messages = await CreateHistoryAsync(request);
         messages.Add(new OllamaMessage

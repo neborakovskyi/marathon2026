@@ -10,6 +10,7 @@ using System;
 using APIHandler.Services.Locations;
 using APIHandler.Services.Tables;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading;
 
 namespace APIHandler.Services.Chat;
 
@@ -31,7 +32,7 @@ public sealed class GroqChatService(
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken)
+    public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken, CancellationToken ct = default)
     {
         // Create knowledge base - try cache first, fallback to service calls
         var cacheOptions = new MemoryCacheEntryOptions
@@ -54,7 +55,7 @@ public sealed class GroqChatService(
         var tablesTask = memoryCache.GetOrCreateAsync("chat:tables", async entry =>
         {
             entry.SetOptions(cacheOptions);
-            return await locationService.GetAllLocationsAsync();
+            return await tableService.GetAllTablesAsync();
         });
 
         await Task.WhenAll(dishesTask, locationsTask, tablesTask);
@@ -98,7 +99,10 @@ public sealed class GroqChatService(
                 new OpenAIClientOptions { Endpoint = new Uri("https://api.groq.com/openai/v1") });
 
             var completion = await client.CompleteChatAsync(messages,
-                new ChatCompletionOptions { MaxOutputTokenCount = MaxTokens });
+                new ChatCompletionOptions {
+                    Temperature = .7f, 
+                    MaxOutputTokenCount = MaxTokens 
+                }, ct);
 
             var text = completion.Value.Content[0].Text; //Streaming OFF
 

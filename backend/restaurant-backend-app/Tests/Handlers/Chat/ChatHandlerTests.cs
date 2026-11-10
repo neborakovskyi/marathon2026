@@ -46,7 +46,7 @@ public class ChatHandlerTests
 
         Assert.Equal(400, response.StatusCode);
         _chatService.Verify(
-            service => service.SendAsync(It.IsAny<ChatRequest>(), It.IsAny<string>()),
+            service => service.SendAsync(It.IsAny<ChatRequest>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
             Times.Never);
     }
 
@@ -56,7 +56,7 @@ public class ChatHandlerTests
         _chatService
             .Setup(service => service.SendAsync(
                 It.IsAny<ChatRequest>(),
-                ""))
+                "", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ChatResponse("Here is the menu.", []));
         var handler = new ChatHandler(_chatService.Object);
         var request = new APIGatewayProxyRequest
@@ -77,7 +77,7 @@ public class ChatHandlerTests
                 It.Is<ChatRequest>(chatRequest =>
                     chatRequest.Context!.GuestSessionId == "guest-1" &&
                     chatRequest.Message == "Show the menu"),
-                ""),
+                "", It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
@@ -87,7 +87,7 @@ public class ChatHandlerTests
         _chatService
             .Setup(service => service.SendAsync(
                 It.IsAny<ChatRequest>(),
-                "header-token"))
+                "header-token", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ChatResponse("Here is the menu.", []));
         var handler = new ChatHandler(_chatService.Object);
         var request = new APIGatewayProxyRequest
@@ -115,7 +115,7 @@ public class ChatHandlerTests
                 It.Is<ChatRequest>(chatRequest =>
                     chatRequest.Context!.GuestSessionId == "guest-1" &&
                     chatRequest.Message == "Show the menu"),
-                "header-token"),
+                "header-token", It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
@@ -125,7 +125,7 @@ public class ChatHandlerTests
         _chatService
             .Setup(service => service.SendAsync(
                 It.IsAny<ChatRequest>(),
-                It.IsAny<string>()))
+                It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new ChatUpstreamException("provider failure"));
         var handler = new ChatHandler(_chatService.Object);
         var request = new APIGatewayProxyRequest
@@ -146,7 +146,7 @@ public class ChatHandlerTests
 
         Assert.Equal(502, response.StatusCode);
         _chatService.Verify(
-            service => service.SendAsync(It.IsAny<ChatRequest>(), "header-token"),
+            service => service.SendAsync(It.IsAny<ChatRequest>(), "header-token", It.IsAny<CancellationToken>()),
             Times.Once);
     }
 

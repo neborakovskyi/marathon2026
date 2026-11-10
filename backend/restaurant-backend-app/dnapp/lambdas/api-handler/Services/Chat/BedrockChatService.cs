@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 using APIHandler.Services.Dishes;
+using System.Threading;
 
 namespace APIHandler.Services.Chat;
 
@@ -35,28 +36,28 @@ public sealed class BedrockChatService(
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken)
+    public async Task<ChatResponse> SendAsync(ChatRequest request, string guestSessionToken, CancellationToken ct = default)
     {
-        // ValidateRequest(request, guestSessionToken);
+        ValidateRequest(request, guestSessionToken);
 
-        // string guestSessionId = request.Context!.GuestSessionId!;
-        // bool authorized = true;
+        string guestSessionId = request.Context!.GuestSessionId!;
+        bool authorized = true;
 
-        // // If token is provided, validate it; otherwise allow anonymous access
-        // if (!string.IsNullOrWhiteSpace(guestSessionToken))
-        // {
-        //     try
-        //     {
-        //         authorized = await guestSessionService.IsAuthorizedAsync(guestSessionToken, guestSessionId);
-        //     }
-        //     catch (FormatException)
-        //     {
-        //         authorized = false;
-        //     }
+        // If token is provided, validate it; otherwise allow anonymous access
+        if (!string.IsNullOrWhiteSpace(guestSessionToken))
+        {
+            try
+            {
+                authorized = await guestSessionService.IsAuthorizedAsync(guestSessionToken, guestSessionId);
+            }
+            catch (FormatException)
+            {
+                authorized = false;
+            }
 
-        //     if (!authorized)
-        //         throw new UnauthorizedAccessException("The guest session token is invalid.");
-        // }
+            if (!authorized)
+                throw new UnauthorizedAccessException("The guest session token is invalid.");
+        }
 
         var messages = CreateHistory(request);
         messages.Add(new Message

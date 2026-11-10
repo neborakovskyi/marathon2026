@@ -97,7 +97,7 @@ public class BedrockChatServiceTests
             .ReturnsAsync(false);
 
         await Assert.ThrowsAsync<UnauthorizedAccessException>(
-            () => _service.SendAsync(CreateRequest(), SessionToken));
+            () => _service.SendAsync(CreateRequest(), SessionToken, default));
 
         _bedrock.Verify(
             client => client.ConverseAsync(It.IsAny<ConverseRequest>(), It.IsAny<CancellationToken>()),
@@ -117,7 +117,7 @@ public class BedrockChatServiceTests
             .ReturnsAsync(true);
 
         await Assert.ThrowsAsync<ChatUpstreamException>(
-            () => _service.SendAsync(CreateRequest(), SessionToken));
+            () => _service.SendAsync(CreateRequest(), SessionToken, default));
 
         _dishService.Verify(service => service.GetAllDishesAsync(), Times.Never);
     }
@@ -136,7 +136,7 @@ public class BedrockChatServiceTests
         };
 
         await Assert.ThrowsAsync<ChatValidationException>(
-            () => _service.SendAsync(request, SessionToken));
+            () => _service.SendAsync(request, SessionToken, It.IsAny<CancellationToken>()));
 
         _guestSessions.Verify(
             service => service.IsAuthorizedAsync(It.IsAny<string>(), It.IsAny<string>()),
@@ -153,7 +153,7 @@ public class BedrockChatServiceTests
         };
 
         await Assert.ThrowsAsync<ChatValidationException>(
-            () => _service.SendAsync(request, SessionToken));
+            () => _service.SendAsync(request, SessionToken, default));
 
         _guestSessions.Verify(
             service => service.IsAuthorizedAsync(It.IsAny<string>(), It.IsAny<string>()),
@@ -203,7 +203,7 @@ public class BedrockChatServiceTests
             .ThrowsAsync(new AmazonServiceException("provider failure"));
 
         await Assert.ThrowsAsync<ChatUpstreamException>(
-            () => _service.SendAsync(CreateRequest(), SessionToken));
+            () => _service.SendAsync(CreateRequest(), SessionToken, It.IsAny<CancellationToken>()));
     }
 
     private static ChatRequest CreateRequest() => new()

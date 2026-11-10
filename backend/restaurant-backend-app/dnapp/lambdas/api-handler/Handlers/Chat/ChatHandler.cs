@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 namespace APIHandler.Handlers.Chat;
 
@@ -20,6 +21,11 @@ public sealed class ChatHandler(IChatService chatService) : IApiRequestHandler
         ILambdaContext context)
     {
         ChatRequest? chatRequest;
+        
+        var timeout = context.RemainingTime - TimeSpan.FromSeconds(3);
+        using var cts = new CancellationTokenSource(timeout > TimeSpan.Zero ? timeout : TimeSpan.FromMilliseconds(1));
+        CancellationToken ct = cts.Token;
+
         if (string.IsNullOrWhiteSpace(request.Body))
             return ResponseBuilder.CreateErrorResponse(400, "A JSON request body is required.", context.Logger);
 
@@ -48,7 +54,7 @@ public sealed class ChatHandler(IChatService chatService) : IApiRequestHandler
         // Token is now optional - pass null/empty if not provided
         try
         {
-            ChatResponse result = await chatService.SendAsync(chatRequest!, token ?? string.Empty);
+            ChatResponse result = await chatService.SendAsync(chatRequest!, token ?? string.Empty, ct);
             return ResponseBuilder.CreateJsonResponse(200, result);
         }
         catch (ChatValidationException exception)
